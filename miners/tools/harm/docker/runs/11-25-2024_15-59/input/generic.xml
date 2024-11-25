@@ -1,0 +1,20 @@
+<harm>
+	<context name="default">
+
+		<prop exp="gnt2" loc="c,dt"/>
+		<prop exp="req2" loc="c,dt"/>
+		<prop exp="req1" loc="c,dt"/>
+		<prop exp="gnt1" loc="c,dt"/>
+		<prop exp="rst" loc="c,dt"/>
+		<prop exp="clk" loc="c,dt"/>
+
+
+
+		<template dtLimits="5D,3W,15A,-0.1E,U" exp="G({..#1&..}|-> P0)" /> 
+
+
+
+		<sort name="causality" exp="1-afct/traceLength"/>
+		<sort name="frequency" exp="atct/traceLength"/>
+	</context>
+</harm>
