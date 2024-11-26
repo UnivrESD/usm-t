@@ -10,17 +10,19 @@
 
 
 <usm-t>
+  <!--
+  -->
+
   <usecase id="harm_usecase_1">
-    <miner name="harm">
-    <input path="arb2/traces/t1.vcd"/>
-    <config_file path="config1/generic.xml"/>
-    <run path="configurations/config1/run_miner.sh"/>
+    <miner name="harm"/> 
+    <input type="vcd" clk="clk" rst="rst" path="arb2/traces/t1.vcd"/>
+    <config type="input" path="config1/generic.xml"/>
+    <config type="run" path="config1/run_miner.sh"/>
     <input_adaptor path="vcd_to_vcd/run.sh"/>
     <output_adaptor path="spotltl_to_spotltl/run.sh"/>
-  <usecase/>
+  </usecase>
 
-  <test name="test1">
+  <test name="test1" mode="sequential">
     <usecase id="harm_usecase_1"/> 
-  <test/>
-
-<usm-t/>
+  </test>
+</usm-t>

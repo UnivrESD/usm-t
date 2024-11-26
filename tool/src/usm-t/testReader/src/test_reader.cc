@@ -1,0 +1,183 @@
+#include "test_reader.hh"
+#include "Test.hh"
+#include "message.hh"
+#include "xmlUtils.hh"
+#include <sstream>
+#include <string>
+#include <unordered_map>
+#include <vector>
+
+namespace usmt {
+using namespace rapidxml;
+
+std::vector<Test> parseTests(XmlNode *root);
+
+std::vector<Test> readTestFile(const std::string &filename) {
+
+  try {
+    rapidxml::file<> xmlFile(filename.c_str());
+    rapidxml::xml_document<> doc;
+    doc.parse<0>(xmlFile.data());
+
+    XmlNode *root = doc.first_node("usm-t");
+    if (root) {
+      return parseTests(root);
+    } else {
+      messageError("Failed to find root 'usm-t'");
+    }
+  } catch (rapidxml::parse_error &e) {
+    std::stringstream ss;
+    ss << "Parsing error in " << filename << " "
+       << "\n"
+       << e.m_what << " at line " << e.m_lineNumber << std::endl;
+    if (!reinterpret_cast<char *>(e.m_where)[0]) {
+      ss << "Hint: you probably forgot to close a tag\n";
+    }
+    messageError(ss.str());
+  }
+  return {};
+}
+
+void parseInput(XmlNode *inputNode, Input &input) {
+  input.type = getAttributeValue(inputNode, "type", "");
+  input.path = getAttributeValue(inputNode, "path", "");
+  messageErrorIf(input.type.empty() || input.path.empty(),
+                 "Input type and path cannot be empty");
+  input.clk = getAttributeValue(inputNode, "clk", "");
+  input.rst = getAttributeValue(inputNode, "rst", "");
+  if (input.type == "vcd") {
+    messageErrorIf(input.clk.empty(), "VCD input must have a clk");
+  }
+}
+
+void parseConfigs(XmlNode *configNode, std::vector<Config> &configs) {
+  XmlNodeList configNodes;
+  getNodesFromName(configNode, "config", configNodes);
+  for (auto cfgNode : configNodes) {
+    Config config;
+    config.type = getAttributeValue(cfgNode, "type", "");
+    config.path = getAttributeValue(cfgNode, "path", "");
+    messageErrorIf(config.type.empty() || config.path.empty(),
+                   "Config type and path cannot be empty");
+    configs.push_back(config);
+  }
+}
+
+UseCase parseUseCase(XmlNode *usecaseNode) {
+  // Parse usecase
+  UseCase usecase;
+  usecase.usecase_id = getAttributeValue(usecaseNode, "id", "");
+  messageErrorIf(usecase.usecase_id.empty(),
+                 "Usecase id cannot be empty");
+  // Parse miner
+  std::vector<rapidxml::xml_node<> *> minerNodes;
+  getNodesFromName(usecaseNode, "miner", minerNodes);
+  messageErrorIf(minerNodes.size() != 1,
+                 "There should be exactly one miner tag got '" +
+                     std::to_string(minerNodes.size()) + "'");
+
+  usecase.miner_name = getAttributeValue(minerNodes[0], "name", "");
+
+  messageErrorIf(usecase.miner_name.empty(),
+                 "Miner name cannot be empty");
+
+  // Parse input
+  std::vector<rapidxml::xml_node<> *> inputNodes;
+  getNodesFromName(usecaseNode, "input", inputNodes);
+  messageErrorIf(inputNodes.size() != 1,
+                 "There should be exactly one input tag");
+  parseInput(inputNodes[0], usecase.input);
+
+  // Parse configs
+  parseConfigs(usecaseNode, usecase.configs);
+
+  std::vector<rapidxml::xml_node<> *> input_adaptorNodes;
+  getNodesFromName(usecaseNode, "input_adaptor", input_adaptorNodes);
+  messageErrorIf(input_adaptorNodes.size() != 1,
+                 "There should be exactly one input_adaptor tag");
+
+  // Parse input adaptor
+  usecase.input_adaptor_path =
+      getAttributeValue(input_adaptorNodes[0], "path", "");
+  messageErrorIf(usecase.input_adaptor_path.empty(),
+                 "Input adaptor path cannot be empty");
+
+  // Parse output adaptor
+  std::vector<rapidxml::xml_node<> *> output_adaptorNodes;
+  getNodesFromName(usecaseNode, "output_adaptor",
+                   output_adaptorNodes);
+  usecase.output_adaptor_path =
+      getAttributeValue(output_adaptorNodes[0], "path", "");
+  messageErrorIf(usecase.output_adaptor_path.empty(),
+                 "Output adaptor path cannot be empty");
+
+  return usecase;
+}
+
+std::vector<Test> parseTests(XmlNode *root) {
+
+  //parse usecases declarations
+  XmlNodeList usecaseNodes;
+  getNodesFromName(root, "usecase", usecaseNodes);
+  std::unordered_map<std::string, UseCase> idToUseCase;
+  for (auto usecaseNode : usecaseNodes) {
+    auto usecase = parseUseCase(usecaseNode);
+    idToUseCase[usecase.usecase_id] = usecase;
+  }
+
+  //parse tests
+  std::vector<Test> tests;
+  XmlNodeList testNodes;
+  getNodesFromName(root, "test", testNodes);
+  messageErrorIf(testNodes.size() == 0,
+                 "There should be at least one test tag");
+
+  for (auto testNode : testNodes) {
+    Test test;
+    test.name = getAttributeValue(testNode, "name", "");
+    test.mode = getAttributeValue(testNode, "mode", "");
+    messageErrorIf(test.name.empty() || test.mode.empty(),
+                   "Test name and mode cannot be empty in test tag");
+
+    //Parse usecases used in the test
+    XmlNodeList usecaseNodes;
+    getNodesFromName(testNode, "usecase", usecaseNodes);
+    for (auto usecaseNode : usecaseNodes) {
+      std::string id = getAttributeValue(usecaseNode, "id", "");
+      messageErrorIf(id.empty(),
+                     "Usecase id cannot be empty in test tag");
+      if (idToUseCase.count(id) == 0) {
+        messageWarning("Usecase with id '" + id + "' not found");
+      } else {
+        test.use_cases.push_back(idToUseCase[id]);
+      }
+    }
+
+    tests.push_back(test);
+  }
+
+  //print tests
+  for (auto test : tests) {
+    std::cout << "Test: " << test.name << " Mode: " << test.mode
+              << std::endl;
+    for (auto usecase : test.use_cases) {
+      std::cout << "Usecase: " << usecase.usecase_id << "\n";
+      std::cout << "\t\t\t Miner: " << usecase.miner_name
+                << std::endl;
+      std::cout << "\t\t\t Input: " << usecase.input.type << " "
+                << usecase.input.path << " " << usecase.input.clk
+                << std::endl;
+      for (auto config : usecase.configs) {
+        std::cout << "\t\t\t Config: " << config.type << " "
+                  << config.path << std::endl;
+      }
+      std::cout << "\t\t\t Input Adaptor: "
+                << usecase.input_adaptor_path << std::endl;
+      std::cout << "\t\t\t Output Adaptor: "
+                << usecase.output_adaptor_path << std::endl;
+    }
+  }
+
+  return tests;
+}
+} // namespace usmt

@@ -176,9 +176,6 @@ add_subdirectory(src/antlr4/temporalParser)
 #CSV parser
 add_subdirectory(src/csv-parser)
 
-#clustering
-add_subdirectory(src/clustering)
-
 #Table printer
 add_subdirectory(src/fort)
 
@@ -186,9 +183,9 @@ add_subdirectory(src/fort)
 add_subdirectory(src/paal)
 
 
-########MINER#########################################
-add_subdirectory(src/miner)
-target_link_libraries(${NAME} miner)
+########USM-T CORE#########################################
+add_subdirectory(src/usm-t)
+target_link_libraries(${NAME} usmt_core)
 
 #ast printer
 add_subdirectory(src/ast)

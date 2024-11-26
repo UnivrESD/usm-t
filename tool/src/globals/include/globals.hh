@@ -30,6 +30,8 @@ extern std::vector<std::string> faultyTraceFiles;
 extern std::string includeAss;
 ///--conf
 extern std::string configFile;
+///--test
+extern std::string testFile;
 ///csv or vcd
 extern std::string parserType;
 ///--clk
