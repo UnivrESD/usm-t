@@ -12,7 +12,6 @@
 <usm-t>
   <!--
   -->
-
   <usecase id="harm_usecase_1">
     <miner name="harm"/> 
     <input type="vcd" clk="clk" rst="rst" path="arb2/traces/t1.vcd"/>
@@ -22,7 +21,19 @@
     <output_adaptor path="spotltl_to_spotltl/run.sh"/>
   </usecase>
 
+
+  <usecase id="texada_usecase_1">
+    <miner name="texada"/> 
+    <input type="csv" path="arb2/traces/t1.csv"/>
+    <config type="run" path="config1/run_miner.sh"/>
+    <input_adaptor path="csv_to_texada_csv/run.sh"/>
+    <output_adaptor path="spotltl_to_spotltl/run.sh"/>
+  </usecase>
+
   <test name="test1" mode="sequential">
+    <usecase id="texada_usecase_1"/> 
     <usecase id="harm_usecase_1"/> 
+    <!--
+    -->
   </test>
 </usm-t>
