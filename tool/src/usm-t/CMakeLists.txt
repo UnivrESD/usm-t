@@ -16,10 +16,10 @@ target_include_directories(${NAME} PUBLIC interface/include)
 
 add_subdirectory(utils)
 add_subdirectory(testReader)
-#add_subdirectory(evaluator)
-#add_subdirectory(minerRunner)
+add_subdirectory(adaptor)
+add_subdirectory(evaluator)
 
-target_link_libraries(${NAME} test_reader)
+target_link_libraries(${NAME} test_reader adaptor evaluator)
 
 
 
