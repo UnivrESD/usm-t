@@ -190,6 +190,11 @@ target_link_libraries(${NAME} usmt_core)
 #ast printer
 add_subdirectory(src/ast)
 
+#vcd to csv tool
+add_subdirectory(src/clustering)
+add_subdirectory(src/miner)
+add_subdirectory(src/vcd2csv)
+
 ### TESTS & EXAMPLES ##################################
 enable_testing()
 include (CTest)

@@ -97,6 +97,13 @@ void inline systemCustom(std::string command) {
   }
 }
 
+void inline systemCheckExit(std::string command) {
+  int status = system(command.c_str());
+  if (!(WIFEXITED(status) && WEXITSTATUS(status) == 0)) {
+    messageError(command + " failed");
+  }
+}
+
 ///select the string after the input pattern
 inline std::string selectStringAfter(std::string str,
                                      std::string pattern) {

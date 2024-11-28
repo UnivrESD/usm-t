@@ -51,7 +51,7 @@ void run() {
       //add the command to be executed in the container
       run_container_command += " \"bash /input/run_miner.sh\"";
       messageInfo("Running '" + use_case.miner_name + "'");
-      systemCustom(run_container_command);
+      systemCheckExit(run_container_command);
 
       //ADAPT THE OUTPUT--------------------------------
       adaptOutput(ph, use_case);

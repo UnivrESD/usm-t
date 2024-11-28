@@ -57,24 +57,37 @@ inline PathHandler generatePaths(const UseCase &us) {
 
   ret.ustm_root = getenv("USMT_ROOT");
   ret.miners_path = ret.ustm_root + "/miners/";
+  //check that miners_path exists
+  messageErrorIf(!std::filesystem::exists(ret.miners_path),
+                 "Could not find miners path '" + ret.miners_path +
+                     "'");
   ret.tools_path = ret.miners_path + "tools/";
+  messageErrorIf(!std::filesystem::exists(ret.tools_path),
+                 "Could not find tools path '" + ret.tools_path +
+                     "'");
   ret.miner_path = ret.tools_path + us.miner_name + "/";
+  messageErrorIf(!std::filesystem::exists(ret.miner_path),
+                 "Could not find miner path '" + ret.miner_path +
+                     "'");
   ret.configurations_path = ret.miner_path + "configurations/";
+  messageErrorIf(!std::filesystem::exists(ret.configurations_path),
+                 "Could not find configurations path '" +
+                     ret.configurations_path + "'");
 
   //--work folder
   ret.work_path =
       ret.miner_path + "runs/" + getCurrentDateTime() + "/";
-  ret.work_input = "input/";
-  ret.work_output = "output/";
-  ret.work_eval = "eval/";
-
   //check if the work folder exists
   if (std::filesystem::exists(ret.work_path)) {
     //delete the folder
     std::filesystem::remove_all(ret.work_path);
   }
 
-  //create the folder
+  ret.work_input = "input/";
+  ret.work_output = "output/";
+  ret.work_eval = "eval/";
+
+  //create the folders
   messageErrorIf(!std::filesystem::create_directories(ret.work_path),
                  "error while creating directory '" + ret.work_path +
                      "'");
@@ -95,7 +108,8 @@ inline PathHandler generatePaths(const UseCase &us) {
   ret.run_container_path =
       ret.tools_path + us.miner_name + "/docker/run_container.sh";
   messageErrorIf(!std::filesystem::exists(ret.run_container_path),
-                 "Run container script not found");
+                 "Run container script '" + ret.run_container_path +
+                     "' not found");
 
   //output ass
   ret.expected_ass_file = "ass.txt";
@@ -107,10 +121,16 @@ inline PathHandler generatePaths(const UseCase &us) {
   ret.input_adaptor_path = ret.miners_path +
                            "adaptors/input_adaptors/" +
                            us.input_adaptor_path;
+  messageErrorIf(!std::filesystem::exists(ret.input_adaptor_path),
+                 "Input adaptor '" + ret.input_adaptor_path +
+                     "' not found");
 
   ret.output_adaptor_path = ret.miners_path +
                             "adaptors/output_adaptors/" +
                             us.output_adaptor_path;
+  messageErrorIf(!std::filesystem::exists(ret.output_adaptor_path),
+                 "Output adaptor '" + ret.output_adaptor_path +
+                     "' not found");
   return ret;
 }
 

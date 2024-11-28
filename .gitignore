@@ -26,4 +26,5 @@ tool/build/*
 tool/install/*
 tool/.cache/*
 .cache/*
-miners/tools/harm/runs/
+miners/tools/harm/runs/*
+miners/tools/texada/runs/*

@@ -39,7 +39,7 @@ int main(int arg, char *argv[]) {
 
 void parseCommandLineArguments(int argc, char *args[]) {
   //parse the cmd using an external library
-  auto result = parseHARM(argc, args);
+  auto result = parseUSMT(argc, args);
 
   //check for errors and build the environment
   //messageErrorIf(((result.count("vcd") || result.count("vcd-dir")) &&
