@@ -49,6 +49,10 @@ void parseInput(XmlNode *inputNode, Input &input) {
     messageErrorIf(input.clk.empty(), "VCD input must have a clk");
   }
 }
+void parseOutput(XmlNode *outputNode, Output &output) {
+  output.path = getAttributeValue(outputNode, "path", "");
+  messageErrorIf(output.path.empty(), "Output path cannot be empty");
+}
 
 void parseConfigs(XmlNode *configNode, std::vector<Config> &configs) {
   XmlNodeList configNodes;
@@ -61,6 +65,19 @@ void parseConfigs(XmlNode *configNode, std::vector<Config> &configs) {
                    "Config type and path cannot be empty");
     configs.push_back(config);
   }
+}
+Comparator parseCompare(XmlNode *compareNode) {
+
+  Comparator comp;
+  comp.with_strategy =
+      getAttributeValue(compareNode, "with_strategy", "");
+  messageErrorIf(comp.with_strategy == "fault_coverage" ||
+                     comp.with_strategy == "expected_vs_mined",
+                 "Comparator strategy '" + comp.with_strategy +
+                     "' not supported, supported strategies are "
+                     "'fault_coverage' and 'expected_vs_mined'");
+
+  return comp;
 }
 
 UseCase parseUseCase(XmlNode *usecaseNode) {
@@ -84,9 +101,20 @@ UseCase parseUseCase(XmlNode *usecaseNode) {
   // Parse input
   std::vector<rapidxml::xml_node<> *> inputNodes;
   getNodesFromName(usecaseNode, "input", inputNodes);
-  messageErrorIf(inputNodes.size() != 1,
-                 "There should be exactly one input tag");
-  parseInput(inputNodes[0], usecase.input);
+  for (auto n : inputNodes) {
+    Input new_input;
+    parseInput(n, new_input);
+    usecase.input.push_back(new_input);
+  }
+
+  // Parse output
+  std::vector<rapidxml::xml_node<> *> outputNodes;
+  getNodesFromName(usecaseNode, "output", outputNodes);
+  for (auto n : outputNodes) {
+    Output new_output;
+    parseOutput(n, new_output);
+    usecase.output.push_back(new_output);
+  }
 
   // Parse configs
   parseConfigs(usecaseNode, usecase.configs);
@@ -139,6 +167,13 @@ std::vector<Test> parseTests(XmlNode *root) {
     messageErrorIf(test.name.empty() || test.mode.empty(),
                    "Test name and mode cannot be empty in test tag");
 
+    //parse comparators
+    XmlNodeList compareNodes;
+    getNodesFromName(root, "compare", compareNodes);
+    for (auto compareNode : compareNodes) {
+      test.comparators.push_back(parseCompare(compareNode));
+    }
+
     //Parse usecases used in the test
     XmlNodeList usecaseNodes;
     getNodesFromName(testNode, "usecase", usecaseNodes);
@@ -164,9 +199,13 @@ std::vector<Test> parseTests(XmlNode *root) {
       std::cout << "Usecase: " << usecase.usecase_id << "\n";
       std::cout << "\t\t\t Miner: " << usecase.miner_name
                 << std::endl;
-      std::cout << "\t\t\t Input: " << usecase.input.type << " "
-                << usecase.input.path << " " << usecase.input.clk
-                << std::endl;
+      for (auto input : usecase.input) {
+        std::cout << "\t\t\t Input: " << input.type << " "
+                  << input.path << " " << input.clk << std::endl;
+      }
+      for (auto output : usecase.output) {
+        std::cout << "\t\t\t Output: " << output.path << std::endl;
+      }
       for (auto config : usecase.configs) {
         std::cout << "\t\t\t Config: " << config.type << " "
                   << config.path << std::endl;

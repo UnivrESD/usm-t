@@ -1,0 +1,5 @@
+G(req1 && !req2 -> gnt1);
+G(req2 -> gnt2);
+G(req1 -> gnt1);
+G(req2 && !req1 |-> gnt2);
+G(rst -> !state);

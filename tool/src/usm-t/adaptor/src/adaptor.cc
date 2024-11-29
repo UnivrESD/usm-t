@@ -10,23 +10,38 @@ namespace usmt {
 void adaptInput(const PathHandler &ph, const UseCase &use_case) {
 
   messageInfo("Adapting input...");
-  std::string adapt_input_command = "bash " + ph.input_adaptor_path;
-  //add the path to the input and output file of the input adaptor
-  adapt_input_command +=
-      " " + ph.ustm_root + "/input/" + use_case.input.path;
-  adapt_input_command += " " + ph.work_path + "input/";
+  for (auto input : use_case.input) {
 
-  systemCustom(adapt_input_command);
+    std::string adapt_input_command = "bash " + ph.input_adaptor_path;
+    //add the path to the input and output file of the input adaptor
+    adapt_input_command +=
+        " " + ph.ustm_root + "/"+ ph.work_input + input.path;
+    adapt_input_command += " " + ph.work_path + "input/";
+
+    systemCheckExit(adapt_input_command);
+  }
 }
 void adaptOutput(const PathHandler &ph, const UseCase &use_case) {
 
   messageInfo("Adapting output...");
-  std::string adapt_output_command = "bash " + ph.output_adaptor_path;
-  //add the path to the input and output file of the output adaptor
-  adapt_output_command += " " + ph.work_ass;
-  adapt_output_command +=
-      " " + ph.work_path + ph.work_output + ph.adapted_ass_file;
+  //create the adapter output folder
+  messageErrorIf(!std::filesystem::exists(ph.work_path),
+                 "Run folder '" + ph.work_path + "' does not exist");
+  std::string adapted_output_folder = ph.work_path + "adapted/";
+  if (!std::filesystem::create_directory(adapted_output_folder)) {
+    messageError("Error while creating directory '" +
+                 adapted_output_folder + "'");
+  }
 
-  systemCustom(adapt_output_command);
+  for (auto output : use_case.output) {
+    std::string adapt_output_command =
+        "bash " + ph.output_adaptor_path;
+    //add the path to the input and output file of the output adaptor
+    adapt_output_command +=
+        " " + ph.work_path + ph.work_output + output.path;
+    adapt_output_command += " " + adapted_output_folder;
+
+    systemCheckExit(adapt_output_command);
+  }
 }
 } // namespace usmt

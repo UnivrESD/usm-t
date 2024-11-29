@@ -15,6 +15,8 @@
   <usecase id="harm_usecase_1">
     <miner name="harm"/> 
     <input type="vcd" clk="clk" rst="rst" path="arb2/traces/t1.vcd"/>
+    <output path="without_next_ass.txt"/>
+    <output path="with_next_ass.txt"/>
     <config type="input" path="config1/generic.xml"/>
     <config type="run" path="config1/run_miner.sh"/>
     <input_adaptor path="vcd_to_vcd/run.sh"/>
@@ -25,12 +27,15 @@
   <usecase id="texada_usecase_1">
     <miner name="texada"/> 
     <input type="csv" path="arb2/traces/t1.csv"/>
+    <output path="mixed_ass.txt"/>
     <config type="run" path="config1/run_miner.sh"/>
     <input_adaptor path="csv_to_texada_log/run.sh"/>
-    <output_adaptor path="spotltl_to_spotltl/run.sh"/>
+    <output_adaptor path="spin_to_spotltl/run.sh"/>
   </usecase>
 
   <test name="test1" mode="sequential">
+    <compare with_strategy="expected_vs_mined"/>
+    <compare with_strategy="fault_coverage"/>
     <!--
     -->
     <usecase id="texada_usecase_1"/> 

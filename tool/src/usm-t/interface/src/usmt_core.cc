@@ -57,7 +57,7 @@ void run() {
       adaptOutput(ph, use_case);
 
       //EVAL-----------------------------------------------
-      evaluate(ph, use_case);
+      evaluateExpectedvsMined(ph, use_case);
 
     } //end of use cases
   }   //end of tests

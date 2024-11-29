@@ -20,9 +20,6 @@ public:
   std::string work_eval = "";
   std::string work_path = "";
   std::string run_container_path = "";
-  std::string expected_ass_file = "";
-  std::string adapted_ass_file = "";
-  std::string work_ass = "";
 
   std::string input_adaptor_path = "";
   std::string output_adaptor_path = "";
@@ -110,12 +107,6 @@ inline PathHandler generatePaths(const UseCase &us) {
   messageErrorIf(!std::filesystem::exists(ret.run_container_path),
                  "Run container script '" + ret.run_container_path +
                      "' not found");
-
-  //output ass
-  ret.expected_ass_file = "ass.txt";
-  ret.adapted_ass_file = "adapted_ass.txt";
-  ret.work_ass =
-      ret.work_path + ret.work_output + ret.expected_ass_file;
 
   //adaptors
   ret.input_adaptor_path = ret.miners_path +
