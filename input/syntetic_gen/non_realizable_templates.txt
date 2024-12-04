@@ -1,0 +1,24 @@
+#2. Mutual Exclusion with Fairness
+Input : a, b
+Output : None (Enforces mutual exclusion and fairness)
+Template: G((a -> !b) & (b -> !a)) & GF(a) & GF(b)
+
+#3. Producer-Consumer Synchronization
+Input : produce, consume
+Output : None (Synchronizes the actions)
+Template: G((produce -> X consume) & (consume -> X produce))
+
+#4. Traffic Light Controller
+Input : green, yellow, red
+Output : None (Ensures correct traffic light sequence)
+Template: G((green -> X yellow) & (yellow -> X red) & (red -> X green))
+
+#6. Alternating Signals
+Input : a
+Output : None (Alternates the signal 'a')
+Template: G(a -> X !a) & G(!a -> X a)
+
+#7. Fair Choice
+Input : p1, p2
+Output : None (Ensures fair alternation between p1 and p2)
+Template: GF(p1) & GF(p2) & G((p1 -> X !p2) & (p2 -> X !p1))

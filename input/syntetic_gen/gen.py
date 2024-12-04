@@ -1,0 +1,72 @@
+import subprocess
+import os
+yosis_prefix = '$(pwd)/../../tool/third_party/oss-cad-suite/bin/'
+ltlsynt_prefix = '$(pwd)/../../tool/third_party/spot/bin/'
+xml_prefix = '/home/magister/usm-t/input/syntetic_gen/'
+
+def aigerToSv(design_aiger):
+    input_file = design_aiger
+    output_file = design_aiger.replace('.aiger', '.sv')
+    yosys_command = f"{yosis_prefix}yosys -p 'read_aiger {input_file}; write_verilog -sv {output_file}'"
+    subprocess.run(yosys_command, shell=True, check=True)
+    print(f"Generated SystemVerilog file: {output_file}")
+
+def synthesize_controller(specification):
+    formula = specification.get('formula')
+    inputs = specification.get('inputs')
+    outputs = specification.get('outputs')
+    aiger_file = 'controller.aiger'
+    
+    ltlsynt_command = f'{ltlsynt_prefix}ltlsynt --formula="{formula}" --ins="{inputs}" --outs="{outputs}" --aiger > {aiger_file}'
+
+    result = subprocess.run(ltlsynt_command, shell=True, check=False, capture_output=True, text=True)
+    if result.returncode == 1:
+        print("Error: The design is unrealizable.")
+        exit(1)
+    elif result.returncode == 2:
+        print("Error: An error occurred during the realizability check.")
+        exit(2)
+    else:
+        #Remove REALIZABLE/UNREALIZABLE output line from aiger file
+        with open(aiger_file, 'r') as file:
+            lines = file.readlines()
+        with open(aiger_file, 'w') as file:
+            file.writelines(lines[1:])
+        return aiger_file
+
+
+def generate_circuit(specification):
+    design_aiger = synthesize_controller(specification)
+    aigerToSv(design_aiger)
+
+def main():
+    import xml.etree.ElementTree as ET
+    xml_file = f'{xml_prefix}output_templates.xml'
+    tree = ET.parse(xml_file)
+    root = tree.getroot()
+    templates = root.findall('Template')
+    num_templates = len(templates)
+
+    try:
+        template_number = int(input(f"Enter a template number (1-{num_templates}): "))
+        if not 1 <= template_number <= num_templates:
+            print(f"Error: Template number must be between 1 and {num_templates}.")
+            exit(3)
+    except ValueError:
+        print("Error: Invalid input. Please enter a number between 1 and {num_templates}.")
+        exit(3)
+
+    template = root.findall('Template')[template_number - 1]
+    specification = {}
+    specification['formula'] = template.find('TemplateText').text
+    specification['inputs'] = template.find('Input').text
+    specification['outputs'] = template.find('Output').text
+
+    generate_circuit(specification)
+    #aiger_file = 'controller.aigr'
+    #if os.path.exists(aiger_file):
+    #    os.remove(aiger_file)
+
+
+if __name__ == "__main__":
+    main()

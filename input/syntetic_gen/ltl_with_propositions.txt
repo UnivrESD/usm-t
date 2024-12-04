@@ -1,0 +1,24 @@
+#1. Always Eventually Response
+Input : request
+Output : response
+Template: G(request -> F response)
+
+#2. Request-Acknowledge Protocol
+Input : request
+Output : acknowledge
+Template: G(request -> F acknowledge) & G(acknowledge -> F request)
+
+#3. Resource Allocation
+Input : request
+Output : grant, release
+Template: G(request -> F(grant & X release)) & G(grant -> X release)
+
+#4. Bidirectional Communication
+Input : send1, send2
+Output : receive1, receive2
+Template: G((send1 -> F receive2) & (send2 -> F receive1))
+
+#5. Robot Movement and Target Reachability
+Input : atTarget, move
+Output : ""
+Template: G(atTarget -> F move) & G(move -> F atTarget)

@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<Templates>
+  <Template>
+    <Input>request</Input>
+    <Output>response</Output>
+    <TemplateText>G(request -&gt; F response)</TemplateText>
+  </Template>
+  <Template>
+    <Input>request</Input>
+    <Output>acknowledge</Output>
+    <TemplateText>G(request -&gt; F acknowledge) &amp; G(acknowledge -&gt; F request)</TemplateText>
+  </Template>
+  <Template>
+    <Input>request</Input>
+    <Output>grant, release</Output>
+    <TemplateText>G(request -&gt; F(grant &amp; X release)) &amp; G(grant -&gt; X release)</TemplateText>
+  </Template>
+  <Template>
+    <Input>send1, send2</Input>
+    <Output>receive1, receive2</Output>
+    <TemplateText>G((send1 -&gt; F receive2) &amp; (send2 -&gt; F receive1))</TemplateText>
+  </Template>
+  <Template>
+    <Input>atTarget, move</Input>
+    <Output>&quot;&quot;</Output>
+    <TemplateText>G(atTarget -&gt; F move) &amp; G(move -&gt; F atTarget)</TemplateText>
+  </Template>
+</Templates>
