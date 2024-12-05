@@ -24,10 +24,6 @@ namespace harm {
 //static functions
 
 #ifdef SPOTLTL
-/** \brief generate a FSM from a spot formula
-   */
-static std::shared_ptr<spot::twa_graph>
-generateDeterministicSpotAutomaton(const spot::formula &formula);
 
 /** \brief builds a custom automaton (see class Automaton) from a spotLTL automaton
    */
@@ -566,10 +562,10 @@ generateDeterministicSpotAutomaton(const spot::formula &formula) {
   messageErrorIf(!spot::is_complete(aut),
                  "The formula_to_use '" + to_string(formula_to_use) +
                      "' generates an incomplete automaton");
-  messageWarningIf(
-      aut->num_states() == 1,
-      "The formula '" + to_string(formula_to_use) +
-          "' generates a trivial automaton with only one state");
+  //messageWarningIf(
+  //    aut->num_states() == 1,
+  //    "The formula '" + to_string(formula_to_use) +
+  //        "' generates a trivial automaton with only one state");
 
   //add to cache
   cache.insert({formulaStr, aut});

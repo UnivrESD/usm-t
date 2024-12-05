@@ -1,1 +1,1 @@
-docker pull samger/harm:texada
+docker pull samger/texada:latest

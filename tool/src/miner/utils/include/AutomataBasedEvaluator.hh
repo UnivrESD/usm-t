@@ -5,6 +5,7 @@
 #include "Trace.hh"
 #include "Trinary.hh"
 #include "formula/temporal/TemporalExpression.hh"
+#include "spot/twa/twagraph.hh"
 
 namespace harm {
 
@@ -74,4 +75,7 @@ private:
 // shared pointer to the AutomataBasedEvaluator
 using AutomataBasedEvaluatorPtr =
     std::shared_ptr<AutomataBasedEvaluator>;
+
+std::shared_ptr<spot::twa_graph>
+generateDeterministicSpotAutomaton(const spot::formula &formula);
 } // namespace harm
