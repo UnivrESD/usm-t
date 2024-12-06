@@ -1,6 +1,8 @@
 #include <string>
 #include <vector>
 
+#include "UseCasePathHandler.hh"
+
 namespace usmt {
 
 struct Input {
@@ -27,6 +29,8 @@ struct UseCase {
   std::vector<Config> configs;
   std::string input_adaptor_path;
   std::string output_adaptor_path;
+
+  UseCasePathHandler ph;
 };
 
 struct Comparator {

@@ -1,5 +1,5 @@
 #include "EvalReport.hh"
-#include "UseCasePathHandler.hh"
+#include "Test.hh"
 #include "adaptor.hh"
 #include "globals.hh"
 #include "misc.hh"
@@ -19,11 +19,13 @@ void run() {
   for (auto &test : tests) {
     messageInfo("Running test " + test.name);
 
-    for (const auto &use_case : test.use_cases) {
-      UseCasePathHandler ph = generatePaths(use_case);
+    for (auto &use_case : test.use_cases) {
+      initPathHandler(use_case);
+
+      const UseCasePathHandler &ph = use_case.ph;
 
       //ADAPT THE INPUT--------------------------------
-      adaptInput(ph, use_case);
+      adaptInput(use_case);
 
       //PREPARE THE EXECUTION-------------------------------
       //copy the conf input files to the input folder
@@ -32,16 +34,22 @@ void run() {
           std::filesystem::copy(ph.configurations_path + conf.path,
                                 ph.work_path + "input/");
         } else if (conf.type == "run") {
-          messageErrorIf(std::filesystem::exists(
-                             ph.work_path + "input/run_miner.sh"),
-                         "Multiple run configurations not supported");
           std::filesystem::copy(ph.configurations_path + conf.path,
                                 ph.work_path + "input/run_miner.sh");
         } else {
           messageError("Configuration type '" + conf.type +
-                       "' not supported");
+                       "' not supported in '" + use_case.usecase_id +
+                       "'");
         }
       }
+
+      //count number of run
+      messageErrorIf(
+          std::count_if(
+              use_case.configs.begin(), use_case.configs.end(),
+              [](const Config &c) { return c.type == "run"; }) != 1,
+          "Multiple run configurations found in use case " +
+              use_case.usecase_id);
 
       //RUN THE MINER---------------------------------------
       std::string run_container_command = "";
@@ -55,16 +63,16 @@ void run() {
       systemCheckExit(run_container_command);
 
       //ADAPT THE OUTPUT--------------------------------
-      adaptOutput(ph, use_case);
+      adaptOutput(use_case);
 
       //EVAL-----------------------------------------------
-      for (auto &comp : test.comparators) {
-        EvalReport er = evaluate(ph, use_case, comp);
+      for (const auto &comp : test.comparators) {
+        EvalReport er = evaluate(use_case, comp);
         std::cout << er._score << "\n";
-        for (auto &[ex,sim] : er._expextedToSimilar) {
-          std::cout << "Ex: " << ex <<"\n";
+        for (auto &[ex, sim] : er._expextedToSimilar) {
+          std::cout << "Ex: " << ex << "\n";
           for (auto &s : sim) {
-            std::cout << "\t\t\tSim: " << s <<"\n";
+            std::cout << "\t\t\tSim: " << s << "\n";
           }
         }
       }

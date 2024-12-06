@@ -1,5 +1,5 @@
 #include "Location.hh"
-#include "UseCasePathHandler.hh"
+#include "Test.hh"
 #include "globals.hh"
 #include "message.hh"
 #include "misc.hh"
@@ -96,7 +96,7 @@ AssertionPtr makeAssertion(const std::string &ass_str,
       ass_str, trace, harm::DTLimits(), 0);
   messageErrorIf(!ti->assHoldsOnTrace(harm::Location::AntCon),
                  "Specification '" + ass_str +
-                     "', does not hold on the input trace");
+                     "', does not hold on the input traces'");
   AssertionPtr new_ass = generatePtr<Assertion>();
   fillAssertion(new_ass, ti, false);
   return new_ass;
@@ -118,7 +118,7 @@ std::vector<AssertionPtr>
 getAssertionsFromFile(const std::string &input_path,
                       const TracePtr &trace) {
 
-  std::cout << "Parsing assertion file '" << input_path << "'";
+  messageInfo("Parsing assertion file '" + input_path);
   std::vector<std::string> assStrs;
   messageErrorIf(!std::filesystem::exists(input_path),
                  "Could not find assertino file'" + input_path + "'");
@@ -135,51 +135,72 @@ getAssertionsFromFile(const std::string &input_path,
 }
 
 using TraceReaderPtr = std::shared_ptr<TraceReader>;
-TracePtr parseTrace(const usmt::UseCase &use_case,
-                    const UseCasePathHandler &ph) {
+TracePtr parseInputTraces(const usmt::UseCase &use_case) {
+  const UseCasePathHandler &ph = use_case.ph;
 
-  auto first_input = use_case.input[0];
-  std::string trace_path =
-      ph.ustm_root + "/input/" + first_input.path;
+  std::string trace_prefix = ph.ustm_root + "/input/";
 
-  std::cout << "Parsing " << trace_path << "\n";
+  std::vector<std::string> allTraces;
 
-  if (first_input.type == "vcd") {
-    clc::selectedScope = use_case.input[0].scope;
-    clc::vcdRecursive = 1;
-    TraceReaderPtr tr =
-        generatePtr<VCDtraceReader>(trace_path, first_input.clk);
-    return tr->readTrace();
-  } else if (first_input.type == "csv") {
-    TraceReaderPtr tr = generatePtr<CSVtraceReader>(trace_path);
-    return tr->readTrace();
+  for (const auto &input : use_case.input) {
+    std::string trace_path = trace_prefix + input.path;
+    messageInfo("Parsing input trace(s) at " + trace_path);
+    messageErrorIf(!std::filesystem::exists(trace_path),
+                   "path '" + trace_path + "' does not exist");
+    if (std::filesystem::is_directory(trace_path)) {
+      for (const auto &entry :
+           std::filesystem::directory_iterator(trace_path)) {
+
+        if (entry.path().extension() == ("." + input.type)) {
+          allTraces.push_back(entry.path().u8string());
+          std::cout << "Including:" << entry.path().u8string()
+                    << "\n";
+        }
+      }
+    } else {
+      allTraces.push_back(trace_path);
+    }
+
+    if (input.type == "vcd") {
+      clc::selectedScope = use_case.input[0].scope;
+      clc::vcdRecursive = 1;
+      TraceReaderPtr tr =
+          generatePtr<VCDtraceReader>(allTraces, input.clk);
+      return tr->readTrace();
+    } else if (input.type == "csv") {
+      TraceReaderPtr tr = generatePtr<CSVtraceReader>(allTraces);
+      return tr->readTrace();
+    }
   }
+
   messageError("Unsupported trace type");
   return nullptr;
 }
 
-EvalReport evaluate(const usmt::UseCasePathHandler &ph,
-                    const usmt::UseCase &use_case,
+EvalReport evaluate(const usmt::UseCase &use_case,
                     const Comparator &comp) {
+
+  const UseCasePathHandler &ph = use_case.ph;
+
   if (comp.with_strategy == "expected_vs_mined") {
-    return evaluateExpectedvsMined(
-        ph, use_case, ph.ustm_root + "/input/" + comp.expected);
+    return evaluateExpectedvsMined(use_case, ph.ustm_root + "/" +
+                                                 comp.expected);
   }
   messageError("Unsupported strategy");
   return EvalReport();
 }
 
 EvalReport
-evaluateExpectedvsMined(const usmt::UseCasePathHandler &ph,
-                        const usmt::UseCase &use_case,
+evaluateExpectedvsMined(const usmt::UseCase &use_case,
                         const std::string expected_ass_path) {
 
-  std::cout << "Expected ass path " << expected_ass_path << "\n";
-  TracePtr trace = parseTrace(use_case, ph);
+  const UseCasePathHandler &ph = use_case.ph;
+
+  TracePtr trace = parseInputTraces(use_case);
   auto expected_ass = getAssertionsFromFile(expected_ass_path, trace);
 
   EvalReport ret;
-  //clc::psilent = 1;
+
   double avgScore = 0.f;
   for (const auto &output : use_case.output) {
     std::string adapted_output_folder =
@@ -195,7 +216,6 @@ evaluateExpectedvsMined(const usmt::UseCasePathHandler &ph,
       double this_ass_score = 0.f;
       for (const auto &ma : mined_ass) {
         int res = compareLanguage(ea, ma);
-        //std::cout << "-------->" <<res<< "\n";
 
         if (res == 0) {
           ret._expextedToSimilar[expected_ass_str].clear();

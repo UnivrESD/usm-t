@@ -7,7 +7,7 @@ project(${NAME})
 # Sources.
 #############################################
 
-SET(TR_SRC src/Test.cc)
+SET(TR_SRC src/Test.cc src/UseCasePathHandler.cc)
 
 #############################################
 # Targets.
