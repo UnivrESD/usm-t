@@ -6,10 +6,10 @@
 #include <sstream>
 
 namespace usmt {
-class PathHandler {
+class UseCasePathHandler {
 public:
-  virtual ~PathHandler() = default;
-  PathHandler(const UseCase &us) : us(us) {}
+  virtual ~UseCasePathHandler() = default;
+  UseCasePathHandler(const UseCase &us) : us(us) {}
 
   std::string ustm_root = "";
   std::string miners_path = "";
@@ -45,9 +45,9 @@ inline std::string getCurrentDateTime() {
   return ss.str();
 }
 
-inline PathHandler generatePaths(const UseCase &us) {
+inline UseCasePathHandler generatePaths(const UseCase &us) {
 
-  PathHandler ret(us);
+  UseCasePathHandler ret(us);
 
   messageErrorIf(getenv("USMT_ROOT") == nullptr,
                  "USTM_ROOT environment variable not set");

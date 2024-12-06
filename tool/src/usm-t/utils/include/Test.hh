@@ -8,6 +8,7 @@ struct Input {
   std::string rst;
   std::string path;
   std::string clk;
+  std::string scope;
 };
 struct Output {
   std::string path;
@@ -30,6 +31,7 @@ struct UseCase {
 
 struct Comparator {
   std::string with_strategy;
+  std::string expected;
 };
 
 struct Test {

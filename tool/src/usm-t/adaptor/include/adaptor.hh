@@ -3,9 +3,9 @@
 
 namespace usmt {
 class Test;
-class PathHandler;
+class UseCasePathHandler;
 class UseCase;
 
-void adaptInput(const PathHandler &ph, const UseCase &use_case);
-void adaptOutput(const PathHandler &ph, const UseCase &use_case);
+void adaptInput(const UseCasePathHandler &ph, const UseCase &use_case);
+void adaptOutput(const UseCasePathHandler &ph, const UseCase &use_case);
 } // namespace usmt

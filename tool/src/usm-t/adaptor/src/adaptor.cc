@@ -1,4 +1,4 @@
-#include "PathHandler.hh"
+#include "UseCasePathHandler.hh"
 #include "message.hh"
 #include "misc.hh"
 #include <sstream>
@@ -7,7 +7,7 @@
 #include <vector>
 
 namespace usmt {
-void adaptInput(const PathHandler &ph, const UseCase &use_case) {
+void adaptInput(const UseCasePathHandler &ph, const UseCase &use_case) {
 
   messageInfo("Adapting input...");
   for (auto input : use_case.input) {
@@ -21,7 +21,7 @@ void adaptInput(const PathHandler &ph, const UseCase &use_case) {
     systemCheckExit(adapt_input_command);
   }
 }
-void adaptOutput(const PathHandler &ph, const UseCase &use_case) {
+void adaptOutput(const UseCasePathHandler &ph, const UseCase &use_case) {
 
   messageInfo("Adapting output...");
   //create the adapter output folder

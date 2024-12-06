@@ -1,29 +1,16 @@
 
 #pragma once
 #include <string>
+#include <unordered_map>
+#include <vector>
 
-class EvalReport {
-public:
-  EvalReport(){};
-  ~EvalReport() {}
-  virtual std::string printReport() = 0;
+namespace usmt {
+struct EvalReport {
+
+  std::string _type = "";
+  double _score = 0.f;
+  std::unordered_map<std::string, std::vector<std::string>>
+      _expextedToSimilar;
 };
 
-class FaultCoverageReport : public EvalReport {
-
-public:
-  FaultCoverageReport() {}
-
-  virtual ~FaultCoverageReport() = default;
-  virtual std::string printReport() override{
-    return "Fault Coverage: " + std::to_string(fault_coverage) + "\n";
-  }
-
-  double fault_coverage = 0.f;
-};
-
-class ExpectedVSMinedReport : public EvalReport {
-public:
-  ExpectedVSMinedReport() {}
-  ~ExpectedVSMinedReport() = default;
-};
+} // namespace usmt

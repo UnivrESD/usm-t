@@ -1,9 +1,10 @@
-#include "PathHandler.hh"
+#include "EvalReport.hh"
+#include "UseCasePathHandler.hh"
 #include "adaptor.hh"
-#include "usmt-evaluator.hh"
 #include "globals.hh"
 #include "misc.hh"
 #include "test_reader.hh"
+#include "usmt-evaluator.hh"
 #include "ustm_core.hh"
 #include <chrono>
 #include <filesystem>
@@ -19,7 +20,7 @@ void run() {
     messageInfo("Running test " + test.name);
 
     for (const auto &use_case : test.use_cases) {
-      PathHandler ph = generatePaths(use_case);
+      UseCasePathHandler ph = generatePaths(use_case);
 
       //ADAPT THE INPUT--------------------------------
       adaptInput(ph, use_case);
@@ -57,7 +58,16 @@ void run() {
       adaptOutput(ph, use_case);
 
       //EVAL-----------------------------------------------
-      evaluateExpectedvsMined(ph, use_case);
+      for (auto &comp : test.comparators) {
+        EvalReport er = evaluate(ph, use_case, comp);
+        std::cout << er._score << "\n";
+        for (auto &[ex,sim] : er._expextedToSimilar) {
+          std::cout << "Ex: " << ex <<"\n";
+          for (auto &s : sim) {
+            std::cout << "\t\t\tSim: " << s <<"\n";
+          }
+        }
+      }
 
     } //end of use cases
   }   //end of tests

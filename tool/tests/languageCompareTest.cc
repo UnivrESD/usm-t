@@ -21,6 +21,7 @@
 
 using namespace harm;
 using namespace usmt;
+
 AssertionPtr makeAssertion(const std::string &ass_str,
                            const TracePtr &trace) {
   TemplateImplicationPtr ti = hparser::parseTemplateImplication(

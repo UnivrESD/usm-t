@@ -14,7 +14,7 @@
   -->
   <usecase id="harm_usecase_1">
     <miner name="harm"/> 
-    <input type="vcd" clk="clk" rst="rst" path="arb2/traces/t1.vcd"/>
+    <input type="vcd" clk="clk" rst="rst" scope="arb2_tb" path="arb2/traces/t1.vcd"/>
     <output path="without_next_ass.txt"/>
     <output path="with_next_ass.txt"/>
     <config type="input" path="config1/generic.xml"/>
@@ -34,11 +34,11 @@
   </usecase>
 
   <test name="test1" mode="sequential">
-    <compare with_strategy="expected_vs_mined"/>
-    <compare with_strategy="fault_coverage"/>
+    <compare with_strategy="expected_vs_mined" expected="arb2/expected/arb2_golden_ass.txt"/>
     <!--
+    <compare with_strategy="fault_coverage"/>
     -->
-    <usecase id="texada_usecase_1"/> 
     <usecase id="harm_usecase_1"/> 
+    <usecase id="texada_usecase_1"/> 
   </test>
 </usm-t>

@@ -48,6 +48,8 @@ void parseInput(XmlNode *inputNode, Input &input) {
   if (input.type == "vcd") {
     messageErrorIf(input.clk.empty(), "VCD input must have a clk");
   }
+
+  input.scope = getAttributeValue(inputNode, "scope", "");
 }
 void parseOutput(XmlNode *outputNode, Output &output) {
   output.path = getAttributeValue(outputNode, "path", "");
@@ -71,11 +73,17 @@ Comparator parseCompare(XmlNode *compareNode) {
   Comparator comp;
   comp.with_strategy =
       getAttributeValue(compareNode, "with_strategy", "");
-  messageErrorIf(comp.with_strategy == "fault_coverage" ||
-                     comp.with_strategy == "expected_vs_mined",
+  messageErrorIf(!(comp.with_strategy == "fault_coverage" ||
+                   comp.with_strategy == "expected_vs_mined"),
                  "Comparator strategy '" + comp.with_strategy +
                      "' not supported, supported strategies are "
                      "'fault_coverage' and 'expected_vs_mined'");
+  comp.expected = getAttributeValue(compareNode, "expected", "");
+  messageErrorIf(comp.expected.empty() &&
+                     comp.with_strategy == "expected_vs_mined",
+                 "Must specify a path to a set of golden assertions "
+                 "with the attribute 'expected' when using the "
+                 "'expected_vs_mined' strategy");
 
   return comp;
 }
@@ -169,10 +177,13 @@ std::vector<Test> parseTests(XmlNode *root) {
 
     //parse comparators
     XmlNodeList compareNodes;
-    getNodesFromName(root, "compare", compareNodes);
+    getNodesFromName(testNode, "compare", compareNodes);
     for (auto compareNode : compareNodes) {
       test.comparators.push_back(parseCompare(compareNode));
     }
+    messageWarningIf(test.comparators.empty(),
+                     "Non comparators found in test '" + test.name +
+                         "'");
 
     //Parse usecases used in the test
     XmlNodeList usecaseNodes;
@@ -195,6 +206,14 @@ std::vector<Test> parseTests(XmlNode *root) {
   for (auto test : tests) {
     std::cout << "Test: " << test.name << " Mode: " << test.mode
               << std::endl;
+    std::cout << "\tComparators:"
+              << "\n";
+    for (auto comp : test.comparators) {
+      std::cout << "\t\t\twith_strategy: " << comp.with_strategy
+                << "\n";
+      std::cout << "\t\t\texpected: " << comp.expected << "\n";
+    }
+
     for (auto usecase : test.use_cases) {
       std::cout << "Usecase: " << usecase.usecase_id << "\n";
       std::cout << "\t\t\t Miner: " << usecase.miner_name
