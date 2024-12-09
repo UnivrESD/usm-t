@@ -59,7 +59,7 @@ void initPathHandler(UseCase &us) {
 
   ret.work_input = "input/";
   ret.work_output = "output/";
-  ret.work_eval = "eval/";
+  ret.work_eval = "evaluation/";
 
   //create the folders
   messageErrorIf(!std::filesystem::create_directories(ret.work_path),

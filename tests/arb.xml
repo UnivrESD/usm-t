@@ -14,7 +14,7 @@
   -->
   <usecase id="harm_usecase_1">
     <miner name="harm"/> 
-    <input type="vcd" clk="clk" rst="rst" scope="arb2_tb" path="arb2/traces"/>
+    <input path="arb2/traces" trace_type="vcd" clk="clk" rst="rst" scope="arb2_tb" />
     <output path="without_next_ass.txt"/>
     <output path="with_next_ass.txt"/>
     <config type="input" path="config1/generic.xml"/>
@@ -26,7 +26,7 @@
 
   <usecase id="texada_usecase_1">
     <miner name="texada"/> 
-    <input type="csv" path="arb2/traces/t1.csv"/>
+    <input trace_type="csv" path="arb2/traces/t1.csv"/>
     <output path="mixed_ass.txt"/>
     <config type="run" path="config1/run_miner.sh"/>
     <input_adaptor path="csv_to_texada_log/run.sh"/>
@@ -39,10 +39,10 @@
     -->
 
     <compare with_strategy="expected_vs_mined" expected="input/arb2/expected/arb2_golden_ass.txt"/>
+    <compare with_strategy="fault_coverage" faulty_traces="input/arb2/faulty_traces/" trace_type="csv" />
     <!--
-    <compare with_strategy="fault_coverage"/>
     -->
-    <usecase id="harm_usecase_1"/> 
     <usecase id="texada_usecase_1"/> 
+    <usecase id="harm_usecase_1"/> 
   </test>
 </usm-t>

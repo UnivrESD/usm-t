@@ -104,20 +104,20 @@ TEST(LanguageCompare, lc1) {
                    .count()
             << "[ms]" << std::endl;
 
-  begin = std::chrono::steady_clock::now();
-  for (size_t k = 0; k < assertions.size(); k++) {
-    AssertionPtr targetAssertion = assertions[k];
-    for (auto &ass : assertions) {
-      for (size_t i = 0; i < times; i++) {
-        int res = testEmpty(ass, targetAssertion);
-      }
-    }
-  }
-  end = std::chrono::steady_clock::now();
+ // begin = std::chrono::steady_clock::now();
+ // for (size_t k = 0; k < assertions.size(); k++) {
+ //   AssertionPtr targetAssertion = assertions[k];
+ //   for (auto &ass : assertions) {
+ //     for (size_t i = 0; i < times; i++) {
+ //       int res = testEmpty(ass, targetAssertion);
+ //     }
+ //   }
+ // }
+ // end = std::chrono::steady_clock::now();
 
-  std::cout << "Time with empty "
-            << std::chrono::duration_cast<std::chrono::milliseconds>(
-                   end - begin)
-                   .count()
-            << "[ms]" << std::endl;
+ // std::cout << "Time with empty "
+ //           << std::chrono::duration_cast<std::chrono::milliseconds>(
+ //                  end - begin)
+ //                  .count()
+ //           << "[ms]" << std::endl;
 }

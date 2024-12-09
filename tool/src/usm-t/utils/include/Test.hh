@@ -36,6 +36,8 @@ struct UseCase {
 struct Comparator {
   std::string with_strategy;
   std::string expected;
+  std::string faulty_traces;
+  std::string trace_type;
 };
 
 struct Test {

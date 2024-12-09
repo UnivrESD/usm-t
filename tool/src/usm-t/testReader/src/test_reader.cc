@@ -39,10 +39,10 @@ std::vector<Test> readTestFile(const std::string &filename) {
 }
 
 void parseInput(XmlNode *inputNode, Input &input) {
-  input.type = getAttributeValue(inputNode, "type", "");
+  input.type = getAttributeValue(inputNode, "trace_type", "");
   input.path = getAttributeValue(inputNode, "path", "");
   messageErrorIf(input.type.empty() || input.path.empty(),
-                 "Input type and path cannot be empty");
+                 "Input type or path cannot be empty");
   input.clk = getAttributeValue(inputNode, "clk", "");
   input.rst = getAttributeValue(inputNode, "rst", "");
   if (input.type == "vcd") {
@@ -84,6 +84,17 @@ Comparator parseCompare(XmlNode *compareNode) {
                  "Must specify a path to a set of golden assertions "
                  "with the attribute 'expected' when using the "
                  "'expected_vs_mined' strategy");
+
+  comp.faulty_traces =
+      getAttributeValue(compareNode, "faulty_traces", "");
+  comp.trace_type = getAttributeValue(compareNode, "trace_type", "");
+  messageErrorIf(
+      (comp.trace_type.empty() || comp.faulty_traces.empty()) &&
+          comp.faulty_traces == "fault_coverage",
+      "Must specify a path to a set of faulty traces with the "
+      "attribute 'faulty_traces' and the trace type with the "
+      "attribute 'trace_type' when using the 'fault_coverage' "
+      "strategy");
 
   return comp;
 }

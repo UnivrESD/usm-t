@@ -17,7 +17,7 @@ void adaptInput(const UseCase &use_case) {
     //add the path to the input and output file of the input adaptor
     adapt_input_command +=
         " " + ph.ustm_root + "/" + ph.work_input + input.path;
-    adapt_input_command += " " + ph.work_path + "input/";
+    adapt_input_command += " " + ph.work_path + ph.work_input;
 
     systemCheckExit(adapt_input_command);
   }

@@ -68,6 +68,7 @@ void fillAssertion(const AssertionPtr &ass,
   ass->_CT = t->getCT();
   ass->_maxLength = t->getTraceLength();
 }
+
 std::string Assertion::toString(Language lang) const {
   lang = (lang == Language::Unset) ? clc::outputLang : lang;
   return temp2String(_formula, lang, PrintMode::ShowAll);

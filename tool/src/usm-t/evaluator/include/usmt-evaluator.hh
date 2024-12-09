@@ -11,16 +11,20 @@ namespace usmt {
 class UseCasePathHandler;
 class UseCase;
 class EvalReport;
+using EvalReportPtr = std::shared_ptr<EvalReport>;
 class Comparator;
+struct fault_coverage_t;
 
 int compareLanguage(harm::AssertionPtr a1, harm::AssertionPtr a2);
-int testEmpty(harm::AssertionPtr a1, harm::AssertionPtr a2);
 
-EvalReport
+EvalReportPtr
 evaluateExpectedvsMined(const UseCase &use_case,
                         const std::string expected_ass_path);
 
-EvalReport evaluate(const usmt::UseCase &use_case,
-                    const Comparator &comp);
+EvalReportPtr evaluateFaultCoverage(const UseCase &use_case,
+                                    const Comparator comp);
+
+EvalReportPtr evaluate(const usmt::UseCase &use_case,
+                       const Comparator &comp);
 
 } // namespace usmt
