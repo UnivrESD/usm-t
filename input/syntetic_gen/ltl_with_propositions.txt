@@ -1,7 +1,17 @@
 #1. Always Eventually Response
-Input : request
-Output : response
-Template: G(request -> F response)
+Input : ant
+Output : cons
+Template: G(ant -> F cons)
+
+#1.5 Sequential dependency
+Input : ant
+Output : cons
+Template: G(ant -> X cons)
+
+#1.5.1 
+Input : ant
+Output : cons
+Template: G(ant -> cons)
 
 #2. Request-Acknowledge Protocol
 Input : request
@@ -18,7 +28,27 @@ Input : send1, send2
 Output : receive1, receive2
 Template: G((send1 -> F receive2) & (send2 -> F receive1))
 
-#5. Robot Movement and Target Reachability
-Input : atTarget, move
-Output : ""
-Template: G(atTarget -> F move) & G(move -> F atTarget)
+#5. Always Eventually with Compound Antecedents
+Input : ant_1, ant_2
+Output : cons
+Template: G((ant_1 & ant_2) -> F cons)
+
+#6. Sequential Guarantee
+Input : ant_1, ant_2
+Output : p, q
+Template: G((ant_1 & ant_2) -> (F p & X F q))
+
+#7. Compound Request-Response
+Input : ant_1, ant_2
+Output : cons_1, cons_2
+Template: G((ant_1 & ant_2) -> (F cons_1 & F cons_2))
+
+#8. Until with Conjunction
+Input : ant_1, ant_2
+Output : p, q, r
+Template: G((ant_1 & ant_2) -> (p & (q U r)))
+
+#10. Conjunctive Bidirectional Communication
+Input : send1, send2
+Output : receive1, receive2
+Template: G((send1 & send2) -> (F receive1 & F receive2))

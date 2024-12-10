@@ -7,8 +7,8 @@ xml_prefix = '/home/magister/usm-t/input/syntetic_gen/'
 def aigerToSv(design_aiger):
     input_file = design_aiger
     output_file = design_aiger.replace('.aiger', '.sv')
-    yosys_command = f"{yosis_prefix}yosys -p 'read_aiger {input_file}; write_verilog -sv {output_file}'"
-    subprocess.run(yosys_command, shell=True, check=True)
+    yosys_command = f"yosys -p 'read_aiger {input_file}; write_verilog -sv {output_file}'"
+    subprocess.run(yosys_command, shell=True, check=False)
     print(f"Generated SystemVerilog file: {output_file}")
 
 def synthesize_controller(specification):
@@ -17,7 +17,7 @@ def synthesize_controller(specification):
     outputs = specification.get('outputs')
     aiger_file = 'controller.aiger'
     
-    ltlsynt_command = f'{ltlsynt_prefix}ltlsynt --formula="{formula}" --ins="{inputs}" --outs="{outputs}" --aiger > {aiger_file}'
+    ltlsynt_command = f'ltlsynt --formula="{formula}" --ins="{inputs}" --outs="{outputs}" --aiger > {aiger_file} --verbose'
 
     result = subprocess.run(ltlsynt_command, shell=True, check=False, capture_output=True, text=True)
     if result.returncode == 1:

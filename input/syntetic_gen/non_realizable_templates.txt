@@ -22,3 +22,23 @@ Template: G(a -> X !a) & G(!a -> X a)
 Input : p1, p2
 Output : None (Ensures fair alternation between p1 and p2)
 Template: GF(p1) & GF(p2) & G((p1 -> X !p2) & (p2 -> X !p1))
+
+#5. Robot Movement and Target Reachability
+Input : atTarget, move
+Output : ""
+Template: G(atTarget -> F move) & G(move -> F atTarget)
+
+#6. Until-Based Guarantee
+Input : ant, p, q
+Output : p
+Template: G(ant -> (p U q))
+
+#9. Alternating Until
+Input : ant, q
+Output : p_1, p_2
+Template: G(ant -> ((p_1 | p_2) U q))
+
+#9. Complex Protocol with Until
+Input : request,release
+Output : acknowledge,grant
+Template: G((request -> F (acknowledge & (grant U release))))
