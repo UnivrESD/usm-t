@@ -27,4 +27,5 @@ EvalReportPtr evaluateFaultCoverage(const UseCase &use_case,
 EvalReportPtr evaluate(const usmt::UseCase &use_case,
                        const Comparator &comp);
 
+
 } // namespace usmt

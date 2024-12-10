@@ -35,13 +35,11 @@
 
   <test name="test1" mode="sequential">
     <!--
-    The path of expected is relative to the root
+    The paths here are relative to the root of usm-t
     -->
 
     <compare with_strategy="expected_vs_mined" expected="input/arb2/expected/arb2_golden_ass.txt"/>
     <compare with_strategy="fault_coverage" faulty_traces="input/arb2/faulty_traces/" trace_type="csv" />
-    <!--
-    -->
     <usecase id="texada_usecase_1"/> 
     <usecase id="harm_usecase_1"/> 
   </test>

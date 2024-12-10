@@ -12,7 +12,12 @@
 #include <utility>
 #include <vector>
 
+namespace z3 {
+class expr;
+}
+
 namespace expression {
+class Z3ExpWrapper;
 enum class PrintMode;
 class NumericExpression;
 using NumericExpressionPtr = std::shared_ptr<NumericExpression>;
@@ -119,4 +124,6 @@ bool isSimple(const TemporalExpressionPtr &exp);
 std::string printAST_terminal(const TemporalExpressionPtr &exp,
                               const Language lang,
                               const PrintMode mode);
+
+Z3ExpWrapper to_z3exp(const PropositionPtr &exp);
 } // namespace expression

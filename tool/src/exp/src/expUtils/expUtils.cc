@@ -9,6 +9,7 @@
 #include "formula/atom/NumericExpression.hh"
 #include "formula/atom/Variable.hh"
 #include "visitors/CopyVisitor.hh"
+#include "visitors/ExpToZ3Visitor.hh"
 #include "visitors/PrinterVisitor.hh"
 #include "visitors/TraceChangerVisitor.hh"
 #include "visitors/VarExtractVisitor.hh"
@@ -112,6 +113,7 @@ expCopyOp(Int, IntExpressionPtr)
   return (copy);
 }
 // clang-format off
+
 
 expGetVars(Proposition, PropositionPtr)
 expGetVars(Temporal, TemporalExpressionPtr)
@@ -264,6 +266,12 @@ std::string printAST_terminal(const TemporalExpressionPtr &exp,
   traverse(exp, enter, exit);
 
   return terminal_.str();
+}
+
+Z3ExpWrapper to_z3exp(const PropositionPtr &exp) {
+  ExpToZ3Visitor converter;
+  exp->acceptVisitor(converter);
+  return converter.get();
 }
 
 } // namespace expression

@@ -18,11 +18,13 @@ SET(EXP_SRCS
     src/visitors/CopyVisitor.cc
     src/visitors/VarExtractVisitor.cc
     src/visitors/TraceChangerVisitor.cc
+    src/visitors/ExpToZ3Visitor.cc
     #utils
     src/expUtils/expUtils.cc
     )
 
 
 add_library(exp ${EXP_SRCS})
+target_link_libraries(exp ${Z3_LIBRARY})
 
 target_include_directories(exp PUBLIC include ../miner/utils/include/)

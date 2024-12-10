@@ -115,11 +115,14 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 add_subdirectory(src/googletest EXCLUDE_FROM_ALL)
 
 #boost
-find_package(BOOST1_83)
+find_package(BOOST1_83 REQUIRED)
 
 #spotLTL
 find_package(SPOTLTL REQUIRED)
 add_compile_definitions(SPOTLTL)
+
+#z3
+find_package(Z3 REQUIRED)
 
 
 ### LIBRARIES LINKED TO EVERYONE ######################################

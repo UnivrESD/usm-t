@@ -8,6 +8,7 @@
 #include "spot/twa/twagraph.hh"
 
 namespace harm {
+class PlaceholderPack;
 
 ///@brief This class is used to evaluate a formula using an automaton
 class AutomataBasedEvaluator : public Evaluator {
@@ -78,4 +79,9 @@ using AutomataBasedEvaluatorPtr =
 
 std::shared_ptr<spot::twa_graph>
 generateDeterministicSpotAutomaton(const spot::formula &formula);
+
+/** \brief builds a custom automaton (see class Automaton) from a spotLTL automaton
+   */
+Automaton *buildAutomatonFromSpot(spot::twa_graph_ptr &automata,
+                                  const PlaceholderPack &pack);
 } // namespace harm

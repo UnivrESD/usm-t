@@ -25,12 +25,6 @@ namespace harm {
 
 #ifdef SPOTLTL
 
-/** \brief builds a custom automaton (see class Automaton) from a spotLTL automaton
-   */
-static Automaton *
-buildAutomatonFromSpot(spot::twa_graph_ptr &automata,
-                       const PlaceholderPack &pack);
-
 /** \brief converts a spot LTL formula to an edge custom proposition
    */
 static EdgeProposition *
