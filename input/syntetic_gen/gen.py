@@ -3,7 +3,7 @@ import os
 import random
 yosis_prefix = '$(pwd)/../../tool/third_party/oss-cad-suite/bin/'
 ltlsynt_prefix = '$(pwd)/../../tool/third_party/spot/bin/'
-xml_prefix = '/home/magister/usm-t/input/syntetic_gen/'
+xml_prefix = '/home/magister/usm-t/input/syntetic_gen/specs/'
 
 def aigerToSv(design_aiger):
     input_file = design_aiger
