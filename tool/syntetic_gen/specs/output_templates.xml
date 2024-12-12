@@ -1,58 +1,13 @@
 <?xml version="1.0" ?>
 <Templates>
   <Template>
-    <Input>ant</Input>
-    <Output>cons</Output>
-    <TemplateText>G(ant -&gt; F cons)</TemplateText>
+    <Input>a</Input>
+    <Output>c</Output>
+    <TemplateText>G(..##1.. -&gt; ..##1..)</TemplateText>
   </Template>
   <Template>
-    <Input>ant</Input>
-    <Output>cons</Output>
-    <TemplateText>G(ant -&gt; X cons)</TemplateText>
-  </Template>
-  <Template>
-    <Input>ant</Input>
-    <Output>cons</Output>
-    <TemplateText>G(ant -&gt; cons)</TemplateText>
-  </Template>
-  <Template>
-    <Input>request</Input>
-    <Output>acknowledge</Output>
-    <TemplateText>G(request -&gt; F acknowledge) &amp; G(acknowledge -&gt; F request)</TemplateText>
-  </Template>
-  <Template>
-    <Input>request</Input>
-    <Output>grant, release</Output>
-    <TemplateText>G(request -&gt; F(grant &amp; X release)) &amp; G(grant -&gt; X release)</TemplateText>
-  </Template>
-  <Template>
-    <Input>send1, send2</Input>
-    <Output>receive1, receive2</Output>
-    <TemplateText>G((send1 -&gt; F receive2) &amp; (send2 -&gt; F receive1))</TemplateText>
-  </Template>
-  <Template>
-    <Input>ant_1, ant_2</Input>
-    <Output>cons</Output>
-    <TemplateText>G((ant_1 &amp; ant_2) -&gt; F cons)</TemplateText>
-  </Template>
-  <Template>
-    <Input>ant_1, ant_2</Input>
-    <Output>p, q</Output>
-    <TemplateText>G((ant_1 &amp; ant_2) -&gt; (F p &amp; X F q))</TemplateText>
-  </Template>
-  <Template>
-    <Input>ant_1, ant_2</Input>
-    <Output>cons_1, cons_2</Output>
-    <TemplateText>G((ant_1 &amp; ant_2) -&gt; (F cons_1 &amp; F cons_2))</TemplateText>
-  </Template>
-  <Template>
-    <Input>ant_1, ant_2</Input>
-    <Output>p, q, r</Output>
-    <TemplateText>G((ant_1 &amp; ant_2) -&gt; (p &amp; (q U r)))</TemplateText>
-  </Template>
-  <Template>
-    <Input>send1, send2</Input>
-    <Output>receive1, receive2</Output>
-    <TemplateText>G((send1 &amp; send2) -&gt; (F receive1 &amp; F receive2))</TemplateText>
+    <Input>a</Input>
+    <Output>c</Output>
+    <TemplateText>G(..&amp;&amp;.. -&gt; ..&amp;&amp;..)</TemplateText>
   </Template>
 </Templates>

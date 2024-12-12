@@ -1,3 +1,5 @@
+import sys
+
 import xml.etree.ElementTree as ET
 import xml.dom.minidom
 
@@ -43,7 +45,11 @@ def create_xml(templates, output_file):
         f.write(pretty_xml_str)
 
 if __name__ == "__main__":
-    input_file = '../ltl_with_propositions.txt'
-    output_file = 'output_templates.xml'
+    if len(sys.argv) != 3:
+        print("Usage: python template_lib.py <input_file> <output_file>")
+        sys.exit(1)
+    
+    input_file = sys.argv[1]
+    output_file = sys.argv[2]
     templates = parse_ltl_spects(input_file)
     create_xml(templates, output_file)

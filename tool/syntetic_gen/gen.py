@@ -7,10 +7,46 @@ yosis_prefix = '$(pwd)/../third_party/oss-cad-suite/bin/'
 ltlsynt_prefix = '$(pwd)/../third_party/spot/bin/'
 xml_prefix = root +'/tool/syntetic_gen/specs/'
 
+def expand_spec(specification, lenght):
+    formula = specification['formula']
+    ant_base = specification['inputs']
+    con_base = specification['outputs']
+    ant_seq = ant_base + "_0"
+    con_seq = con_base + "_0"
+    ins = ant_base + "_0"
+    outs = con_base + "_0"
+
+    if '..&&..' in formula:
+        for i in range(1, lenght):
+            ins = ins + ',' + ant_base + "_" + str(i)
+            outs = outs + ',' + con_base + "_" + str(i)
+            ant_seq = ant_seq + " & " + ant_base + "_" + str(i)
+            con_seq = con_seq + " & " + con_base + "_" + str(i)
+        # Replace only the first instance of '..&&..'
+        formula = formula.replace('..&&..', ant_seq,1)
+        formula = formula.replace('..&&..', con_seq)
+        
+    if '..##1..' in formula:
+        for i in range(1, lenght):
+            ins = ins + ',' + ant_base + "_" + str(i)
+            outs = outs + ',' + con_base + "_" + str(i)
+            ant_seq = ant_seq + "& X " + ant_base + "_" + str(i)
+            con_seq = con_seq + "& X " + con_base + "_" + str(i)
+        # Replace '..##1..' 
+        formula = formula.replace('..##1..', ant_seq,1)
+        formula = formula.replace('..##1..',con_seq)
+
+    specification['formula'] = formula
+    specification['inputs'] = ins
+    specification['outputs'] = outs
+    print(f"Expanded formula: {specification['formula']}")
+
 def aigerToSv(design_aiger):
     input_file = design_aiger
     output_file = design_aiger.replace('.aiger', '.sv')
-    yosys_command = f"yosys -p 'read_aiger {input_file}; write_verilog -sv {output_file}'"
+    module_name = 'test'
+    clk_name = 'clock'
+    yosys_command = f"yosys -p 'read_aiger  -module_name {module_name} -clk_name {clk_name} {input_file}; write_verilog -sv {output_file}'"
     subprocess.run(yosys_command, shell=True, check=False)
     print(f"Generated SystemVerilog file: {output_file}")
 
@@ -18,7 +54,7 @@ def synthesize_controller(specification):
     formula = specification.get('formula')
     inputs = specification.get('inputs')
     outputs = specification.get('outputs')
-    aiger_file = 'controller.aiger'
+    aiger_file = 'test.aiger'
     
     ltlsynt_command = f'ltlsynt --formula="{formula}" --ins="{inputs}" --outs="{outputs}" --aiger > {aiger_file}'
 
@@ -59,48 +95,33 @@ def main():
         print("Error: Invalid input. Please enter a number between 1 and {num_templates}.")
         exit(3)
 
+    numprops = int(input(f"Insert the lenghts of the properties sequence: "))
+
+    merged_specification = {}
+    #randomly select template_number templates
     random_templates = random.sample(templates, template_number)
     for i, template in enumerate(random_templates, start=1):
         specification = {}
         specification['formula'] = template.find('TemplateText').text
         specification['inputs'] = template.find('Input').text
         specification['outputs'] = template.find('Output').text
-        print(f"Generating circuit for template {i}")
-
-    merged_formula = ' & '.join([template.find('TemplateText').text for template in random_templates])
-    merged_inputs = ','.join(set(input for template in random_templates for input in template.find('Input').text.split(',')))
-    merged_outputs = ','.join(set(output for template in random_templates for output in template.find('Output').text.split(',')))
-
-    merged_specification = {
-        'formula': merged_formula,
-        'inputs': merged_inputs,
-        'outputs': merged_outputs
-    }
-
+        
+        #expand special templates
+        if(specification['formula'].find('..##1..') or specification['formula'].find('..&&..')):
+            print(f"Expanding template")  
+            expand_spec(specification,numprops)
+        
+        # update merged_specification structure
+        if(merged_specification.get('formula') == None):
+            merged_specification = specification
+        else:  
+            merged_specification['formula'] = specification['formula'] + ' & ' + merged_specification.get('formula', '')
+            merged_specification['inputs'] = ','.join(set(merged_specification.get('inputs', '').split(',') + specification['inputs'].split(',')))
+            merged_specification['outputs'] = ','.join(set(merged_specification.get('outputs', '').split(',') + specification['outputs'].split(',')))
+    print(merged_specification)
+    
     print("Generating circuit for merged specification")
     generate_circuit(merged_specification)
-    '''
-    try:
-        template_number = int(input(f"Enter a template number (1-{num_templates}): "))
-        if not 1 <= template_number <= num_templates:
-            print(f"Error: Template number must be between 1 and {num_templates}.")
-            exit(3)
-    except ValueError:
-        print("Error: Invalid input. Please enter a number between 1 and {num_templates}.")
-        exit(3)
-
-        template = root.findall('Template')[template_number - 1]
-    specification = {}
-    specification['formula'] = template.find('TemplateText').text
-    specification['inputs'] = template.find('Input').text
-    specification['outputs'] = template.find('Output').text
-    '''
-
-    #generate_circuit(specification)
-    #aiger_file = 'controller.aigr'
-    #if os.path.exists(aiger_file):
-    #    os.remove(aiger_file)
-
 
 if __name__ == "__main__":
     main()

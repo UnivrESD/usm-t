@@ -52,13 +52,3 @@ Template: G((ant_1 & ant_2) -> (p & (q U r)))
 Input : send1, send2
 Output : receive1, receive2
 Template: G((send1 & send2) -> (F receive1 & F receive2))
-
-#11. Sequential Behavior
-Input : a
-Output : c
-Template: G(..##1.. -> ..##1..)
-
-#12. 
-Input : a
-Output : c
-Template: G(..&&.. -> ..&&..)
