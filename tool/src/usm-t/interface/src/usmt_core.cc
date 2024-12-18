@@ -66,7 +66,17 @@ void run() {
       //add the command to be executed in the container
       run_container_command += " \"bash /input/run_miner.sh\"";
       messageInfo("Running '" + use_case.miner_name + "'");
+
+      //start the timer
+      TemporalReportPtr tr = std::make_shared<TemporalReport>();
+      auto start = std::chrono::high_resolution_clock::now();
       systemCheckExit(run_container_command);
+      auto stop = std::chrono::high_resolution_clock::now();
+      tr->_timeMS =
+          std::chrono::duration_cast<std::chrono::milliseconds>(stop -
+                                                                start)
+              .count();
+      evalReports[use_case.usecase_id].push_back(tr);
 
       //ADAPT THE OUTPUT--------------------------------
       adaptOutput(use_case);
@@ -85,6 +95,7 @@ void run() {
     table.set_border_style(FT_NICE_STYLE);
 
     table << fort::header << "Use case";
+    table << "Time";
     for (const auto &comp : test.comparators) {
       table << comp.with_strategy;
     }
@@ -98,19 +109,26 @@ void run() {
         if (std::dynamic_pointer_cast<FaultCoverageReport>(er)) {
           FaultCoverageReportPtr fcr =
               std::dynamic_pointer_cast<FaultCoverageReport>(er);
-          line.push_back(to_string_with_precision(fcr->fault_coverage,2));
+          line.push_back(
+              to_string_with_precision(fcr->fault_coverage, 2));
         } else if (std::dynamic_pointer_cast<ExpectedVSMinedReport>(
                        er)) {
           ExpectedVSMinedReportPtr evmr =
               std::dynamic_pointer_cast<ExpectedVSMinedReport>(er);
-          line.push_back(to_string_with_precision(evmr->_score,2));
+          line.push_back(to_string_with_precision(evmr->_score, 2));
+        } else if (std::dynamic_pointer_cast<TemporalReport>(er)) {
+          TemporalReportPtr tr =
+              std::dynamic_pointer_cast<TemporalReport>(er);
+          line.push_back(to_string_with_precision(
+                             (double)tr->_timeMS / 1000.f, 2) +
+                         "s");
         } else {
           messageError("Unknown report type");
         }
 
       } //end of reports
-        table.range_write_ln(std::begin(line), std::end(line));
-    }   // end of evalReports
+      table.range_write_ln(std::begin(line), std::end(line));
+    } // end of evalReports
 
     std::cout << table.to_string() << std::endl;
   } //end of tests

@@ -25,6 +25,8 @@ public:
   template <bool Dynamic>
   std::pair<Trinary, size_t> evaluateAutomaton(size_t time);
 
+  Automaton *getAutomaton() { return _automaton; }
+
 private:
   /** \brief evaluation: 1. this function handles the update of cached values and the dynamic or non-dynamic shift case 
    * \param what specifies if the function has to update the cached values of ant/con/both/none

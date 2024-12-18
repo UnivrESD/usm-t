@@ -47,7 +47,7 @@ TEST(gatherPathTest, gp1) {
 
   const TracePtr &trace = generatePtr<Trace>(vars, 1);
 
-  std::string originalFormula = "G(b_0 -> XXb_1)";
+  std::string originalFormula = "G({b_0 ##1 b_1}|->b_2)";
 
   TemporalExpressionPtr harm_formula =
       hparser::parseTemporalExpression(originalFormula, trace);

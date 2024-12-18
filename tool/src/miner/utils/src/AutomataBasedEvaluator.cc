@@ -77,6 +77,8 @@ AutomataBasedEvaluator::~AutomataBasedEvaluator() {
     delete[] _sereShiftCacheParallel;  // Delete the array of pointers
     _sereShiftCacheParallel = nullptr; // Set to nullptr for safety
   }
+
+  delete _automaton;
 }
 
 void AutomataBasedEvaluator::changeTrace(

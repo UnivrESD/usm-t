@@ -124,6 +124,10 @@ add_compile_definitions(SPOTLTL)
 #z3
 find_package(Z3 REQUIRED)
 
+#gedlib
+find_package(GEDLIB REQUIRED)
+
+
 
 ### LIBRARIES LINKED TO EVERYONE ######################################
 

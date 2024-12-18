@@ -19,6 +19,7 @@ tool/third_party/spot
 tool/third_party/antlr4
 tool/third_party/boost
 tool/third_party/z3
+tool/third_party/gedlib
 tool/src/miner/modules/src/traceReader/vcdTraceReader/pyVCDparser/vcdToC.pyc
 tool/src/miner/modules/src/traceReader/vcdTraceReader/pyVCDparser/Verilog_VCD.pyc
 tool/src/api/cpp/example/harm_example

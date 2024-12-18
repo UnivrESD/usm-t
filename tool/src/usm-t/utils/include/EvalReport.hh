@@ -131,14 +131,38 @@ public:
   double _score = 0.f;
   std::unordered_map<std::string, std::vector<std::string>>
       _expextedToSimilar;
+  std::unordered_map<std::string, double> _expextedToBestSimilarScore;
   std::vector<std::pair<std::string, std::string>>
       _expectedCoveredWith;
   size_t _totExpected = 0;
+};
+
+class TemporalReport : public EvalReport {
+public:
+  TemporalReport() {}
+  ~TemporalReport() = default;
+
+  virtual std::string to_string() override {
+    std::stringstream ss;
+    ss << "Temporal Report\n";
+    ss << "Time: " << (double)_timeMS / 1000.f << " ms\n";
+    return ss.str();
+  }
+
+  virtual void dumpTo(const std::string &pathToDir) override {
+    messageInfo("Dumping Temporal Report to: " + pathToDir);
+    std::ofstream out(pathToDir + "/temporal_report.csv");
+    out << "Time\n";
+    out << (double)_timeMS / 1000.f << "\n";
+  }
+
+  size_t _timeMS = 0;
 };
 
 using EvalReportPtr = std::shared_ptr<EvalReport>;
 using FaultCoverageReportPtr = std::shared_ptr<FaultCoverageReport>;
 using ExpectedVSMinedReportPtr =
     std::shared_ptr<ExpectedVSMinedReport>;
+using TemporalReportPtr = std::shared_ptr<TemporalReport>;
 
 } // namespace usmt
