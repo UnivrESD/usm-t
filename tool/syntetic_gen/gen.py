@@ -6,6 +6,7 @@ root = os.environ["USMT_ROOT"]
 yosis_prefix = '$(pwd)/../third_party/oss-cad-suite/bin/'
 ltlsynt_prefix = '$(pwd)/../third_party/spot/bin/'
 xml_prefix = root +'/tool/syntetic_gen/specs/'
+out_folder = root + '/tool/syntetic_gen/outs/'
 
 def expand_spec(specification, lenght):
     formula = specification['formula']
@@ -46,7 +47,7 @@ def aigerToSv(design_aiger):
     output_file = design_aiger.replace('.aiger', '.sv')
     module_name = 'test'
     clk_name = 'clock'
-    yosys_command = f"yosys -p 'read_aiger  -module_name {module_name} -clk_name {clk_name} {input_file}; write_verilog -sv {output_file}'"
+    yosys_command = f"yosys -p 'read_aiger  -module_name {module_name} -clk_name {clk_name} {out_folder}{input_file}; write_verilog -sv {out_folder}{output_file}'"
     subprocess.run(yosys_command, shell=True, check=False)
     print(f"Generated SystemVerilog file: {output_file}")
 
@@ -56,7 +57,7 @@ def synthesize_controller(specification):
     outputs = specification.get('outputs')
     aiger_file = 'test.aiger'
     
-    ltlsynt_command = f'ltlsynt --formula="{formula}" --ins="{inputs}" --outs="{outputs}" --aiger > {aiger_file}'
+    ltlsynt_command = f'ltlsynt --formula="{formula}" --ins="{inputs}" --outs="{outputs}" --aiger > {out_folder}{aiger_file}'
 
     result = subprocess.run(ltlsynt_command, shell=True, check=False, capture_output=True, text=True)
     if result.returncode == 1:

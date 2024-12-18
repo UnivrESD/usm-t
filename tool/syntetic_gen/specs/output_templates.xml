@@ -5,9 +5,10 @@
     <Output>c</Output>
     <TemplateText>G(..##1.. -&gt; ..##1..)</TemplateText>
   </Template>
-  <Template>
+   <Template>
     <Input>a</Input>
     <Output>c</Output>
     <TemplateText>G(..&amp;&amp;.. -&gt; ..&amp;&amp;..)</TemplateText>
   </Template>
   </Templates>
+

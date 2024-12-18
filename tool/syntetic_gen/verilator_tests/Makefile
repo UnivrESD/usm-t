@@ -1,21 +1,21 @@
-MODULE=Controller
+MODULE=test
 
 .PHONY:sim
-sim: waveform.vcd
+sim: trace.vcd
 
 .PHONY:verilate
 verilate: .stamp.verilate
 
 .PHONY:build
-build: obj_dir/VController
+build: obj_dir/Vtest
 
 .PHONY:waves
-waves: waveform.vcd
+waves: trace.vcd
 	@echo
 	@echo "### WAVES ###"
-	gtkwave waveform.vcd
+	gtkwave trace.vcd
 
-waveform.vcd: ./obj_dir/V$(MODULE)
+trace.vcd: ./obj_dir/V$(MODULE)
 	@echo
 	@echo "### SIMULATING ###"
 	@./obj_dir/V$(MODULE)
