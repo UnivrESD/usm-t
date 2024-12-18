@@ -1,7 +1,7 @@
 
 //including interface and testcase files
-`include "counterInterface.sv"
-`include "test.sv"
+`include "tb/controllerInterface.sv"
+`include "tb/test.sv"
 
 module tbench_top;
 
@@ -13,24 +13,22 @@ module tbench_top;
   
   //reset Generation
   initial begin
-    rst = 1;
     clk = 0;
-    #5 rst =0;
   end
   
   
   //creating an instance of interface to connect DUT and testcase
-  counter_intf intf(clk,rst);
+  controller_intf intf(clk);
   
   //testcase instance, interface handle is passed to test as an argument
   test t1(intf);
   
   //DUT instance, interface signals are connected to the DUT ports
-  Counter DUT (intf.dut);
+  Controller DUT (intf.dut);
   
   //enabling the wave dump
   initial begin 
-    $dumpfile("counter.vcd");
+    $dumpfile("controller.vcd");
     $dumpvars(0, tbench_top, intf);
   end
 endmodule

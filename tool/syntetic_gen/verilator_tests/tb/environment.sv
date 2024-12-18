@@ -1,6 +1,6 @@
-`include "transaction.sv"
-`include "generator.sv"
-`include "driver.sv"
+`include "tb/transaction.sv"
+`include "tb/generator.sv"
+`include "tb/driver.sv"
 
 class environment;
   
@@ -9,29 +9,28 @@ class environment;
   driver    driv;
   
   //mailbox handle's
-  mailbox gen2driv;
+  mailbox #(transaction) gen2driv;
   
   //event for synchronization between generator and test
   event gen_ended;
   
   //virtual interface
-  virtual counter_intf counter_vif;
+  virtual controller_intf controller_vif;
   
   //constructor
-  function new(virtual counter_intf counter_vif);
+  function new(virtual controller_intf controller_vif);
     //get the interface from test
-    this.counter_vif = counter_vif;
+    this.controller_vif = controller_vif;
     
     //creating the mailbox (Same handle will be shared across generator and driver)
     gen2driv = new();
     
     //creating generator and driver
     gen  = new(gen2driv,gen_ended);
-    driv = new(counter_vif,gen2driv);
+    driv = new(controller_vif,gen2driv);
   endfunction
   
   task pre_test();
-    driv.reset();
   endtask
   
   task test();

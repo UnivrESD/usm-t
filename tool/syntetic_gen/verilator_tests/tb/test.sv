@@ -1,11 +1,13 @@
-`include "environment.sv"
-program test(counter_intf intf);
+`include "tb/environment.sv"
+program test(controller_intf intf);
 
     class my_trans extends transaction;
         function void pre_randomize();
-            in.rand_mode(1);
-            start.rand_mode(1);
-            dec.rand_mode(1);
+            a_0.rand_mode(1);
+            a_1.rand_mode(1);
+            a_2.rand_mode(1);
+            a_3.rand_mode(1);
+            a_4.rand_mode(1);
         endfunction
     endclass
 

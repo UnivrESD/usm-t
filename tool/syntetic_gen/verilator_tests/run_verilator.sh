@@ -1,0 +1,1 @@
+verilator -Wall --trace -cc controller.sv --exe tb_controller.cpp && make -C obj_dir -f VController.mk Vcontroller
