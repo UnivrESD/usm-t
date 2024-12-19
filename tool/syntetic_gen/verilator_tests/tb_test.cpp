@@ -4,7 +4,7 @@
 #include <verilated_vcd_c.h>
 #include "Vtest.h"
 
-#define DEBUG true
+#define DEBUG false
 
 #define MAX_SIM_TIME 20
 vluint64_t sim_time = 0;
@@ -87,9 +87,9 @@ int main(int argc, char** argv, char** env) {
                     }
                 }
         }
-            dut->eval();
-            m_trace->dump(sim_time);
-            sim_time++;
+        dut->eval();
+        m_trace->dump(sim_time);
+        sim_time++;
 
     }
 

@@ -15,6 +15,9 @@ toDo.txt
 .DS_Store
 tool/tests/bl_master/bl_master100k.vcd
 tool/examples/sobel/ass.txt
+tool/syntetic_gen/modelsim_test/
+tool/syntetic_gen/scripts/dotToSv.py
+tool/syntetic_gen/verilator_tests/obj_dir
 tool/third_party/spot
 tool/third_party/antlr4
 tool/third_party/boost
