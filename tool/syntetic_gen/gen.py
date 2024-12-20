@@ -8,12 +8,16 @@ ltlsynt_prefix = '$(pwd)/../third_party/spot/bin/'
 xml_prefix = root +'/tool/syntetic_gen/specs/'
 out_folder = root + '/tool/syntetic_gen/outs/'
 
-def expand_spec(specification, lenght):
-    formula = specification['formula']
-    ant_base = specification['inputs']
-    con_base = specification['outputs']
-    ant_seq = ant_base + "_0"
-    con_seq = con_base + "_0"
+def expand_spec(specification, lenght, numspec):
+    formula = specification['formula'] 
+    #base name for the proposition is a_propertyIndex
+    ant_base = specification['inputs'] + "_" + str(numspec)
+    con_base = specification['outputs'] + "_" + str(numspec)
+    #first propositions in the sequences are a_propertyIndex_0 and c_propertyIndex_0
+    # + { is needed beacause we are using SERE syntax 
+    ant_seq = "{" + ant_base + "_0"
+    con_seq = "{" + con_base + "_0"
+    #initialize the inputs and outputs with the base propositions
     ins = ant_base + "_0"
     outs = con_base + "_0"
 
@@ -23,24 +27,34 @@ def expand_spec(specification, lenght):
             outs = outs + ',' + con_base + "_" + str(i)
             ant_seq = ant_seq + " & " + ant_base + "_" + str(i)
             con_seq = con_seq + " & " + con_base + "_" + str(i)
+        #close the sequence with } for SERE syntax
+        ant_seq = ant_seq + "}"
+        con_seq = con_seq + "}" 
         # Replace only the first instance of '..&&..'
         formula = formula.replace('..&&..', ant_seq,1)
+        # Replace the second instance of '..&&..'
         formula = formula.replace('..&&..', con_seq)
         
     if '..##1..' in formula:
         for i in range(1, lenght):
             ins = ins + ',' + ant_base + "_" + str(i)
             outs = outs + ',' + con_base + "_" + str(i)
-            ant_seq = ant_seq + "& X " + ant_base + "_" + str(i)
-            con_seq = con_seq + "& X " + con_base + "_" + str(i)
-        # Replace '..##1..' 
+            ant_seq = ant_seq + " ##1 " + ant_base + "_" + str(i)
+            con_seq = con_seq + " ##1 " + con_base + "_" + str(i)
+        #close the sequence with } for SERE syntax
+        ant_seq = ant_seq + "}"
+        con_seq = con_seq + "}" 
+        # Replace '..##1..' in the antecedent
         formula = formula.replace('..##1..', ant_seq,1)
+        # Replace '..##1..' in the consequent
         formula = formula.replace('..##1..',con_seq)
-
-    specification['formula'] = formula
-    specification['inputs'] = ins
-    specification['outputs'] = outs
-    print(f"Expanded formula: {specification['formula']}")
+    #return the expanded formula
+    ret_spec = {}
+    ret_spec['formula'] = formula
+    ret_spec['inputs'] = ins
+    ret_spec['outputs'] = outs
+    print(f"Expanded formula: {ret_spec['formula']}")
+    return ret_spec
 
 def aigerToSv(design_aiger):
     input_file = design_aiger
@@ -49,7 +63,7 @@ def aigerToSv(design_aiger):
     clk_name = 'clock'
     yosys_command = f"yosys -p 'read_aiger  -module_name {module_name} -clk_name {clk_name} {out_folder}{input_file}; write_verilog -sv {out_folder}{output_file}'"
     subprocess.run(yosys_command, shell=True, check=False)
-    print(f"Generated SystemVerilog file: {output_file}")
+    print(f"Generated SystemVerilog file: {output_file} in {out_folder}")
 
 def synthesize_controller(specification):
     formula = specification.get('formula')
@@ -67,10 +81,11 @@ def synthesize_controller(specification):
         print("Error: An error occurred during the realizability check.")
         exit(2)
     else:
+        print("Controller synthesized successfully.")
         #Remove REALIZABLE/UNREALIZABLE output line from aiger file
-        with open(aiger_file, 'r') as file:
+        with open(out_folder + aiger_file, 'r') as file:
             lines = file.readlines()
-        with open(aiger_file, 'w') as file:
+        with open(out_folder + aiger_file, 'w') as file:
             file.writelines(lines[1:])
         return aiger_file
 
@@ -97,30 +112,49 @@ def main():
         exit(3)
 
     numprops = int(input(f"Insert the lenghts of the properties sequence: "))
+    numspecs = int(input(f"Insert the number of parallel properties to be used in the design: "))
+
 
     merged_specification = {}
     #randomly select template_number templates
     random_templates = random.sample(templates, template_number)
+    #iterate over the selected templates to expand them and merge them
     for i, template in enumerate(random_templates, start=1):
         specification = {}
         specification['formula'] = template.find('TemplateText').text
         specification['inputs'] = template.find('Input').text
         specification['outputs'] = template.find('Output').text
         
-        #expand special templates
-        if(specification['formula'].find('..##1..') or specification['formula'].find('..&&..')):
-            print(f"Expanding template")  
-            expand_spec(specification,numprops)
-        
-        # update merged_specification structure
-        if(merged_specification.get('formula') == None):
-            merged_specification = specification
-        else:  
-            merged_specification['formula'] = specification['formula'] + ' & ' + merged_specification.get('formula', '')
-            merged_specification['inputs'] = ','.join(set(merged_specification.get('inputs', '').split(',') + specification['inputs'].split(',')))
-            merged_specification['outputs'] = ','.join(set(merged_specification.get('outputs', '').split(',') + specification['outputs'].split(',')))
-    print(merged_specification)
+        #TODO: this works only for multiple instances of the same template, if we get multiple templates we need to share numspecs between them
+        for j, num in enumerate(range(1, numspecs + 1), start=1):
+            #expand special templates
+            if(specification['formula'].find('..##1..') or specification['formula'].find('..&&..')):
+                print(f"Expanding template")  
+                expanded_formula = expand_spec(specification,numprops,j)
+
+            # update merged_specification structure
+            if(merged_specification.get('formula') == None):
+                merged_specification = expanded_formula
+            else:  
+                merged_specification['formula'] = expanded_formula['formula'] + ' & ' + merged_specification.get('formula', '')
+                merged_specification['inputs'] = ','.join(set(merged_specification.get('inputs', '').split(',') + expanded_formula['inputs'].split(',')))
+                merged_specification['outputs'] = ','.join(set(merged_specification.get('outputs', '').split(',') + expanded_formula['outputs'].split(',')))
     
+            # Write expanded formulas to a file
+            with open(out_folder + 'specifications.txt', 'a') as file:
+                file.write(f"Expanded formula {j} for template {i}:\n")
+                file.write(f"{expanded_formula['formula']}\n\n")
+
+
+    # Write merged specification to a file
+    with open(out_folder + 'specifications.txt', 'a') as file:
+        file.write("Merged specification:\n")
+        file.write(f"Formula: {merged_specification['formula']}\n")
+        file.write(f"Inputs: {merged_specification['inputs']}\n")
+        file.write(f"Outputs: {merged_specification['outputs']}\n")
+    
+    print("Merged specification:\n")
+    print(merged_specification)
     print("Generating circuit for merged specification")
     generate_circuit(merged_specification)
 

@@ -18,6 +18,7 @@ tool/examples/sobel/ass.txt
 tool/syntetic_gen/modelsim_test/
 tool/syntetic_gen/scripts/dotToSv.py
 tool/syntetic_gen/verilator_tests/obj_dir
+tool/syntetic_gen/outs
 tool/third_party/spot
 tool/third_party/antlr4
 tool/third_party/boost
