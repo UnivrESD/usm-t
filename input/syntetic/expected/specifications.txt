@@ -1,0 +1,13 @@
+Expanded formula 1 for template 1:
+G({a_1_0 ##1 a_1_1} |=> {c_1_0})
+
+Expanded formula 2 for template 1:
+G({a_2_0 ##1 a_2_1} |=> {c_2_0})
+
+Expanded formula 3 for template 1:
+G({a_3_0 ##1 a_3_1} |=> {c_3_0})
+
+Merged specification:
+Formula: G({a_3_0 ##1 a_3_1} |=> {c_3_0}) & G({a_2_0 ##1 a_2_1} |=> {c_2_0}) & G({a_1_0 ##1 a_1_1} |=> {c_1_0})
+Inputs: a_2_1,a_3_1,a_1_1,a_2_0,a_3_0,a_1_0
+Outputs: c_1_0,c_3_0,c_2_0
