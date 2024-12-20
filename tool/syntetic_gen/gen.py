@@ -1,7 +1,7 @@
 import subprocess
 import os
 import random
-
+import copy 
 root = os.environ["USMT_ROOT"]
 yosis_prefix = root + '/tool/third_party/oss-cad-suite/bin/'
 ltlsynt_prefix = root + '/tool/third_party/spot/bin/'
@@ -67,17 +67,16 @@ def expand_spec(specification, lenght, assnumb):
 def aigerToSv(design_aiger):
     input_file = design_aiger
     output_file = design_aiger.replace('.aiger', '.v')
-    module_name = 'test'
+    module_name = design_aiger.replace('.aiger', '')
     clk_name = 'clock'
     yosys_command = f"yosys -p 'read_aiger  -module_name {module_name} -clk_name {clk_name} {out_folder}{input_file}; write_verilog {out_folder}{output_file}'"
     subprocess.run(yosys_command, shell=True, check=False)
     print(f"Generated SystemVerilog file: {output_file} in {out_folder}")
 
-def synthesize_controller(specification):
+def synthesize_controller(specification, aiger_file='test.aiger'):
     formula = specification.get('formula')
     inputs = specification.get('inputs')
     outputs = specification.get('outputs')
-    aiger_file = 'test.aiger'
     
     ltlsynt_command = f'ltlsynt --formula="{formula}" --ins="{inputs}" --outs="{outputs}" --aiger > {out_folder}{aiger_file}'
 
@@ -97,9 +96,57 @@ def synthesize_controller(specification):
             file.writelines(lines[1:])
         return aiger_file
 
-def generate_circuit(specification):
-    design_aiger = synthesize_controller(specification)
-    aigerToSv(design_aiger)
+def generate_top_module(spec_list):
+    #prefix of the top module 
+    top_module = 'module test(\n'
+    top_module += 'clock,' 
+    #all submodule inputs
+    for spec in spec_list:
+        top_module += spec['inputs'] + ','
+    #all submodule outputs
+    for spec in spec_list:
+        if(spec_list.index(spec) != len(spec_list) - 1):
+            top_module += spec['outputs'] + ','
+        else:
+            top_module += spec['outputs'] + ');\n'
+    #start input declaration
+    top_module +='input clock,'
+    for spec in spec_list:
+        if(spec_list.index(spec) != len(spec_list) - 1):
+            top_module += spec['inputs'] + ','
+        else:
+            top_module += spec['inputs'] + ';\n'
+    #start output declaration
+    top_module +='output '
+    for spec in spec_list:
+        if(spec_list.index(spec) != len(spec_list) - 1):
+            top_module += spec['outputs'] + ','
+        else:
+            top_module += spec['outputs'] + ';\n'
+
+    # instantiate the submodules
+    for spec in spec_list:
+        top_module += 'spec' + str(spec_list.index(spec)) + ' spec_sbm' + str(spec_list.index(spec)) + '(' + spec['inputs'] + ',' + spec['outputs'] + ');\n'    
+
+    top_module += 'endmodule\n'
+
+    with open(out_folder + 'test.v', 'w') as file:
+        file.write(top_module)
+    print(f"Generated test module: {out_folder}test.v")
+
+def generate_circuit(specification,spec_list, modules):
+    if(modules):
+        #We need to generate a module for each property
+        for spec in spec_list:
+            #for each specification generate a controller
+            design_aiger = synthesize_controller(spec, 'spec' + str(spec_list.index(spec)) + '.aiger')
+            #Generate a SystemVerilog file for each controller
+            aigerToSv(design_aiger)
+
+        generate_top_module(spec_list)
+    else:
+        design_aiger = synthesize_controller(specification)
+        aigerToSv(design_aiger)
 
 def generate_testbench(specification):
     inputs = specification.get('inputs', '').split(',')
@@ -130,15 +177,15 @@ def run_verilator():
     subprocess.run(f"cd {verilator_tb_prefix} && make sim", shell=True, check=False)
     subprocess.run(f"cp {verilator_tb_prefix}trace.vcd {out_folder}", shell=True, check=False)
     #clean up 
-    subprocess.run(f"rm -rf {verilator_tb_prefix}trace.vcd {verilator_tb_prefix}test.v {verilator_tb_prefix}tb_test.cpp", shell=True, check=False)
-    subprocess.run(f"rm -rf {verilator_tb_prefix}obj_dir", shell=True, check=False)
+    #subprocess.run(f"rm -rf {verilator_tb_prefix}trace.vcd {verilator_tb_prefix}test.v {verilator_tb_prefix}tb_test.cpp", shell=True, check=False)
+    #subprocess.run(f"rm -rf {verilator_tb_prefix}obj_dir", shell=True, check=False)
 
 def populate_input_dir():
     input_prefix = root + '/input/syntetic'
     subprocess.run(f"mv {out_folder}test.v {input_prefix}/design/", shell=True, check=False)
     subprocess.run(f"mv {out_folder}specifications.txt {input_prefix}/expected/", shell=True, check=False)
     subprocess.run(f"mv {out_folder}trace.vcd {input_prefix}/traces/", shell=True, check=False)
-    subprocess.run(f"rm -rf {out_folder}/*", shell=True, check=False)
+    #subprocess.run(f"rm -rf {out_folder}/*", shell=True, check=False)
 
 def main():
     import xml.etree.ElementTree as ET
@@ -148,6 +195,7 @@ def main():
     templates = root.findall('Template')
     num_templates = len(templates)
 
+    #input parameters
     try:
         template_number = int(input(f"Enter how many specification to use (1-{num_templates}): "))
         if not 1 <= template_number <= num_templates:
@@ -156,13 +204,13 @@ def main():
     except ValueError:
         print("Error: Invalid input. Please enter a number between 1 and {num_templates}.")
         exit(3)
-
-    
     ant_props = int(input(f"Insert the lenghts of the antecedent sequence: "))
     con_props = int(input(f"Insert the lenghts of the consequent sequence: "))
     numprops = (ant_props,con_props)
     assnumbs = int(input(f"Insert the number of parallel properties to be used in the design: "))
 
+    #enable parallel module config
+    modules = True
 
     merged_specification = {}
     #randomly select template_number templates
@@ -174,13 +222,15 @@ def main():
         specification['inputs'] = template.find('Input').text
         specification['outputs'] = template.find('Output').text
         
+        spec_list = []
         #TODO: this works only for multiple instances of the same template, if we get multiple templates we need to share assnumbs between them
         for j, num in enumerate(range(1, assnumbs + 1), start=1):
             #expand special templates
             if(specification['formula'].find('..##1..') or specification['formula'].find('..&&..')):
                 print(f"Expanding template")  
                 expanded_formula = expand_spec(specification,numprops,j)
-
+            else: 
+                expanded_formula = specification
             # update merged_specification structure
             if(merged_specification.get('formula') == None):
                 merged_specification = expanded_formula
@@ -194,6 +244,10 @@ def main():
                 file.write(f"Expanded formula {j} for template {i}:\n")
                 file.write(f"{expanded_formula['formula']}\n\n")
 
+            #if module subdivision is enabled
+            if(modules):
+                #for each iteration add the expanded formula to the list
+                spec_list.append(copy.deepcopy(expanded_formula))
 
     # Write merged specification to a file
     with open(out_folder + 'specifications.txt', 'a') as file:
@@ -205,7 +259,7 @@ def main():
     print("Merged specification:\n")
     print(merged_specification)
     print("Generating circuit for merged specification")
-    generate_circuit(merged_specification)
+    generate_circuit(merged_specification,spec_list, modules)
     generate_testbench(merged_specification)
     run_verilator()
     populate_input_dir()
