@@ -483,6 +483,33 @@ void AutomataBasedEvaluator::generateAutomaton() {
   //other automata-based libraries
 #endif
 }
+Automaton *
+generateAutomatonFromTemporal(const TemporalExpressionPtr &formula) {
+
+#ifdef SPOTLTL
+  {
+    static std::mutex spotGuard;
+    std::lock_guard<std::mutex> lock{spotGuard};
+    //retrieve the string representation of temporal formula
+    std::string spotFormulaStr =
+        temp2String(formula, Language::SpotLTL, PrintMode::Hide);
+    //retrieve the spot formula
+    spot::formula spotFormula =
+        spot::parse_infix_psl(spotFormulaStr).f;
+    //generate the spot automaton
+    std::shared_ptr<spot::twa_graph> spotAutomaton =
+        generateDeterministicSpotAutomaton(spotFormula);
+    //extract the placeholders
+    auto placeholderPack = extractPlaceholders(formula);
+    //build the harm automaton
+    return buildAutomatonFromSpot(spotAutomaton, placeholderPack);
+    //std::cout << printAutomaton(_automaton) << "\n";
+  }
+#else
+  messageError("No automata generator library provided");
+  //other automata-based libraries
+#endif
+}
 
 void AutomataBasedEvaluator::initCache() {
   _cacheParallel = new Trinary *[l1Constants::MAX_THREADS];

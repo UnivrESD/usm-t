@@ -8,12 +8,10 @@
 namespace usmt {
 using namespace harm;
 
-void computeEditDistance(AssertionPtr a1,
-                         const SerializedAutomaton &sa1,
-                         AssertionPtr a2,
-                         const SerializedAutomaton &sa2,
-                         std::map<std::pair<std::string, std::string>,
-                                  double> &edge_rel_cost_map) {
+double computeEditDistanceSimilarity(
+    const SerializedAutomaton &sa1, const SerializedAutomaton &sa2,
+    std::map<std::pair<std::string, std::string>, double>
+        &edge_rel_cost_map) {
 
   // Instantiate GED environment
   ged::GEDEnv<int, double, std::string> env;
@@ -26,7 +24,7 @@ void computeEditDistance(AssertionPtr a1,
     env.add_node(expected_graph, id, label);
   }
   for (auto &[from, to, label] : sa1.edges) {
-    env.add_edge(expected_graph, from, to, label);
+    env.add_edge(expected_graph, from, to, label->toString());
   }
 
   ged::GEDGraph::GraphID mined_graph =
@@ -36,7 +34,7 @@ void computeEditDistance(AssertionPtr a1,
     env.add_node(mined_graph, id, label);
   }
   for (auto &[from, to, label] : sa2.edges) {
-    env.add_edge(mined_graph, from, to, label);
+    env.add_edge(mined_graph, from, to, label->toString());
   }
 
   env.init(ged::Options::InitType::EAGER_WITHOUT_SHUFFLED_COPIES);
@@ -55,16 +53,12 @@ void computeEditDistance(AssertionPtr a1,
   double upper_bound =
       env.get_upper_bound(expected_graph, mined_graph);
 
-  std::cout
-      << upper_bound << "/"
-      << (std::max(sa1.getNumberEdges() - 2 + sa1.getNumberNodes(),
-                   sa2.getNumberEdges() - 2 + sa2.getNumberNodes()))
-      << " " << a1->toString() << " vs " << a2->toString() << ": "
-      << 1.f - (upper_bound /
-                (double)std::max(
-                    sa1.getNumberEdges() - 2 + sa1.getNumberNodes(),
-                    sa2.getNumberEdges() - 2 + sa2.getNumberNodes()))
-      << "\n";
+  double similarity =
+      1.f - (upper_bound /
+             (double)std::max(
+                 sa1.getNumberEdges() - 2 + sa1.getNumberNodes(),
+                 sa2.getNumberEdges() - 2 + sa2.getNumberNodes()));
+  return similarity;
 }
 
 SerializedAutomaton serializeAutomaton(Automaton *aut) {
@@ -85,10 +79,13 @@ SerializedAutomaton serializeAutomaton(Automaton *aut) {
     sa.nodes.push_back({(int)id, type});
 
     for (const auto &edge : node->_outEdges) {
-      std::string label = edge->_prop->toString();
       int from = (int)edge->_fromNode->_id;
       int to = (int)edge->_toNode->_id;
-      sa.edges.push_back({from, to, label});
+      if (from == to &&
+          dynamic_cast<EdgeTrue *>(edge->_prop) != nullptr) {
+        continue;
+      }
+      sa.edges.push_back({from, to, edge->_prop});
     }
   }
   return sa;

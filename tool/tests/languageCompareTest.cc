@@ -79,45 +79,45 @@ TEST(LanguageCompare, lc1) {
   //    }
   //  }
 
-  size_t times = 1;
-  //use chrono to measure time
-  std::chrono::steady_clock::time_point begin =
-      std::chrono::steady_clock::now();
-  for (size_t k = 0; k < assertions.size(); k++) {
-    AssertionPtr targetAssertion = assertions[k];
-    for (auto &ass : assertions) {
-      for (size_t i = 0; i < times; i++) {
-        int res = compareLanguage(ass, targetAssertion);
-        //std::cout << ass->toString(Language::SpotLTL) << " vs ";
-        //std::cout << targetAssertion->toString() << ": ";
-        //std::cout << res;
-        //std::cout <<  "\n";
-      }
-    }
-  }
-  std::chrono::steady_clock::time_point end =
-      std::chrono::steady_clock::now();
+  //size_t times = 1;
+  ////use chrono to measure time
+  //std::chrono::steady_clock::time_point begin =
+  //    std::chrono::steady_clock::now();
+  //for (size_t k = 0; k < assertions.size(); k++) {
+  //  AssertionPtr targetAssertion = assertions[k];
+  //  for (auto &ass : assertions) {
+  //    for (size_t i = 0; i < times; i++) {
+  //      int res = compareLanguage(ass, targetAssertion);
+  //      //std::cout << ass->toString(Language::SpotLTL) << " vs ";
+  //      //std::cout << targetAssertion->toString() << ": ";
+  //      //std::cout << res;
+  //      //std::cout <<  "\n";
+  //    }
+  //  }
+  //}
+  //std::chrono::steady_clock::time_point end =
+  //    std::chrono::steady_clock::now();
 
-  std::cout << "Time with compare "
-            << std::chrono::duration_cast<std::chrono::milliseconds>(
-                   end - begin)
-                   .count()
-            << "[ms]" << std::endl;
+  //std::cout << "Time with compare "
+  //          << std::chrono::duration_cast<std::chrono::milliseconds>(
+  //                 end - begin)
+  //                 .count()
+  //          << "[ms]" << std::endl;
 
- // begin = std::chrono::steady_clock::now();
- // for (size_t k = 0; k < assertions.size(); k++) {
- //   AssertionPtr targetAssertion = assertions[k];
- //   for (auto &ass : assertions) {
- //     for (size_t i = 0; i < times; i++) {
- //       int res = testEmpty(ass, targetAssertion);
- //     }
- //   }
- // }
- // end = std::chrono::steady_clock::now();
+  // begin = std::chrono::steady_clock::now();
+  // for (size_t k = 0; k < assertions.size(); k++) {
+  //   AssertionPtr targetAssertion = assertions[k];
+  //   for (auto &ass : assertions) {
+  //     for (size_t i = 0; i < times; i++) {
+  //       int res = testEmpty(ass, targetAssertion);
+  //     }
+  //   }
+  // }
+  // end = std::chrono::steady_clock::now();
 
- // std::cout << "Time with empty "
- //           << std::chrono::duration_cast<std::chrono::milliseconds>(
- //                  end - begin)
- //                  .count()
- //           << "[ms]" << std::endl;
+  // std::cout << "Time with empty "
+  //           << std::chrono::duration_cast<std::chrono::milliseconds>(
+  //                  end - begin)
+  //                  .count()
+  //           << "[ms]" << std::endl;
 }

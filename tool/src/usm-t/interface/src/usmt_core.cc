@@ -8,6 +8,7 @@
 #include "test_reader.hh"
 #include "usmt-evaluator.hh"
 #include "ustm_core.hh"
+#include <algorithm>
 #include <chrono>
 #include <filesystem>
 #include <iomanip>
@@ -21,9 +22,20 @@ void run() {
   std::vector<Test> tests = readTestFile(clc::testFile);
 
   for (auto &test : tests) {
+    bool startTablePrint = true;
     messageInfo("Running test " + test.name);
     std::unordered_map<std::string, std::vector<EvalReportPtr>>
-        evalReports;
+        useCaseToEvalReports;
+    fort::utf8_table table;
+    if (startTablePrint) {
+      startTablePrint = false;
+      table.set_border_style(FT_NICE_STYLE);
+      table << fort::header << "Use case";
+      for (const auto comparator : test.comparators) {
+        table << fort::header << comparator.with_strategy;
+      }
+      table << fort::endr;
+    }
 
     for (auto &use_case : test.use_cases) {
       initPathHandler(use_case);
@@ -76,32 +88,34 @@ void run() {
           std::chrono::duration_cast<std::chrono::milliseconds>(stop -
                                                                 start)
               .count();
-      evalReports[use_case.usecase_id].push_back(tr);
+      //check if the temporal report exists
+      if (std::find_if(test.comparators.begin(),
+                       test.comparators.end(),
+                       [](const Comparator &c) {
+                         return c.with_strategy == "time_to_mine";
+                       }) != test.comparators.end()) {
+        //add the temporal report to the evaluation reports
+        useCaseToEvalReports[use_case.usecase_id].push_back(tr);
+      }
 
-      //ADAPT THE OUTPUT--------------------------------
       adaptOutput(use_case);
 
       //EVAL-----------------------------------------------
       for (const auto &comp : test.comparators) {
+        //skip time_to_mine comparator which is implicit
+        if (comp.with_strategy == "time_to_mine") {
+          continue;
+        }
         EvalReportPtr er = evaluate(use_case, comp);
         std::cout << er->to_string() << "\n";
         er->dumpTo(ph.work_path + ph.work_eval);
-        evalReports[use_case.usecase_id].push_back(er);
+        useCaseToEvalReports[use_case.usecase_id].push_back(er);
       }
     } //end of use cases
 
     //AGGREGATE THE EVALUATION REPORTS-------------------
-    fort::utf8_table table;
-    table.set_border_style(FT_NICE_STYLE);
 
-    table << fort::header << "Use case";
-    table << "Time";
-    for (const auto &comp : test.comparators) {
-      table << comp.with_strategy;
-    }
-    table << fort::endr;
-
-    for (const auto &[usecase_id, report] : evalReports) {
+    for (const auto &[usecase_id, report] : useCaseToEvalReports) {
       std::vector<std::string> line;
       line.push_back(usecase_id);
       for (const auto &er : report) {
@@ -128,7 +142,7 @@ void run() {
 
       } //end of reports
       table.range_write_ln(std::begin(line), std::end(line));
-    } // end of evalReports
+    } // end of useCaseToEvalReports
 
     std::cout << table.to_string() << std::endl;
   } //end of tests

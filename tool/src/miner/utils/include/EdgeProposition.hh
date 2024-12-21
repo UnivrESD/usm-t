@@ -83,5 +83,26 @@ public:
   expression::PropositionPtr _toInst;
   std::string _phName = "";
 };
+inline bool isEdgeAnd(EdgeProposition *p) {
+  return dynamic_cast<EdgeAnd *>(p) != nullptr;
+}
+inline bool isEdgeOr(EdgeProposition *p) {
+  return dynamic_cast<EdgeOr *>(p) != nullptr;
+}
+inline bool isEdgeNot(EdgeProposition *p) {
+  return dynamic_cast<EdgeNot *>(p) != nullptr;
+}
+inline bool isEdgeTrue(EdgeProposition *p) {
+  return dynamic_cast<EdgeTrue *>(p) != nullptr;
+}
+inline bool isEdgeFalse(EdgeProposition *p) {
+  return dynamic_cast<EdgeFalse *>(p) != nullptr;
+}
+inline bool isEdgePlaceholder(EdgeProposition *p) {
+  return dynamic_cast<EdgePlaceholder *>(p) != nullptr;
+}
+inline bool isEdgeInst(EdgeProposition *p) {
+  return dynamic_cast<EdgeInst *>(p) != nullptr;
+}
 
 } // namespace harm

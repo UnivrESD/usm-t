@@ -14,9 +14,11 @@ SET(EXP_SRCS
     src/formula/temporal/Sere.cc
     #visitors
     src/visitors/PrinterVisitor.cc
+    src/visitors/RemapPrinterVisitor.cc
     src/visitors/ExpVisitor.cc
     src/visitors/CopyVisitor.cc
     src/visitors/VarExtractVisitor.cc
+    src/visitors/RemapVisitor.cc
     src/visitors/TraceChangerVisitor.cc
     src/visitors/ExpToZ3Visitor.cc
     #utils

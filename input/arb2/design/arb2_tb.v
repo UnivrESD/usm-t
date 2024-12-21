@@ -5,10 +5,10 @@ module arb2_tb;
   // Testbench signals
   reg clk;
   reg rst;
-  reg req1;
-  reg req2;
-  wire gnt1;
-  wire gnt2;
+  reg [31:0] req1;
+  reg [31:0] req2;
+  wire[31:0] gnt1;
+  wire[31:0] gnt2;
 
   // Instantiate the design under test (DUT)
   arb2 uut (

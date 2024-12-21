@@ -2,6 +2,7 @@
 	<context name="without_next">
 
 		<prop exp="req1" loc="dt"/>
+        <prop exp="req1 > 0 && !req2" loc="dt"/>
 		<prop exp="req2" loc="dt"/>
 
 		<prop exp="gnt1" loc="c"/>

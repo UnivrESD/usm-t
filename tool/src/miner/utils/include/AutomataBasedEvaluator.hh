@@ -86,4 +86,6 @@ generateDeterministicSpotAutomaton(const spot::formula &formula);
    */
 Automaton *buildAutomatonFromSpot(spot::twa_graph_ptr &automata,
                                   const PlaceholderPack &pack);
+Automaton *
+generateAutomatonFromTemporal(const TemporalExpressionPtr &formula);
 } // namespace harm

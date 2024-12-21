@@ -14,16 +14,18 @@ namespace usmt {
 
 class EvalReport {
 public:
-  EvalReport() = default;
+  EvalReport(std::string with_strategy)
+      : _with_strategy(with_strategy) {}
   ~EvalReport() {}
   virtual void dumpTo(const std::string &pathToDir) = 0;
   virtual std::string to_string() = 0;
+  std::string _with_strategy;
 };
 
 class FaultCoverageReport : public EvalReport {
 
 public:
-  FaultCoverageReport() {}
+  FaultCoverageReport() : EvalReport("fault_coverage") {}
 
   virtual ~FaultCoverageReport() = default;
   virtual std::string to_string() override {
@@ -76,16 +78,16 @@ public:
 
 class ExpectedVSMinedReport : public EvalReport {
 public:
-  ExpectedVSMinedReport() {}
+  ExpectedVSMinedReport() : EvalReport("expected_vs_mined") {}
   ~ExpectedVSMinedReport() = default;
 
   virtual std::string to_string() override {
     std::stringstream ss;
     ss << "Expected vs Mined Report\n";
-    ss << "Covered " << _expectedCoveredWith.size() << "/"
+    ss << "Semantically Covered " << _expectedCoveredWith.size() << "/"
        << _totExpected << "\n";
     if (_expectedCoveredWith.size() != _totExpected) {
-      ss << "Covered + Similar "
+      ss << "SCovered + SSimilar "
          << _expectedCoveredWith.size() + _expextedToSimilar.size()
          << "/" << _totExpected << "\n";
       ss << "--------Covered-"
@@ -94,10 +96,10 @@ public:
 
     for (const auto &pair : _expectedCoveredWith) {
       ss << pair.first << "\n";
-      ss << "=>  \t\t" << pair.second << "\n";
+      ss << "--->  \t\t" << pair.second << "\n";
     }
     if (_expectedCoveredWith.size() != _totExpected) {
-      ss << "--------Similar "
+      ss << "--------Semantically Similar "
          << "------------------\n";
 
       for (const auto &pair : _expextedToSimilar) {
@@ -108,8 +110,11 @@ public:
       }
     }
 
-    ss << "----------------"
-       << "------------------\n";
+    ss << "----------------Edit similarity------------------\n";
+    for (const auto &pair : _expextedToBestSimilarScore) {
+      ss << pair.first << " : " << pair.second << "\n";
+    }
+
 
     return ss.str();
   }
@@ -139,7 +144,7 @@ public:
 
 class TemporalReport : public EvalReport {
 public:
-  TemporalReport() {}
+  TemporalReport() : EvalReport("time_to_mine") {}
   ~TemporalReport() = default;
 
   virtual std::string to_string() override {

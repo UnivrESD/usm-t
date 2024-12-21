@@ -74,7 +74,8 @@ Comparator parseCompare(XmlNode *compareNode) {
   comp.with_strategy =
       getAttributeValue(compareNode, "with_strategy", "");
   messageErrorIf(!(comp.with_strategy == "fault_coverage" ||
-                   comp.with_strategy == "expected_vs_mined"),
+                   comp.with_strategy == "expected_vs_mined" ||
+                   comp.with_strategy == "time_to_mine"),
                  "Comparator strategy '" + comp.with_strategy +
                      "' not supported, supported strategies are "
                      "'fault_coverage' and 'expected_vs_mined'");

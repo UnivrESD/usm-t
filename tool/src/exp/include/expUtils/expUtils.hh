@@ -44,6 +44,12 @@ void changeTrace(const TemporalExpressionPtr &te,
   std::string prefix##2String(const type &o);                        \
   std::string prefix##2ColoredString(const type &exp);
 
+#define dec_expToRemapString(prefix, type)                           \
+  std::string prefix##2RemapString(                                  \
+      const type &o,                                                 \
+      const std::unordered_map<std::string, std::string>             \
+          &targetToRemap);
+
 #define dec_expOutOp(prefix, type)                                   \
   std::ostream &operator<<(std::ostream &os, const type &o);
 
@@ -60,12 +66,21 @@ TemporalExpressionPtr copy(const TemporalExpressionPtr &o,
   getVars(const type &o);
 
 // clang-format off
-dec_expToString(prop, PropositionPtr)
 std::string temp2String(const TemporalExpressionPtr &exp, const Language lang, const PrintMode mode);
+std::string temp2RemapString(const TemporalExpressionPtr &exp,const std::unordered_map<std::string, std::string>              &targetToRemap, const Language lang, const PrintMode mode);
+
+dec_expToString(prop, PropositionPtr)
 dec_expToString(float, FloatExpressionPtr)
 dec_expToString(int, IntExpressionPtr)
 dec_expToString(num, NumericExpressionPtr)
 
+dec_expToRemapString(prop, PropositionPtr)
+dec_expToRemapString(float, FloatExpressionPtr)
+dec_expToRemapString(int, IntExpressionPtr)
+dec_expToRemapString(num, NumericExpressionPtr)
+
+
+std::string prop2String(Proposition &exp);
 
 dec_expOutOp(prop, PropositionPtr)
 std::string temp2ColoredString(const TemporalExpressionPtr &exp,const Language lang, const PrintMode mode);
@@ -126,4 +141,7 @@ std::string printAST_terminal(const TemporalExpressionPtr &exp,
                               const PrintMode mode);
 
 Z3ExpWrapper to_z3exp(const PropositionPtr &exp);
+
+std::unordered_map<std::string, PropositionPtr>
+prop2RemapTargets(const PropositionPtr &o);
 } // namespace expression

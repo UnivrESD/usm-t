@@ -13,7 +13,7 @@ class SerializedAutomaton {
 public:
   SerializedAutomaton() = default;
   //edges <source, destination, edge_label>
-  std::vector<std::tuple<int, int, std::string>> edges;
+  std::vector<std::tuple<int, int, EdgeProposition *>> edges;
   //nodes <id, type>
   std::vector<std::tuple<int, int>> nodes;
 
@@ -22,9 +22,7 @@ public:
   size_t getNumberNodes() const { return nodes.size(); }
 };
 
-void computeEditDistance(AssertionPtr a1,
-                         const SerializedAutomaton &sa1,
-                         AssertionPtr a2,
+double computeEditDistanceSimilarity(const SerializedAutomaton &sa1,
                          const SerializedAutomaton &sa2,
                          std::map<std::pair<std::string, std::string>,
                                   double> &edge_rel_cost_map);

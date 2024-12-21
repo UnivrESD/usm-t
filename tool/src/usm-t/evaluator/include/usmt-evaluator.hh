@@ -14,8 +14,10 @@ class EvalReport;
 using EvalReportPtr = std::shared_ptr<EvalReport>;
 class Comparator;
 struct fault_coverage_t;
+struct FlattenedAssertion;
 
-int compareLanguage(harm::AssertionPtr a1, harm::AssertionPtr a2);
+int compareLanguage(const FlattenedAssertion &a1,
+                    const FlattenedAssertion &a2);
 
 EvalReportPtr
 evaluateExpectedvsMined(const UseCase &use_case,

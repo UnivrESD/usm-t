@@ -11,6 +11,8 @@
 #include "visitors/CopyVisitor.hh"
 #include "visitors/ExpToZ3Visitor.hh"
 #include "visitors/PrinterVisitor.hh"
+#include "visitors/RemapPrinterVisitor.hh"
+#include "visitors/RemapVisitor.hh"
 #include "visitors/TraceChangerVisitor.hh"
 #include "visitors/VarExtractVisitor.hh"
 
@@ -29,6 +31,26 @@ namespace expression {
   std::string prefix##2ColoredString(const type &exp) {              \
     PrinterVisitor printer(Language::SpotLTL, 1,                     \
                            PrintMode::ShowAll);                      \
+    exp->acceptVisitor(printer);                                     \
+    return printer.get();                                            \
+  }
+
+#define expToRemapString(prefix, type)                               \
+  std::string prefix##2RemapString(                                  \
+      const type &o,                                                 \
+      const std::unordered_map<std::string, std::string>             \
+          &targetToRemap) {                                          \
+    RemapPrinterVisitor printer(targetToRemap, Language::SpotLTL, 0, \
+                                PrintMode::ShowAll);                 \
+    o->acceptVisitor(printer);                                       \
+    return printer.get();                                            \
+  }                                                                  \
+  std::string prefix##2ColoredString(                                \
+      const type &exp,                                               \
+      const std::unordered_map<std::string, std::string>             \
+          &targetToRemap) {                                          \
+    RemapPrinterVisitor printer(targetToRemap, Language::SpotLTL, 1, \
+                                PrintMode::ShowAll);                 \
     exp->acceptVisitor(printer);                                     \
     return printer.get();                                            \
   }
@@ -72,21 +94,39 @@ namespace expression {
   }
 
 // clang-format off
-expToString(prop, PropositionPtr)
 
 std::string temp2String(const TemporalExpressionPtr &exp, const Language lang, const PrintMode mode){
     PrinterVisitor printer(lang,false,mode);                                       
     exp->acceptVisitor(printer);                                        
     return printer.get();                                            
   }                                                                  
+std::string temp2RemapString(const TemporalExpressionPtr &exp,const std::unordered_map<std::string, std::string>              &targetToRemap, const Language lang, const PrintMode mode){
+    RemapPrinterVisitor printer(targetToRemap,lang,false,mode);                                       
+    exp->acceptVisitor(printer);                                        
+    return printer.get();                                            
+  }                                                                  
+
 std::string temp2ColoredString(const TemporalExpressionPtr &exp, const Language lang, const PrintMode mode){
     PrinterVisitor printer(lang,true,mode);
     exp->acceptVisitor(printer);                                      
     return printer.get();                                            
   }
+
+std::string prop2String(Proposition &exp){
+    PrinterVisitor printer(Language::SpotLTL, 0,                     PrintMode::ShowAll);                      
+    exp.acceptVisitor(printer);                                       
+    return printer.get();                                            
+}
+
+expToString(prop, PropositionPtr)
 expToString(float, FloatExpressionPtr)
 expToString(int, IntExpressionPtr)
 expToString(num, NumericExpressionPtr)
+
+expToRemapString(prop, PropositionPtr)
+expToRemapString(float, FloatExpressionPtr)
+expToRemapString(int, IntExpressionPtr)
+expToRemapString(num, NumericExpressionPtr)
 
 expOutOp(prop, PropositionPtr)
 expOutOp(temp, TemporalExpressionPtr)
@@ -272,6 +312,14 @@ Z3ExpWrapper to_z3exp(const PropositionPtr &exp) {
   ExpToZ3Visitor converter;
   exp->acceptVisitor(converter);
   return converter.get();
+}
+
+std::unordered_map<std::string, PropositionPtr>
+prop2RemapTargets(const PropositionPtr &o) {
+  RemapVisitor remapVisitor;
+  remapVisitor.setRootRawPointer(o);
+  o->acceptVisitor(remapVisitor);
+  return remapVisitor.get_remap_targets();
 }
 
 } // namespace expression

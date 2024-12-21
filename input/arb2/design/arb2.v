@@ -1,11 +1,11 @@
 module arb2(clk, rst, req1, req2, gnt1, gnt2);
 
 input clk, rst;
-input req1, req2;
-output gnt1, gnt2;
+input[31:0] req1, req2;
+output[31:0] gnt1, gnt2;
 
-reg state;
-reg gnt1, gnt2;
+reg[31:0] state;
+reg[31:0] gnt1, gnt2;
 
 always @ (posedge clk or posedge rst)
 	if (rst)
