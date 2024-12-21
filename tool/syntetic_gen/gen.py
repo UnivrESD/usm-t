@@ -64,13 +64,43 @@ def expand_spec(specification, lenght, assnumb):
     print(f"Expanded formula: {ret_spec['formula']}")
     return ret_spec
 
-def aigerToSv(design_aiger):
+def aigerToSv(design_aiger, specification):
     input_file = design_aiger
     output_file = design_aiger.replace('.aiger', '.v')
     module_name = design_aiger.replace('.aiger', '')
     clk_name = 'clock'
     yosys_command = f"yosys -p 'read_aiger  -module_name {module_name} -clk_name {clk_name} {out_folder}{input_file}; write_verilog {out_folder}{output_file}'"
     subprocess.run(yosys_command, shell=True, check=False)
+
+    #yosys for some reason mixes inputs and outputs in the module signal list so we need to fix it
+    inputs = specification.get('inputs')
+    outputs = specification.get('outputs')
+    with open(out_folder + output_file, 'r') as file:   
+        lines = file.readlines()
+        # Find the module declaration line
+        for i, line in enumerate(lines):
+            if line.startswith('module '):
+                module_decl = line.strip()
+                break
+
+        # Split the module declaration line into parts
+        parts = module_decl.split('(')
+        module_name = parts[0]
+        signals = parts[1].rstrip(');').split(',')
+
+        # Separate the clock, inputs, and outputs
+        new_signals = ['clock'] + inputs.split(',') + outputs.split(',')
+
+        # Create the new module declaration line
+        new_module_decl = module_name + '(' + ', '.join(new_signals) + ');'
+
+        # Replace the old module declaration line with the new one
+        lines[i] = new_module_decl + '\n'
+
+        # Write the modified lines back to the file
+        with open(out_folder + output_file, 'w') as file:
+            file.writelines(lines)
+
     print(f"Generated SystemVerilog file: {output_file} in {out_folder}")
 
 def synthesize_controller(specification, aiger_file='test.aiger'):
@@ -126,7 +156,7 @@ def generate_top_module(spec_list):
 
     # instantiate the submodules
     for spec in spec_list:
-        top_module += 'spec' + str(spec_list.index(spec)) + ' spec_sbm' + str(spec_list.index(spec)) + '(' + spec['inputs'] + ',' + spec['outputs'] + ');\n'    
+        top_module += 'spec' + str(spec_list.index(spec)) + ' spec_sbm' + str(spec_list.index(spec)) + '(' + "clock, " + spec['inputs'] + ',' + spec['outputs'] + ');\n'    
 
     top_module += 'endmodule\n'
 
@@ -138,15 +168,15 @@ def generate_circuit(specification,spec_list, modules):
     if(modules):
         #We need to generate a module for each property
         for spec in spec_list:
+            specfile_name = 'spec' + str(spec_list.index(spec))
             #for each specification generate a controller
-            design_aiger = synthesize_controller(spec, 'spec' + str(spec_list.index(spec)) + '.aiger')
+            design_aiger = synthesize_controller(spec, specfile_name + '.aiger')
             #Generate a SystemVerilog file for each controller
-            aigerToSv(design_aiger)
-
+            aigerToSv(design_aiger,spec)
         generate_top_module(spec_list)
     else:
         design_aiger = synthesize_controller(specification)
-        aigerToSv(design_aiger)
+        aigerToSv(design_aiger,specification)
 
 def generate_testbench(specification):
     inputs = specification.get('inputs', '').split(',')
@@ -171,21 +201,29 @@ def generate_testbench(specification):
     print(f"Generated testbench file: {verilator_tb_prefix}tb_test.cpp")
 
 def run_verilator():
-    #move test.v file to verilator folder 
-    subprocess.run(f"cp {out_folder}test.v {verilator_tb_prefix}", shell=True, check=False)
+    #move all .v in outs folder to verilator folder 
+    subprocess.run(f"cp {out_folder}*.v {verilator_tb_prefix}", shell=True, check=False)
+    # Collect all files that are not test.v
+    file_names = ""
+    for file in os.listdir(out_folder):
+        if file.endswith(".v") and file != "test.v":
+            file_names += file + " "
     #run verilator
     subprocess.run(f"cd {verilator_tb_prefix} && make sim", shell=True, check=False)
     subprocess.run(f"cp {verilator_tb_prefix}trace.vcd {out_folder}", shell=True, check=False)
     #clean up 
-    #subprocess.run(f"rm -rf {verilator_tb_prefix}trace.vcd {verilator_tb_prefix}test.v {verilator_tb_prefix}tb_test.cpp", shell=True, check=False)
-    #subprocess.run(f"rm -rf {verilator_tb_prefix}obj_dir", shell=True, check=False)
+    subprocess.run(f"rm -rf {verilator_tb_prefix}trace.vcd {verilator_tb_prefix}*.v {verilator_tb_prefix}tb_test.cpp", shell=True, check=False)
+    subprocess.run(f"rm -rf {verilator_tb_prefix}obj_dir {verilator_tb_prefix}.stamp.verilate", shell=True, check=False)
 
 def populate_input_dir():
     input_prefix = root + '/input/syntetic'
-    subprocess.run(f"mv {out_folder}test.v {input_prefix}/design/", shell=True, check=False)
+    subprocess.run(f"mv {out_folder}*.v {input_prefix}/design/", shell=True, check=False)
     subprocess.run(f"mv {out_folder}specifications.txt {input_prefix}/expected/", shell=True, check=False)
     subprocess.run(f"mv {out_folder}trace.vcd {input_prefix}/traces/", shell=True, check=False)
     #subprocess.run(f"rm -rf {out_folder}/*", shell=True, check=False)
+    with open(xml_prefix + 'temp.txt', 'r') as temp_file:
+        temp_content = temp_file.read()
+        print(temp_content)
 
 def main():
     import xml.etree.ElementTree as ET
