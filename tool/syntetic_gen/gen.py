@@ -220,7 +220,7 @@ def populate_input_dir():
     subprocess.run(f"mv {out_folder}*.v {input_prefix}/design/", shell=True, check=False)
     subprocess.run(f"mv {out_folder}specifications.txt {input_prefix}/expected/", shell=True, check=False)
     subprocess.run(f"mv {out_folder}trace.vcd {input_prefix}/traces/", shell=True, check=False)
-    #subprocess.run(f"rm -rf {out_folder}/*", shell=True, check=False)
+    subprocess.run(f"rm -rf {out_folder}/*", shell=True, check=False)
     with open(xml_prefix + 'temp.txt', 'r') as temp_file:
         temp_content = temp_file.read()
         print(temp_content)
@@ -248,7 +248,13 @@ def main():
     assnumbs = int(input(f"Insert the number of parallel properties to be used in the design: "))
 
     #enable parallel module config
-    modules = True
+    modules_input = input("Enable parallel module configuration? (yes/no): ").strip().lower()
+    if modules_input in ['yes', 'no']:
+        modules = modules_input == 'yes'
+    else:
+        print("Invalid input. Please enter 'yes' or 'no'.")
+        exit(4)
+
 
     merged_specification = {}
     #randomly select template_number templates
