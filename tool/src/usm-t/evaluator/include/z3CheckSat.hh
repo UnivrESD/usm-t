@@ -2,6 +2,7 @@
 #pragma once
 #include "expUtils/Z3ExpWrapper.hh"
 #include "formula/atom/Atom.hh"
+#include <map>
 
 #include "message.hh"
 namespace harm {
@@ -14,4 +15,5 @@ bool check_implies(const expression::PropositionPtr &p1,
 
 bool check_implies(harm::EdgeProposition *p1,
                    harm::EdgeProposition *p2);
+
 } // namespace z3

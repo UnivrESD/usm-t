@@ -5,37 +5,44 @@
 #include "boolean_automaton_cost.hpp"
 #include "src/env/ged_env.hpp"
 
+std::map<std::pair<std::string, std::string>, double>
+    edge_rel_cost_map;
+
 namespace usmt {
 using namespace harm;
 
-double computeEditDistanceSimilarity(
-    const SerializedAutomaton &sa1, const SerializedAutomaton &sa2,
-    std::map<std::pair<std::string, std::string>, double>
-        &edge_rel_cost_map) {
+double computeEditDistanceSimilarity(const SerializedAutomaton &sa1,
+                                     const SerializedAutomaton &sa2) {
+
+  std::unordered_map<std::string, EdgeProposition *>
+      edgeStrToProposition;
 
   // Instantiate GED environment
   ged::GEDEnv<int, double, std::string> env;
-  env.set_edit_costs(new ged::BooleanAutomaton<double, std::string>(
-      edge_rel_cost_map));
 
-  ged::GEDGraph::GraphID expected_graph =
-      env.add_graph("expected", "ClassA");
+  ged::GEDGraph::GraphID graph1 = env.add_graph("graph1", "ClassA");
   for (auto &[id, label] : sa1.nodes) {
-    env.add_node(expected_graph, id, label);
+    env.add_node(graph1, id, label);
   }
-  for (auto &[from, to, label] : sa1.edges) {
-    env.add_edge(expected_graph, from, to, label->toString());
+  for (auto &[from, to, edgeProp] : sa1.edges) {
+    std::string edgeStr = edgeProp->toString();
+    edgeStrToProposition[edgeStr] = edgeProp;
+    env.add_edge(graph1, from, to, edgeStr);
   }
 
-  ged::GEDGraph::GraphID mined_graph =
-      env.add_graph("mined", "ClassA");
+  ged::GEDGraph::GraphID graph2 = env.add_graph("graph1", "ClassA");
 
   for (auto &[id, label] : sa2.nodes) {
-    env.add_node(mined_graph, id, label);
+    env.add_node(graph2, id, label);
   }
-  for (auto &[from, to, label] : sa2.edges) {
-    env.add_edge(mined_graph, from, to, label->toString());
+  for (auto &[from, to, edgeProp] : sa2.edges) {
+    std::string edgeStr = edgeProp->toString();
+    edgeStrToProposition[edgeStr] = edgeProp;
+    env.add_edge(graph2, from, to, edgeStr);
   }
+
+  env.set_edit_costs(new ged::BooleanAutomaton<double, std::string>(
+      edgeStrToProposition));
 
   env.init(ged::Options::InitType::EAGER_WITHOUT_SHUFFLED_COPIES);
 
@@ -47,11 +54,10 @@ double computeEditDistanceSimilarity(
   env.init_method();
 
   // Run GED computation between the two graphs
-  env.run_method(expected_graph, mined_graph, 0);
+  env.run_method(graph1, graph2, 0);
 
   // Retrieve and print the results
-  double upper_bound =
-      env.get_upper_bound(expected_graph, mined_graph);
+  double upper_bound = env.get_upper_bound(graph1, graph2);
 
   double similarity =
       1.f - (upper_bound /

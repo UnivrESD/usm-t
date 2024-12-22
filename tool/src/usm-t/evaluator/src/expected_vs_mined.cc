@@ -182,7 +182,7 @@ getFlattenedAssertions(const usmt::UseCase &use_case,
       if (p2 == nullptr || it1 == it2) {
         continue;
       }
-      //std::cout << prop2String(p1) << " vs " << prop2String(p2) << "\n";
+
       bool p1_implies_p2 = false;
       bool p2_implies_p1 = false;
       if (edge_rel_cost_map.count(std::make_pair(rt1, rt2))) {
@@ -203,18 +203,11 @@ getFlattenedAssertions(const usmt::UseCase &use_case,
       }
 
       if (p1_implies_p2 && p2_implies_p1) {
-        //messageWarning("Propositions " + rt1 + " and " + rt2 + " are semantically equivalent");
         edge_rel_cost_map[std::make_pair(rt2, rt1)] = 1.0;
         edge_rel_cost_map[std::make_pair(rt1, rt2)] = 1.0;
         semantically_equivalent[rt1].insert(rt2);
         p2 = nullptr;
       }
-      //std::cout << edge_rel_cost_map[std::make_pair(rt1, rt2)]
-      //          << "\n";
-      //std::cout << edge_rel_cost_map[std::make_pair(rt2, rt1)]
-      //          << "\n";
-      //std::cout << ">>>>>>>>>>>>>>>>>>>>"
-      //          << "\n";
 
     } //end for it2
     pb.increment(0);
@@ -367,80 +360,24 @@ void evaluateWithEditDistance(
     minedToSAutomaton[ma] = serializeAutomaton(aut);
   }
 
-  std::unordered_set<std::string> all_edge_labels;
-  std::unordered_map<std::string, EdgeProposition *>
-      all_edgeToProposition;
+  progresscpp::ParallelProgressBar pb;
+  pb.addInstance(
+      0, "Computing Edit Distance Similarity...",
+      expectedToSAutomaton.size() * minedToSAutomaton.size(), 70);
 
   for (const auto &[ea, ea_sa] : expectedToSAutomaton) {
-    for (auto &[from, to, edgeProp] : ea_sa.edges) {
-      std::string label = edgeProp->toString();
-      all_edge_labels.insert(label);
-      all_edgeToProposition[label] = edgeProp;
-    }
-  }
+    for (const auto &[ma, ma_sa] : minedToSAutomaton) {
 
-  for (const auto &[ma, ma_sa] : minedToSAutomaton) {
-    for (auto &[from, to, edgeProp] : ma_sa.edges) {
-      std::string label = edgeProp->toString();
-      all_edge_labels.insert(label);
-      all_edgeToProposition[label] = edgeProp;
-    }
-  }
-
-  progresscpp::ParallelProgressBar pb;
-  pb.addInstance(0, "Computing edge relabling cost",
-                 all_edge_labels.size() * all_edge_labels.size(), 70);
-
-  //the cost to all couples of edges
-  for (const auto &label1 : all_edge_labels) {
-    for (const auto &label2 : all_edge_labels) {
-      if (edge_rel_cost_map.count(std::make_pair(label1, label2))) {
-        pb.increment(0);
-        pb.display();
-        continue;
-      }
-      if (label1 == label2) { //optimization
-        edge_rel_cost_map[std::make_pair(label1, label2)] = 0.0;
-      } else if (z3::check_implies(
-                     all_edgeToProposition.at(label1),
-                     all_edgeToProposition.at(label2))) {
-        //std::cout << label1 << " -> " << label2 << "\n";
-        edge_rel_cost_map[std::make_pair(label1, label2)] = 0.5;
-      } else {
-        //std::cout << label1 << " -/> " << label2 << "\n";
-        edge_rel_cost_map[std::make_pair(label1, label2)] = 1.0;
-      }
-
+      double similarity = computeEditDistanceSimilarity(ea_sa, ma_sa);
+      //std::cout << "Similarity between " << ea->toString() << " and " << ma->toString() << " is " << similarity << "\n";
+      report->_expextedToBestSimilarScore[ea->toString()] = std::max(
+          similarity,
+          report->_expextedToBestSimilarScore[ea->toString()]);
       pb.increment(0);
       pb.display();
     }
   }
   pb.done(0);
-
-  //fix cost for syntatically different but semantically equivalent edges
-  for (const auto &label1 : all_edge_labels) {
-    for (const auto &label2 : all_edge_labels) {
-      if (edge_rel_cost_map.at(std::make_pair(label1, label2)) ==
-              0.5 &&
-          edge_rel_cost_map.at(std::make_pair(label2, label1)) ==
-              0.5) {
-        edge_rel_cost_map[std::make_pair(label1, label2)] = 0.0;
-        edge_rel_cost_map[std::make_pair(label2, label1)] = 0.0;
-      }
-    }
-  }
-
-  for (const auto &[ea, ea_sa] : expectedToSAutomaton) {
-    for (const auto &[ma, ma_sa] : minedToSAutomaton) {
-
-      double similarity = computeEditDistanceSimilarity(
-          ea_sa, ma_sa, edge_rel_cost_map);
-      //std::cout << "Similarity between " << ea->toString() << " and " << ma->toString() << " is " << similarity << "\n";
-      report->_expextedToBestSimilarScore[ea->toString()] = std::max(
-          similarity,
-          report->_expextedToBestSimilarScore[ea->toString()]);
-    }
-  }
 }
 
 } // namespace usmt

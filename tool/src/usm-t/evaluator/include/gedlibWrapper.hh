@@ -23,9 +23,7 @@ public:
 };
 
 double computeEditDistanceSimilarity(const SerializedAutomaton &sa1,
-                         const SerializedAutomaton &sa2,
-                         std::map<std::pair<std::string, std::string>,
-                                  double> &edge_rel_cost_map);
+                                     const SerializedAutomaton &sa2);
 
 SerializedAutomaton serializeAutomaton(Automaton *aut);
 } // namespace usmt
