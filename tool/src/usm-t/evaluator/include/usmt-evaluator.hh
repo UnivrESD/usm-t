@@ -20,10 +20,14 @@ int compareLanguage(const FlattenedAssertion &a1,
                     const FlattenedAssertion &a2);
 
 EvalReportPtr
-evaluateExpectedvsMined(const UseCase &use_case,
-                        const std::string expected_ass_path);
+runSemanticEquivalence(const usmt::UseCase &use_case,
+                       const std::string expected_assertion_path);
 
-EvalReportPtr evaluateFaultCoverage(const UseCase &use_case,
+EvalReportPtr
+runEditDistance(const usmt::UseCase &use_case,
+                const std::string expected_assertion_path);
+
+EvalReportPtr runFaultCoverage(const UseCase &use_case,
                                     const Comparator comp);
 
 EvalReportPtr evaluate(const usmt::UseCase &use_case,

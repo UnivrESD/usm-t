@@ -76,33 +76,36 @@ public:
   size_t _totFaults;
 };
 
-class ExpectedVSMinedReport : public EvalReport {
+class SemanticEquivalenceReport : public EvalReport {
 public:
-  ExpectedVSMinedReport() : EvalReport("expected_vs_mined") {}
-  ~ExpectedVSMinedReport() = default;
+  SemanticEquivalenceReport() : EvalReport("semantic_equivalence") {}
+  ~SemanticEquivalenceReport() = default;
 
   virtual std::string to_string() override {
     std::stringstream ss;
-    ss << "Expected vs Mined Report\n";
-    ss << "Semantically Covered " << _expectedCoveredWith.size() << "/"
-       << _totExpected << "\n";
-    if (_expectedCoveredWith.size() != _totExpected) {
-      ss << "SCovered + SSimilar "
-         << _expectedCoveredWith.size() + _expextedToSimilar.size()
-         << "/" << _totExpected << "\n";
+    size_t totExpected = _expectedToCoveredWith.size() +
+                         _expectedToSimilar.size() +
+                         _uncovered.size();
+    ss << "Semantic equivalence report\n";
+    ss << "Semantically Covered " << _expectedToCoveredWith.size()
+       << "/" << totExpected << "\n";
+
+    if (_expectedToCoveredWith.size() != totExpected) {
+      ss << "SSimilar " << _expectedToSimilar.size() << "/"
+         << totExpected << "\n";
       ss << "--------Covered-"
          << "------------------\n";
     }
 
-    for (const auto &pair : _expectedCoveredWith) {
+    for (const auto &pair : _expectedToCoveredWith) {
       ss << pair.first << "\n";
       ss << "--->  \t\t" << pair.second << "\n";
     }
-    if (_expectedCoveredWith.size() != _totExpected) {
+    if (_expectedToCoveredWith.size() != totExpected) {
       ss << "--------Semantically Similar "
          << "------------------\n";
 
-      for (const auto &pair : _expextedToSimilar) {
+      for (const auto &pair : _expectedToSimilar) {
         ss << pair.first << "\n";
         for (const auto &similar : pair.second) {
           ss << "\t\t\t->  " << similar << "\n";
@@ -110,36 +113,64 @@ public:
       }
     }
 
-    ss << "----------------Edit similarity------------------\n";
-    for (const auto &pair : _expextedToBestSimilarScore) {
-      ss << pair.first << " : " << pair.second << "\n";
-    }
-
-
     return ss.str();
   }
 
   virtual void dumpTo(const std::string &pathToDir) override {
-    messageInfo("Dumping Expected vs Mined Report to: " + pathToDir);
-    std::ofstream out(pathToDir + "/expected_vs_mined_report.csv");
+    messageInfo("Dumping semantic equivalence report to: " +
+                pathToDir);
+    std::ofstream out(pathToDir + "/semantic_equivalence_report.csv");
     out << "Expected, CoveredWith, Similar\n";
-    for (const auto &pair : _expectedCoveredWith) {
+    for (const auto &pair : _expectedToCoveredWith) {
       out << pair.first << ", " << pair.second << ", None \n";
     }
-    for (const auto &pair : _expextedToSimilar) {
+
+    for (const auto &pair : _expectedToSimilar) {
       for (const auto &similar : pair.second) {
         out << pair.first << ", None , " << similar << "\n";
       }
     }
   }
 
-  double _score = 0.f;
-  std::unordered_map<std::string, std::vector<std::string>>
-      _expextedToSimilar;
-  std::unordered_map<std::string, double> _expextedToBestSimilarScore;
-  std::vector<std::pair<std::string, std::string>>
-      _expectedCoveredWith;
-  size_t _totExpected = 0;
+  std::unordered_map<std::string, std::unordered_set<std::string>>
+      _expectedToSimilar;
+  std::unordered_map<std::string, std::string> _expectedToCoveredWith;
+  std::vector<std::string> _uncovered;
+  double _final_score = 0.f;
+};
+
+class EditDistanceReport : public EvalReport {
+public:
+  EditDistanceReport() : EvalReport("edit_distance") {}
+  ~EditDistanceReport() = default;
+
+  virtual std::string to_string() override {
+    std::stringstream ss;
+    ss << "Edit distance Report\n";
+    ss << "----------------Edit similarity------------------\n";
+    for (const auto &pair : _expectedToClosest) {
+      ss << pair.first << "\n\t\t--> " << pair.second.first << " : "
+         << pair.second.second << "\n";
+    }
+
+    return ss.str();
+  }
+
+  virtual void dumpTo(const std::string &pathToDir) override {
+    messageInfo("Dumping edit distance report to: " + pathToDir);
+    std::ofstream out(pathToDir + "/edit_distance_report.csv");
+    out << "Expected, BestCoveredWith, Similarity\n";
+    for (const auto &[expected, mostSimilar] : _expectedToClosest) {
+      auto &[mostSimilar_assertion, similarity] =
+          _expectedToClosest[expected];
+      out << expected << ", " << mostSimilar_assertion << ", "
+          << similarity << "\n";
+    }
+  }
+
+  std::unordered_map<std::string, std::pair<std::string, double>>
+      _expectedToClosest;
+  double _final_score = 0.f;
 };
 
 class TemporalReport : public EvalReport {
@@ -166,8 +197,9 @@ public:
 
 using EvalReportPtr = std::shared_ptr<EvalReport>;
 using FaultCoverageReportPtr = std::shared_ptr<FaultCoverageReport>;
-using ExpectedVSMinedReportPtr =
-    std::shared_ptr<ExpectedVSMinedReport>;
+using SemanticEquivalenceReportPtr =
+    std::shared_ptr<SemanticEquivalenceReport>;
+using EditDistanceReportPtr = std::shared_ptr<EditDistanceReport>;
 using TemporalReportPtr = std::shared_ptr<TemporalReport>;
 
 } // namespace usmt

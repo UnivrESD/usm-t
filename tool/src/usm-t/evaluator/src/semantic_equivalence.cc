@@ -43,26 +43,16 @@
 #include "temporalParsingUtils.hh"
 #include "usmt-evaluator.hh"
 
-#include "gedlibWrapper.hh"
+#include "FlattenedAssertion.hh"
 #include "z3CheckSat.hh"
 
 //normal include
+
 namespace usmt {
 using namespace harm;
 
-static std::map<std::pair<std::string, std::string>, double>
-    edge_rel_cost_map;
-
-void evaluateWithEditDistance(
-    ExpectedVSMinedReportPtr &report,
-    const std::unordered_map<std::string,
-                             std::vector<FlattenedAssertion>>
-        &flattenedAssertions);
-
-struct FlattenedAssertion {
-  AssertionPtr original;
-  std::string flattened_str;
-};
+static std::map<std::pair<std::string, std::string>, bool>
+    non_bool_prop_cache;
 
 int compareLanguage(const FlattenedAssertion &a1,
                     const FlattenedAssertion &a2) {
@@ -185,26 +175,22 @@ getFlattenedAssertions(const usmt::UseCase &use_case,
 
       bool p1_implies_p2 = false;
       bool p2_implies_p1 = false;
-      if (edge_rel_cost_map.count(std::make_pair(rt1, rt2))) {
+      if (non_bool_prop_cache.count(std::make_pair(rt1, rt2))) {
         p1_implies_p2 =
-            edge_rel_cost_map.at(std::make_pair(rt1, rt2)) != 0.0;
+            non_bool_prop_cache.at(std::make_pair(rt1, rt2));
       } else {
         p1_implies_p2 = z3::check_implies(p1, p2);
-        edge_rel_cost_map[std::make_pair(rt1, rt2)] =
-            p1_implies_p2 ? 0.5 : 0;
+        non_bool_prop_cache[std::make_pair(rt1, rt2)] = p1_implies_p2;
       }
-      if (edge_rel_cost_map.count(std::make_pair(rt2, rt1))) {
+      if (non_bool_prop_cache.count(std::make_pair(rt2, rt1))) {
         p2_implies_p1 =
-            edge_rel_cost_map.at(std::make_pair(rt2, rt1)) != 0.0;
+            non_bool_prop_cache.at(std::make_pair(rt2, rt1));
       } else {
         p2_implies_p1 = z3::check_implies(p2, p1);
-        edge_rel_cost_map[std::make_pair(rt2, rt1)] =
-            p2_implies_p1 ? 0.5 : 0;
+        non_bool_prop_cache[std::make_pair(rt2, rt1)] = p2_implies_p1;
       }
 
       if (p1_implies_p2 && p2_implies_p1) {
-        edge_rel_cost_map[std::make_pair(rt2, rt1)] = 1.0;
-        edge_rel_cost_map[std::make_pair(rt1, rt2)] = 1.0;
         semantically_equivalent[rt1].insert(rt2);
         p2 = nullptr;
       }
@@ -252,8 +238,8 @@ getFlattenedAssertions(const usmt::UseCase &use_case,
   return ret;
 }
 
-void compareLanguageExpectedVsMined(
-    ExpectedVSMinedReportPtr report,
+void evaluateWithSemanticComparison(
+    SemanticEquivalenceReportPtr report,
     const std::unordered_map<std::string,
                              std::vector<FlattenedAssertion>>
         &flattenedAssertions) {
@@ -262,7 +248,6 @@ void compareLanguageExpectedVsMined(
 
   const std::vector<FlattenedAssertion> &expected_assertions =
       flattenedAssertions.at("expected");
-  report->_totExpected = expected_assertions.size();
 
   const std::vector<FlattenedAssertion> &mined_assertions =
       flattenedAssertions.at("mined");
@@ -271,113 +256,67 @@ void compareLanguageExpectedVsMined(
                  expected_assertions.size(), 70);
 
   for (const auto &fea : expected_assertions) {
+    std::string fea_assertionStr = fea.original->toString();
+    if (report->_expectedToCoveredWith.count(fea_assertionStr)) {
+      goto increment_pb;
+    }
     for (const auto &fma : mined_assertions) {
       int res = compareLanguage(fea, fma);
+      std::string fma_assertionStr = fma.original->toString();
 
       if (res == 0) {
-        report->_expectedCoveredWith.emplace_back(
-            fea.original->toString(), fma.original->toString());
-        pb.display();
-        break;
+        report->_expectedToCoveredWith[fea_assertionStr] =
+            fma_assertionStr;
+        //clear the similar ones if they are present
+        if (report->_expectedToSimilar.count(fea_assertionStr)) {
+          report->_expectedToSimilar.erase(fea_assertionStr);
+        }
+        goto increment_pb;
       } else if (res != -1) {
-        report->_expextedToSimilar[fea.original->toString()]
-            .push_back(fma.original->toString());
+        report->_expectedToSimilar[fea.original->toString()].insert(
+            fma_assertionStr);
       }
-
-      std::string expected_assertion_str = fea.original->toString();
-      size_t nOfSimilarAssertions =
-          report->_expextedToSimilar.count(expected_assertion_str)
-              ? report->_expextedToSimilar.at(expected_assertion_str)
-                    .size()
-              : 0;
+    }
+    if (!report->_expectedToSimilar.count(fea_assertionStr)) {
+      report->_uncovered.push_back(fea_assertionStr);
     }
 
+  increment_pb:
     pb.increment(0);
     pb.display();
   }
   pb.done(0);
-
-  //remove redudant _expectedCoveredWith
-  std::sort(report->_expectedCoveredWith.begin(),
-            report->_expectedCoveredWith.end(),
-            [](const auto &a, const auto &b) { return a < b; });
-  report->_expectedCoveredWith.erase(
-      std::unique(report->_expectedCoveredWith.begin(),
-                  report->_expectedCoveredWith.end()),
-      report->_expectedCoveredWith.end());
-
-  report->_score = (double)report->_expectedCoveredWith.size() /
-                   (double)report->_totExpected;
 }
 
 EvalReportPtr
-evaluateExpectedvsMined(const usmt::UseCase &use_case,
-                        const std::string expected_assertion_path) {
+runSemanticEquivalence(const usmt::UseCase &use_case,
+                       const std::string expected_assertion_path) {
 
-  ExpectedVSMinedReportPtr ret =
-      std::make_shared<ExpectedVSMinedReport>();
+  SemanticEquivalenceReportPtr report =
+      std::make_shared<SemanticEquivalenceReport>();
 
   auto flattenedAssertions =
       getFlattenedAssertions(use_case, expected_assertion_path);
 
   for (const auto &output : use_case.output) {
-    compareLanguageExpectedVsMined(ret, flattenedAssertions);
-
-    evaluateWithEditDistance(ret, flattenedAssertions);
+    evaluateWithSemanticComparison(report, flattenedAssertions);
   }
 
-  return ret;
-}
-
-void evaluateWithEditDistance(
-    ExpectedVSMinedReportPtr &report,
-    const std::unordered_map<std::string,
-                             std::vector<FlattenedAssertion>>
-        &flattenedAssertions) {
-
-  std::unordered_map<AssertionPtr, SerializedAutomaton>
-      expectedToSAutomaton;
-
-  std::unordered_map<AssertionPtr, SerializedAutomaton>
-      minedToSAutomaton;
-
-  const std::vector<FlattenedAssertion> &expectedAssertions =
-      flattenedAssertions.at("expected");
-  const std::vector<FlattenedAssertion> &minedAssertions =
-      flattenedAssertions.at("mined");
-
-  for (const auto &[ea, flattened_str] : expectedAssertions) {
-    //Extract the automaton without the G
-    Automaton *aut =
-        generateAutomatonFromTemporal(ea->_formula->getItems()[0]);
-    expectedToSAutomaton[ea] = serializeAutomaton(aut);
+  //compute final score
+  for (const auto &[ea, coveredWith] :
+       report->_expectedToCoveredWith) {
+    report->_final_score += 1.f;
+  }
+  for (const auto &[ea, similar] : report->_expectedToSimilar) {
+    report->_final_score += 0.5f;
   }
 
-  for (const auto &[ma, flattened_str] : minedAssertions) {
-    //Extract the automaton without the G
-    Automaton *aut =
-        generateAutomatonFromTemporal(ma->_formula->getItems()[0]);
-    minedToSAutomaton[ma] = serializeAutomaton(aut);
-  }
+  size_t totExpected = report->_expectedToCoveredWith.size() +
+                       report->_expectedToSimilar.size() +
+                       report->_uncovered.size();
+  report->_final_score /= totExpected;
 
-  progresscpp::ParallelProgressBar pb;
-  pb.addInstance(
-      0, "Computing Edit Distance Similarity...",
-      expectedToSAutomaton.size() * minedToSAutomaton.size(), 70);
-
-  for (const auto &[ea, ea_sa] : expectedToSAutomaton) {
-    for (const auto &[ma, ma_sa] : minedToSAutomaton) {
-
-      double similarity = computeEditDistanceSimilarity(ea_sa, ma_sa);
-      //std::cout << "Similarity between " << ea->toString() << " and " << ma->toString() << " is " << similarity << "\n";
-      report->_expextedToBestSimilarScore[ea->toString()] = std::max(
-          similarity,
-          report->_expextedToBestSimilarScore[ea->toString()]);
-      pb.increment(0);
-      pb.display();
-    }
-  }
-  pb.done(0);
+  return report;
 }
 
 } // namespace usmt

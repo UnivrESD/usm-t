@@ -117,11 +117,19 @@ void run() {
               std::dynamic_pointer_cast<FaultCoverageReport>(er);
           line.push_back(
               to_string_with_precision(fcr->fault_coverage, 2));
-        } else if (std::dynamic_pointer_cast<ExpectedVSMinedReport>(
+        } else if (std::dynamic_pointer_cast<
+                       SemanticEquivalenceReport>(er)) {
+          SemanticEquivalenceReportPtr evmr =
+              std::dynamic_pointer_cast<SemanticEquivalenceReport>(
+                  er);
+          line.push_back(
+              to_string_with_precision(evmr->_final_score, 2));
+        } else if (std::dynamic_pointer_cast<EditDistanceReport>(
                        er)) {
-          ExpectedVSMinedReportPtr evmr =
-              std::dynamic_pointer_cast<ExpectedVSMinedReport>(er);
-          line.push_back(to_string_with_precision(evmr->_score, 2));
+          EditDistanceReportPtr evmr =
+              std::dynamic_pointer_cast<EditDistanceReport>(er);
+          line.push_back(
+              to_string_with_precision(evmr->_final_score, 2));
         } else if (std::dynamic_pointer_cast<TemporalReport>(er)) {
           TemporalReportPtr tr =
               std::dynamic_pointer_cast<TemporalReport>(er);

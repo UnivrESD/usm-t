@@ -34,7 +34,7 @@ struct fault_coverage_t {
 static std::vector<size_t>
 getCoverageSet(const fault_coverage_t &fc_result);
 
-EvalReportPtr evaluateFaultCoverage(const UseCase &use_case,
+EvalReportPtr runFaultCoverage(const UseCase &use_case,
                                     const Comparator comp) {
 
   FaultCoverageReportPtr ret = generatePtr<FaultCoverageReport>();

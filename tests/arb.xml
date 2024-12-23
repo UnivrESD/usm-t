@@ -11,9 +11,10 @@
 
 <usm-t>
   <!--
+  -->
   <usecase id="harm_usecase_1_numeric">
     <miner name="harm"/> 
-    <input path="arb2/traces/numeric" trace_type="vcd" clk="clk" rst="rst" scope="arb2_tb" />
+    <input path="arb2/traces/numeric" type="vcd" clk="clk" rst="rst" scope="arb2_tb" />
     <output path="without_next_ass.txt"/>
     <output path="with_next_ass.txt"/>
     <config type="input" path="config1_numeric/generic.xml"/>
@@ -21,7 +22,6 @@
     <input_adaptor path="vcd_to_vcd/run.sh"/>
     <output_adaptor path="spotltl_to_spotltl/run.sh"/>
   </usecase>
-  -->
 
   <usecase id="harm_usecase_1_bool">
     <miner name="harm"/> 
@@ -60,22 +60,24 @@
     The paths here are relative to the root of usm-t
     -->
 
+  <!--
+  <test name="test1_numeric" mode="sequential">
+    <usecase id="harm_usecase_1_numeric"/> 
+    <compare with_strategy="time_to_mine"/>
+    <compare with_strategy="edit_distance" expected="input/arb2/expected/arb2_golden_ass_numeric.txt"/>
+  </test>
+  -->
+
   <test name="test1_bool" mode="sequential">
 
+    <usecase id="harm_usecase_1_bool"/> 
     <usecase id="goldminer_usecase_1"/> 
     <usecase id="texada_usecase_1"/> 
-    <usecase id="harm_usecase_1_bool"/> 
 
     <compare with_strategy="time_to_mine"/>
-    <compare with_strategy="expected_vs_mined" expected="input/arb2/expected/arb2_golden_ass_bool.txt"/>
+    <compare with_strategy="semantic_equivalence" expected="input/arb2/expected/arb2_golden_ass_bool.txt"/>
+    <compare with_strategy="edit_distance" expected="input/arb2/expected/arb2_golden_ass_bool.txt"/>
     <compare with_strategy="fault_coverage" faulty_traces="input/arb2/faulty_traces/" trace_type="csv" />
   </test>
 
-  <!--
-    <usecase id="harm_usecase_1_numeric"/> 
-  <test name="test1_numeric" mode="sequential">
-    <compare with_strategy="time_to_mine"/>
-    <compare with_strategy="expected_vs_mined" expected="input/arb2/expected/arb2_golden_ass_numeric.txt"/>
-  </test>
-  -->
 </usm-t>

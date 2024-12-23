@@ -46,7 +46,9 @@ void parseInput(XmlNode *inputNode, Input &input) {
   input.clk = getAttributeValue(inputNode, "clk", "");
   input.rst = getAttributeValue(inputNode, "rst", "");
   if (input.type == "vcd") {
-    messageErrorIf(input.clk.empty(), "VCD input '"+input.path +"' must have a clk in the xml tag");
+    messageErrorIf(input.clk.empty(),
+                   "VCD input '" + input.path +
+                       "' must have a clk in the xml tag");
   }
 
   input.scope = getAttributeValue(inputNode, "scope", "");
@@ -74,17 +76,20 @@ Comparator parseCompare(XmlNode *compareNode) {
   comp.with_strategy =
       getAttributeValue(compareNode, "with_strategy", "");
   messageErrorIf(!(comp.with_strategy == "fault_coverage" ||
-                   comp.with_strategy == "expected_vs_mined" ||
+                   comp.with_strategy == "semantic_equivalence" ||
+                   comp.with_strategy == "edit_distance" ||
                    comp.with_strategy == "time_to_mine"),
                  "Comparator strategy '" + comp.with_strategy +
                      "' not supported, supported strategies are "
                      "'fault_coverage' and 'expected_vs_mined'");
   comp.expected = getAttributeValue(compareNode, "expected", "");
-  messageErrorIf(comp.expected.empty() &&
-                     comp.with_strategy == "expected_vs_mined",
-                 "Must specify a path to a set of golden assertions "
-                 "with the attribute 'expected' when using the "
-                 "'expected_vs_mined' strategy");
+  messageErrorIf(
+      comp.expected.empty() &&
+          (comp.with_strategy == "semantic_equivalence" ||
+           comp.with_strategy == "edit_distance"),
+      "Must specify a path to a set of golden assertions "
+      "with the attribute 'expected' when using the "
+      "'semantic_equivalence' or 'edit_distance' strategy");
 
   comp.faulty_traces =
       getAttributeValue(compareNode, "faulty_traces", "");

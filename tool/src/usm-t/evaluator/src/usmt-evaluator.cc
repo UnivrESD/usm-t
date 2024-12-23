@@ -9,11 +9,14 @@ EvalReportPtr evaluate(const usmt::UseCase &use_case,
 
   const UseCasePathHandler &ph = use_case.ph;
 
-  if (comp.with_strategy == "expected_vs_mined") {
-    return evaluateExpectedvsMined(use_case, ph.ustm_root + "/" +
-                                                 comp.expected);
+  if (comp.with_strategy == "semantic_equivalence") {
+    return runSemanticEquivalence(use_case,
+                                  ph.ustm_root + "/" + comp.expected);
+  } else if (comp.with_strategy == "edit_distance") {
+    return runEditDistance(use_case,
+                           ph.ustm_root + "/" + comp.expected);
   } else if (comp.with_strategy == "fault_coverage") {
-    return evaluateFaultCoverage(use_case, comp);
+    return runFaultCoverage(use_case, comp);
   }
 
   messageError("Unsupported strategy '" + comp.with_strategy + "'");

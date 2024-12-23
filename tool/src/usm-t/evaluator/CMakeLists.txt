@@ -7,7 +7,7 @@ project(${NAME})
 # Sources.
 #############################################
 
-SET(EVALUATOR_SRC src/expected_vs_mined.cc src/fault_coverage.cc src/assertion_utils.cc src/usmt-evaluator.cc src/z3TestCaseGenerator.cc src/simulation_based.cc src/z3CheckSat.cc src/gedlibWrapper.cc)
+SET(EVALUATOR_SRC src/edit_distance.cc src/semantic_equivalence.cc src/fault_coverage.cc src/assertion_utils.cc src/usmt-evaluator.cc src/z3TestCaseGenerator.cc src/simulation_based.cc src/z3CheckSat.cc src/gedlibWrapper.cc)
 
 #############################################
 # Targets.
