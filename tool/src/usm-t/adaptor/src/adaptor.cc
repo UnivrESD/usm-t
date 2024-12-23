@@ -12,6 +12,13 @@ void adaptInput(const UseCase &use_case) {
   const UseCasePathHandler &ph = use_case.ph;
   messageInfo("Adapting input...");
   for (auto input : use_case.input) {
+    if (input.type != "vcd" && input.type != "csv") {
+      //simply copy the file to the input folder
+      std::filesystem::copy(ph.ustm_root + "/" + ph.work_input +
+                                input.path,
+                            ph.work_path + ph.work_input);
+      continue;
+    }
 
     std::string adapt_input_command = "bash " + ph.input_adaptor_path;
     //add the path to the input and output file of the input adaptor

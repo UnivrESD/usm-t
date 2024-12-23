@@ -30,3 +30,4 @@ tool/.cache/*
 .cache/*
 miners/tools/harm/runs/*
 miners/tools/texada/runs/*
+miners/tools/goldminer/runs/*

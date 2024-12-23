@@ -88,15 +88,6 @@ void run() {
           std::chrono::duration_cast<std::chrono::milliseconds>(stop -
                                                                 start)
               .count();
-      //check if the temporal report exists
-      if (std::find_if(test.comparators.begin(),
-                       test.comparators.end(),
-                       [](const Comparator &c) {
-                         return c.with_strategy == "time_to_mine";
-                       }) != test.comparators.end()) {
-        //add the temporal report to the evaluation reports
-        useCaseToEvalReports[use_case.usecase_id].push_back(tr);
-      }
 
       adaptOutput(use_case);
 
@@ -104,6 +95,7 @@ void run() {
       for (const auto &comp : test.comparators) {
         //skip time_to_mine comparator which is implicit
         if (comp.with_strategy == "time_to_mine") {
+          useCaseToEvalReports[use_case.usecase_id].push_back(tr);
           continue;
         }
         EvalReportPtr er = evaluate(use_case, comp);

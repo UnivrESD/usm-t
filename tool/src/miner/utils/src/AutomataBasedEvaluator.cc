@@ -52,6 +52,11 @@ AutomataBasedEvaluator::AutomataBasedEvaluator(
 }
 
 AutomataBasedEvaluator::~AutomataBasedEvaluator() {
+  deleteCache();
+  delete _automaton;
+}
+
+void AutomataBasedEvaluator::deleteCache() {
   // Free _cacheParallel
   if (_cacheParallel) {
     for (size_t i = 0; i < l1Constants::MAX_THREADS; i++) {
@@ -77,13 +82,18 @@ AutomataBasedEvaluator::~AutomataBasedEvaluator() {
     delete[] _sereShiftCacheParallel;  // Delete the array of pointers
     _sereShiftCacheParallel = nullptr; // Set to nullptr for safety
   }
-
-  delete _automaton;
 }
-
 void AutomataBasedEvaluator::changeTrace(
     const harm::TracePtr &trace) {
+
+  size_t oldTraceLength = _trace->getLength();
+  _trace = trace;
   expression::changeTrace(_formula, trace);
+  //extend the cache if the new trace is longer
+  if (trace->getLength() > oldTraceLength) {
+    deleteCache();
+    initCache();
+  }
 }
 
 struct LinkedEntry {

@@ -39,14 +39,14 @@ std::vector<Test> readTestFile(const std::string &filename) {
 }
 
 void parseInput(XmlNode *inputNode, Input &input) {
-  input.type = getAttributeValue(inputNode, "trace_type", "");
+  input.type = getAttributeValue(inputNode, "type", "");
   input.path = getAttributeValue(inputNode, "path", "");
   messageErrorIf(input.type.empty() || input.path.empty(),
-                 "Input type or path cannot be empty");
+                 "Input type or path cannot be empty in 'input' tag");
   input.clk = getAttributeValue(inputNode, "clk", "");
   input.rst = getAttributeValue(inputNode, "rst", "");
   if (input.type == "vcd") {
-    messageErrorIf(input.clk.empty(), "VCD input must have a clk");
+    messageErrorIf(input.clk.empty(), "VCD input '"+input.path +"' must have a clk in the xml tag");
   }
 
   input.scope = getAttributeValue(inputNode, "scope", "");

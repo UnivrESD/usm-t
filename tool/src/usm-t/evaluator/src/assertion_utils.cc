@@ -96,6 +96,9 @@ TracePtr parseInputTraces(const usmt::UseCase &use_case) {
   std::vector<std::string> allTraces;
 
   for (const auto &input : use_case.input) {
+    if (input.type != "vcd" && input.type != "csv") {
+      continue;
+    }
     std::string trace_path = trace_prefix + input.path;
     messageInfo("Parsing input trace(s) at " + trace_path);
     messageErrorIf(!std::filesystem::exists(trace_path),

@@ -18,6 +18,8 @@ public:
                          const harm::TracePtr &trace);
   ~AutomataBasedEvaluator();
 
+  void deleteCache();
+
   /// \brief evaluate the formula at a given time through a linear algorithm
   std::pair<Trinary, size_t> evaluate(size_t time) override;
 
