@@ -35,7 +35,7 @@ source setup_env.sh
 ```
 
 ## Usage
-To run the generation of verilog designs simply use the following command: 
+To run the generation of verilog designs simply use the following command from the "tool/syntetic_gen" folder: 
 
 ```bash
 # Run the project
