@@ -257,6 +257,7 @@ def main():
 
 
     merged_specification = {}
+    subprocess.run(f'touch {out_folder}/specifications.txt', shell=True, check=False)
     #randomly select template_number templates
     random_templates = random.sample(templates, template_number)
     #iterate over the selected templates to expand them and merge them
