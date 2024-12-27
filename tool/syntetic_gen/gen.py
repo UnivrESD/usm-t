@@ -7,7 +7,7 @@ yosis_prefix = root + '/tool/third_party/oss-cad-suite/bin/'
 ltlsynt_prefix = root + '/tool/third_party/spot/bin/'
 verilator_tb_prefix = root + '/tool/syntetic_gen/verilator_tests/'
 xml_prefix = root +'/tool/syntetic_gen/specs/'
-out_folder = root + '/tool/syntetic_gen/outs/'
+out_folder = root + '/tool/syntetic_gen/temp/'
 
 def expand_spec(specification, lenght, assnumb):
     formula = specification['formula'] 
@@ -221,9 +221,6 @@ def populate_input_dir():
     subprocess.run(f"mv {out_folder}specifications.txt {input_prefix}/expected/", shell=True, check=False)
     subprocess.run(f"mv {out_folder}trace.vcd {input_prefix}/traces/", shell=True, check=False)
     subprocess.run(f"rm -rf {out_folder}/*", shell=True, check=False)
-    with open(xml_prefix + 'temp.txt', 'r') as temp_file:
-        temp_content = temp_file.read()
-        print(temp_content)
 
 def main():
     import xml.etree.ElementTree as ET
