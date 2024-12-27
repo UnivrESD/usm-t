@@ -64,14 +64,16 @@ void evaluateWithEditDistance(
   for (const auto &ea : expectedAssertions) {
     //Extract the automaton without the G
     Automaton *aut =
-        generateAutomatonFromTemporal(ea->_formula->getItems()[0]);
+        //generateAutomatonFromTemporal(ea->_formula->getItems()[0]);
+        generateAutomatonFromTemporal(ea->_formula);
     expectedToSAutomaton[ea] = serializeAutomaton(aut);
   }
 
   for (const auto &ma : minedAssertions) {
     //Extract the automaton without the G
     Automaton *aut =
-        generateAutomatonFromTemporal(ma->_formula->getItems()[0]);
+        //generateAutomatonFromTemporal(ma->_formula->getItems()[0]);
+        generateAutomatonFromTemporal(ma->_formula);
     minedToSAutomaton[ma] = serializeAutomaton(aut);
   }
 
@@ -86,7 +88,7 @@ void evaluateWithEditDistance(
 
       double similarity = computeEditDistanceSimilarity(ea_sa, ma_sa);
       //std::cout << "Similarity between " << ea->toString() << " and " << ma->toString() << " is " << similarity << "\n";
-      if (similarity >
+      if (similarity >=
           report->_expectedToClosest[ea_assertionStr].second) {
         report->_expectedToClosest[ea_assertionStr] =
             std::make_pair(ma_assertionStr, similarity);

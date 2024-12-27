@@ -7,7 +7,6 @@
 
 #include "commandLineParser.hh"
 
-// HARM
 cxxopts::ParseResult parseUSMT(int argc, char *argv[]) {
   try {
     cxxopts::Options options(argv[0], "");

@@ -62,22 +62,24 @@
 
   <!--
   <test name="test1_numeric" mode="sequential">
-    <usecase id="harm_usecase_1_numeric"/> 
+
     <compare with_strategy="time_to_mine"/>
+    <compare with_strategy="semantic_equivalence" expected="input/arb2/expected/arb2_golden_ass_bool.txt"/>
     <compare with_strategy="edit_distance" expected="input/arb2/expected/arb2_golden_ass_numeric.txt"/>
+    <usecase id="harm_usecase_1_numeric"/> 
   </test>
+    <usecase id="texada_usecase_1"/> 
   -->
 
   <test name="test1_bool" mode="sequential">
 
-    <usecase id="harm_usecase_1_bool"/> 
-    <usecase id="goldminer_usecase_1"/> 
-    <usecase id="texada_usecase_1"/> 
+    <usecase id="harm_usecase_1_bool"/>
 
     <compare with_strategy="time_to_mine"/>
-    <compare with_strategy="semantic_equivalence" expected="input/arb2/expected/arb2_golden_ass_bool.txt"/>
     <compare with_strategy="edit_distance" expected="input/arb2/expected/arb2_golden_ass_bool.txt"/>
-    <compare with_strategy="fault_coverage" faulty_traces="input/arb2/faulty_traces/" trace_type="csv" />
+    <compare with_strategy="semantic_equivalence" expected="input/arb2/expected/arb2_golden_ass_bool.txt"/>
   </test>
+
+
 
 </usm-t>

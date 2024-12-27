@@ -9,7 +9,6 @@ message("-- Including test cases...")
 set(WORK_DIR ${CMAKE_BINARY_DIR})
 set(TEST_DIR ${CMAKE_BINARY_DIR}/../tests)
 
-addTest(languageCompareTests languageCompareTest.cc)
 addTest(z3Tests z3Tests.cc)
-addTest(gatherPathTests gatherPathTests.cc)
 addTest(gedlibTests gedlibTests.cc)
+addTest(holdsTest holdsTest.cc)

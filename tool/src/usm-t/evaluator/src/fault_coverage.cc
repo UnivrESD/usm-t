@@ -35,7 +35,7 @@ static std::vector<size_t>
 getCoverageSet(const fault_coverage_t &fc_result);
 
 EvalReportPtr runFaultCoverage(const UseCase &use_case,
-                                    const Comparator comp) {
+                               const Comparator comp) {
 
   FaultCoverageReportPtr ret = generatePtr<FaultCoverageReport>();
 
@@ -115,23 +115,18 @@ void usmt_fbqUsingFaultyTraces(
   std::unordered_map<size_t, std::vector<size_t>> &_fToAid =
       fc_result._fToAid;
 
-  //lower the number of threads to avoid wasting memory
-  size_t prevl1Val = l1Constants::MAX_THREADS;
-  l1Constants::MAX_THREADS = 1;
-
   progresscpp::ParallelProgressBar progressBarPS;
   progressBarPS.addInstance(0,
                             "Preparing fault-based qualification...",
                             selected.size(), 70);
   progressBarPS.display();
-  std::unordered_map<size_t, TemplateImplicationPtr>
-      aid_to_noCacheTemplates;
 
   //make a new template for each assertion to allow the use of templates utils
   for (const AssertionPtr &a : selected) {
-    aid_to_noCacheTemplates[a->_id] =
-        hparser::parseTemplateImplication(
-            a->toString(), originalTrace, DTLimits(), 0);
+    a->enableEvaluation(originalTrace);
+    messageErrorIf(!a->holdsOnTrace(),
+                   "Specification '" + a->toString() +
+                       "', does not hold on the golden traces'");
 
     progressBarPS.increment(0);
     progressBarPS.display();
@@ -167,25 +162,22 @@ void usmt_fbqUsingFaultyTraces(
 
     auto ft = parseFaultyTrace(fc_result._faultyTraceFiles[j]);
     size_t elaborated = 0;
-    for (auto [aid, noCacheTemplate] : aid_to_noCacheTemplates) {
+    for (auto assertion : selected) {
       //test if the assertion fails on the faulty trace
 
       //new assertion with faulty trace
-      TemplateImplicationPtr fAss =
-          generatePtr<TemplateImplication>(*noCacheTemplate);
-      fAss->changeTrace(ft);
+      assertion->changeTrace(ft);
 
-      if (!fAss->assHoldsOnTrace(Location::AntCon)) {
+      if (!assertion->holdsOnTrace()) {
         // new fault covered
         // store the assertion id that covers the fault
-        _aidToF[aid].push_back(j);
+        _aidToF[assertion->_id].push_back(j);
         // store the fault that is covered by the assertion
-        _fToAid[j].push_back(aid);
+        _fToAid[j].push_back(assertion->_id);
         if (!clc::findMinSubset) {
           //stop search for this fault if you do not want the optimal covering set
           //fill the progress bar with the remaining assertions not elaborated
-          progressBar.increment(0, aid_to_noCacheTemplates.size() -
-                                       elaborated);
+          progressBar.increment(0, selected.size() - elaborated);
           progressBar.display();
 
           break;
@@ -227,11 +219,6 @@ void usmt_fbqUsingFaultyTraces(
   //              << "   " << f << "\n";
   //  }
   //}
-
-  //deallocate the Templates created with only 1 thread
-  aid_to_noCacheTemplates.clear();
-  //restore the previous number of threads
-  l1Constants::MAX_THREADS = prevl1Val;
 }
 
 std::vector<size_t>

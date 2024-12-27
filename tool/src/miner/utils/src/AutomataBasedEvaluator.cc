@@ -48,407 +48,39 @@ AutomataBasedEvaluator::AutomataBasedEvaluator(
     const TemporalExpressionPtr &formula, const TracePtr &trace)
     : Evaluator(formula, trace) {
   generateAutomaton();
-  initCache();
 }
 
 AutomataBasedEvaluator::~AutomataBasedEvaluator() {
-  deleteCache();
   delete _automaton;
 }
 
-void AutomataBasedEvaluator::deleteCache() {
-  // Free _cacheParallel
-  if (_cacheParallel) {
-    for (size_t i = 0; i < l1Constants::MAX_THREADS; i++) {
-      delete[] _cacheParallel[i]; // Delete each row
-    }
-    delete[] _cacheParallel;  // Delete the array of pointers
-    _cacheParallel = nullptr; // Set to nullptr for safety
-  }
-
-  // Free _cache
-  delete[] _cache;
-  _cache = nullptr; // Set to nullptr for safety
-
-  // Free _sereShiftCache
-  delete[] _sereShiftCache;
-  _sereShiftCache = nullptr; // Set to nullptr for safety
-
-  // Free _sereShiftCacheParallel
-  if (_sereShiftCacheParallel) {
-    for (size_t i = 0; i < l1Constants::MAX_THREADS; i++) {
-      delete[] _sereShiftCacheParallel[i]; // Delete each row
-    }
-    delete[] _sereShiftCacheParallel;  // Delete the array of pointers
-    _sereShiftCacheParallel = nullptr; // Set to nullptr for safety
-  }
-}
-void AutomataBasedEvaluator::changeTrace(
-    const harm::TracePtr &trace) {
-
-  size_t oldTraceLength = _trace->getLength();
-  _trace = trace;
-  expression::changeTrace(_formula, trace);
-  //extend the cache if the new trace is longer
-  if (trace->getLength() > oldTraceLength) {
-    deleteCache();
-    initCache();
-  }
-}
-
-struct LinkedEntry {
-  LinkedEntry(size_t id) : _id(id), _nextEntry(nullptr) {
-    // not todo
-  }
-  LinkedEntry() : _id(-1), _nextEntry(nullptr) {}
-  size_t _id;
-  LinkedEntry *_nextEntry;
-};
-struct LinkedInterface {
-  LinkedInterface() : _head(nullptr), _tail(nullptr) {}
-
-public:
-  LinkedEntry *_head;
-  LinkedEntry *_tail;
-};
-
-#define printl 0
-void printList(size_t n_size, size_t c_size,
-               std::vector<std::pair<size_t, LinkedInterface>> &curr,
-               std::vector<std::pair<size_t, LinkedInterface>> &next,
-               const std::string msg) {
-  std::cout << msg << "\n";
-  std::cout << "Next:"
-            << "\n";
-  for (size_t i = 0; i < n_size; i++) {
-    if (next[i].second._head == nullptr) {
-      continue;
-    }
-    LinkedEntry *it = next[i].second._head;
-    std::cout << "State " << next[i].first << "\n\t";
-    while (it != nullptr) {
-      std::cout << it->_id << " ";
-      it = it->_nextEntry;
-    }
-    std::cout << "\n";
-  }
-  std::cout << "\n";
-  std::cout << "Curr:"
-            << "\n";
-  for (size_t i = 0; i < c_size; i++) {
-    if (curr[i].second._head == nullptr) {
-      continue;
-    }
-    LinkedEntry *it = curr[i].second._head;
-    std::cout << "State " << curr[i].first << "\n\t";
-    while (it != nullptr) {
-      std::cout << it->_id << " ";
-      it = it->_nextEntry;
-    }
-    std::cout << "\n";
-  }
-  std::cout << "\n";
-}
-template <bool Dynamic>
-void AutomataBasedEvaluator::joinData(Range traceRange,
-                                      const Range &threadsRange) {
-  size_t threadIndex = threadsRange._start;
-  size_t pad = traceRange._length / threadsRange._length;
-  for (size_t timeIndex = traceRange._start;
-       timeIndex < traceRange._start + traceRange._length;
-       timeIndex++) {
-
-    // increment index unless it is already the last thread
-    threadIndex =
-        timeIndex == (traceRange._start +
-                      ((threadIndex - threadsRange._start + 1) *
-                       pad)) &&
-                (threadIndex !=
-                 threadsRange._start + threadsRange._length - 1)
-            ? threadIndex + 1
-            : threadIndex;
-
-    _cache[timeIndex] = _cacheParallel[threadIndex][timeIndex];
-    if constexpr (Dynamic) {
-      _sereShiftCache[timeIndex] =
-          _sereShiftCacheParallel[threadIndex][timeIndex];
-    }
-  }
-}
-template <bool Dynamic>
-void AutomataBasedEvaluator::linearEval(
-    Range traceRange, Range threadsRange,
-    ProtectedQueueNotify<Range> &threadsPool) {
-
-  if (threadsRange._length > 1 &&
-      threadsRange._length <= traceRange._length) {
-
-    std::thread threadArray[threadsRange._length];
-
-    for (size_t nThread = 0; nThread < threadsRange._length;
-         ++nThread) {
-      threadArray[nThread] =
-          std::thread([this, nThread, &threadsRange, &traceRange]() {
-            runLinearEval<Dynamic>(traceRange, threadsRange, nThread);
-          });
-    }
-
-    // join threads
-    for (size_t i = 0; i < threadsRange._length; ++i)
-      threadArray[i].join();
-
-    joinData<Dynamic>(traceRange, threadsRange);
-  } else {
-    // only 1 thread
-    runLinearEval<Dynamic>(traceRange, Range(threadsRange._start, 1));
-    joinData<Dynamic>(traceRange, Range(threadsRange._start, 1));
-  }
-
-  // notify the end and free the threads
-  threadsPool.push(threadsRange);
-}
-
-template <bool Dynamic>
-void AutomataBasedEvaluator::runLinearEval(Range &traceRange,
-                                           const Range &threadsRange,
-                                           size_t nThread) {
-  size_t pad = traceRange._length / threadsRange._length;
-  // sp is exacly the first eval unit
-  size_t sp = traceRange._start + nThread * pad;
-  // ep is 1 unit after the last eval unit
-  size_t ep = (nThread == (threadsRange._length - 1))
-                  ? (traceRange._start + traceRange._length)
-                  : (sp + pad);
-  // debug
-  // std::cout << "sp: "<<sp<<" ep: "<<ep << "\n";
-
-  // to handle the case in which time >= ep but there are still unresolved
-  // units in the states (due to parallelism)
-  bool noActiveInstances = true;
-
-  size_t nStates = _automaton->_idToNode.size();
-  std::vector<std::pair<size_t, LinkedInterface>> curr;
-  std::vector<std::pair<size_t, LinkedInterface>> next;
-  for (size_t i = 0; i < nStates; i++) {
-    curr.emplace_back(i, LinkedInterface());
-    next.emplace_back(i, LinkedInterface());
-  }
-
-  for (size_t time = sp;
-       time < traceRange._start + traceRange._length; time++) {
-    // next -> curr
-#if printl
-    printList(next.size(), curr.size(), curr, next, "next->curr");
-#endif
-
-    for (auto &n : next) {
-      if (n.second._head == nullptr) {
-        continue;
-      }
-      if (curr[n.first].second._head == nullptr) {
-        curr[n.first].second._head = n.second._head;
-        curr[n.first].second._tail = n.second._tail;
-      } else {
-        curr[n.first].second._tail->_nextEntry = n.second._head;
-        curr[n.first].second._tail = n.second._tail;
-      }
-      n.second._head = nullptr;
-      n.second._tail = nullptr;
-      // we still have work to do
-      noActiveInstances = false;
-    }
-
-    // next empty (all to nullptr)
-#if printl
-    printList(next.size(), curr.size(), curr, next,
-              "After: next->curr");
-#endif
-    // increment root state
-    if (time < ep) {
-      if (curr[0].second._head == nullptr) {
-        curr[0].second._head = new LinkedEntry(time);
-        curr[0].second._tail = curr[0].second._head;
-      } else {
-        curr[0].second._tail->_nextEntry = new LinkedEntry(time);
-        curr[0].second._tail = curr[0].second._tail->_nextEntry;
-      }
-    } else if (noActiveInstances) {
-      break;
-    }
-    // curr -> next
-
-#if printl
-    printList(next.size(), curr.size(), curr, next, "curr->next");
-#endif
-    for (auto &c : curr) {
-      if (c.second._head == nullptr) {
-        continue;
-      }
-      for (const auto &edge :
-           _automaton->_idToNode.at(c.first)->_outEdges) {
-        if (edge->_prop->evaluate(time)) {
-          // pass the tokens
-          if (edge->_toNode->_type ==
-              Automaton::Node::Type::Rejecting) {
-            LinkedEntry *it = c.second._head;
-            assert(it != nullptr);
-            while (it != nullptr) {
-              this->_cacheParallel[threadsRange._start + nThread]
-                                  [it->_id] = Trinary::F;
-              if constexpr (Dynamic) {
-                this->_sereShiftCacheParallel[threadsRange._start +
-                                              nThread][it->_id] =
-                    time - it->_id;
-              }
-              LinkedEntry *toDelete = it;
-              it = it->_nextEntry;
-              delete toDelete;
-            }
-          } else if (edge->_toNode->_type ==
-                     Automaton::Node::Type::Accepting) {
-            LinkedEntry *it = c.second._head;
-            assert(it != nullptr);
-            while (it != nullptr) {
-              this->_cacheParallel[threadsRange._start + nThread]
-                                  [it->_id] = Trinary::T;
-              if constexpr (Dynamic) {
-                this->_sereShiftCacheParallel[threadsRange._start +
-                                              nThread][it->_id] =
-                    time - it->_id;
-              }
-              LinkedEntry *toDelete = it;
-              it = it->_nextEntry;
-              delete toDelete;
-            }
-          } else {
-            if (next[edge->_toNode->_id].second._head == nullptr) {
-              next[edge->_toNode->_id].second._head = c.second._head;
-              next[edge->_toNode->_id].second._tail = c.second._tail;
-            } else {
-              next[edge->_toNode->_id].second._tail->_nextEntry =
-                  c.second._head;
-              next[edge->_toNode->_id].second._tail = c.second._tail;
-            }
-          }
-          c.second._head = nullptr;
-          c.second._tail = nullptr;
-          break;
-        }
-      }
-
-#if printl
-      printList(next.size(), curr.size(), curr, next,
-                "After: curr->next");
-      std::cout << "--------------------------"
-                << "\n";
-#endif
-    }
-    noActiveInstances = true;
-  }
-  // Unknown instances
-  for (auto &n : next) {
-    if (n.second._head == nullptr) {
-      continue;
-    }
-    LinkedEntry *it = n.second._head;
-    assert(it != nullptr);
-    while (it != nullptr) {
-      this->_cacheParallel[threadsRange._start + nThread][it->_id] =
-          Trinary::U;
-      if constexpr (Dynamic) {
-        this->_sereShiftCacheParallel[threadsRange._start + nThread]
-                                     [it->_id] =
-            (traceRange._start + traceRange._length - 1) - it->_id;
-      }
-      LinkedEntry *toDelete = it;
-      it = it->_nextEntry;
-      delete toDelete;
-    }
-
-    n.second._head = nullptr;
-    n.second._tail = nullptr;
-  }
-}
-
-template <bool Dynamic> void AutomataBasedEvaluator::evalWithCut() {
-  _l1ThreadsGuard.lock();
-  size_t avThreads = std::min(_l1Threads, l1Constants::MAX_THREADS);
-  _l1ThreadsGuard.unlock();
-  size_t start = 0;
-  ProtectedQueueNotify<AutomataBasedEvaluator::Range> threadsPool;
+bool AutomataBasedEvaluator::holdsOnTrace() {
   auto &cuts = _trace->getCuts();
-  if (cuts.size() > 1) {
-    size_t toWaitFor = 0;
-    for (size_t i = 0; i < cuts.size() && avThreads > 0; i++) {
-      size_t nThreads = 1;
-      threadsPool.push(Range(start, nThreads));
-      avThreads -= nThreads;
-      start += nThreads;
-      toWaitFor++;
-    }
-    size_t prevCut = 0;
-    for (size_t i = 0; i < cuts.size(); i++) {
-      auto &cut = cuts[i];
-      auto threadsRange = threadsPool.pop();
-      auto traceRange = Range(prevCut, (cut - prevCut) + 1);
-      linearEval<Dynamic>(traceRange, threadsRange, threadsPool);
-      prevCut = cut + 1;
+  size_t prevCut = 0;
+  for (size_t i = 0; i < cuts.size(); i++) {
+    auto &cut = cuts[i];
+    if (!evaluateAutomaton(prevCut, cut + 1)) {
+      return false;
     }
 
-    for (size_t i = 0; i < toWaitFor; i++) {
-      threadsPool.pop();
-    }
-  } else {
-    linearEval<Dynamic>(
-        Range(0, _trace->getLength()),
-        Range(0, _trace->getLength() < 5000 /*heuristic optimization*/
-                     ? 1
-                     : avThreads),
-        threadsPool);
-
-    //linearEval<Dynamic>(Range(0, _trace->getLength()), Range(0, avThreads), threadsPool);
+    prevCut = cut + 1;
   }
+
+  return true;
 }
 
-void AutomataBasedEvaluator::linearEval(harm::Location what) {
-  if (_inCache) {
-    return;
-  }
-  evalWithCut<true>();
-  _inCache = true;
-}
-
-std::pair<Trinary, size_t>
-AutomataBasedEvaluator::evaluate(size_t time) {
-  linearEval(harm::Location::AntCon);
-  return std::make_pair(_cache[time], _sereShiftCache[time]);
-}
-
-template <bool Dynamic>
-std::pair<Trinary, size_t>
-AutomataBasedEvaluator::evaluateAutomaton(size_t time) {
-  size_t dShift = 0;
+bool AutomataBasedEvaluator::evaluateAutomaton(size_t start,
+                                               size_t end) {
   Automaton::Node *cn = _automaton->_root;
   /* visit the automaton by evaluating the edges (which are propositions)
    */
-  while (time < _trace->getLength()) {
+  while (start < end) {
     for (const auto &edge : cn->_outEdges) {
-      // if "the current cn->_outEdges[i] is true at instant 'time'"
-      if (edge->_prop->evaluate(time)) {
+      // if "the current cn->_outEdges[i] is true at instant 'start'"
+      if (edge->_prop->evaluate(start)) {
         if (edge->_toNode->_type ==
             Automaton::Node::Type::Rejecting) {
-          if constexpr (Dynamic) {
-            // store the dynamic shift for the current evaluation
-            dShift = time;
-          }
-          return {Trinary::F, dShift};
-        } else if (edge->_toNode->_type ==
-                   Automaton::Node::Type::Accepting) {
-          if constexpr (Dynamic) {
-            // store the dynamic shift for the current evaluation
-            dShift = time;
-          }
-          return {Trinary::T, dShift};
+          return false;
         }
 
         // go to the next state
@@ -456,14 +88,11 @@ AutomataBasedEvaluator::evaluateAutomaton(size_t time) {
         break;
       }
     }
-    // each time we change state, time increases by 1
-    time++;
+    // each start we change state, start increases by 1
+    start++;
   }
-  if constexpr (Dynamic) {
-    // store the dynamic shift for the current evaluation
-    dShift = time;
-  }
-  return {Trinary::U, dShift};
+
+  return true;
 }
 
 void AutomataBasedEvaluator::generateAutomaton() {
@@ -521,35 +150,6 @@ generateAutomatonFromTemporal(const TemporalExpressionPtr &formula) {
 #endif
 }
 
-void AutomataBasedEvaluator::initCache() {
-  _cacheParallel = new Trinary *[l1Constants::MAX_THREADS];
-  for (size_t i = 0; i < l1Constants::MAX_THREADS; i++) {
-    _cacheParallel[i] = new Trinary[_trace->getLength()];
-    //init
-    std::fill_n(_cacheParallel[i], _trace->getLength(), Trinary::U);
-  }
-
-  //final truth values memory: final result of linearEval
-  _cache = new Trinary[_trace->getLength()];
-  std::fill_n(_cache, _trace->getLength(), Trinary::U);
-
-  //allocate more memory to keep track of sere shifts
-  _sereShiftCache = new size_t[_trace->getLength()];
-  std::fill_n(_sereShiftCache, _trace->getLength(), 0);
-  _sereShiftCacheParallel = new size_t *[l1Constants::MAX_THREADS];
-
-  for (size_t i = 0; i < l1Constants::MAX_THREADS; i++) {
-    _sereShiftCacheParallel[i] = new size_t[_trace->getLength()];
-    std::fill_n(_sereShiftCacheParallel[i], _trace->getLength(), 0);
-  }
-}
-
-///explicit template instantiations
-template std::pair<Trinary, size_t>
-AutomataBasedEvaluator::evaluateAutomaton<true>(size_t time);
-template std::pair<Trinary, size_t>
-AutomataBasedEvaluator::evaluateAutomaton<false>(size_t time);
-
 //--------------------------------------------------------------------------------------
 
 ///spot related functions
@@ -571,34 +171,20 @@ generateDeterministicSpotAutomaton(const spot::formula &formula) {
     return cache.at(formulaStr);
   }
 
-  spot::formula formula_to_use = formula;
-
-  if (formula_to_use.kind() == spot::op::Closure) {
-    //adding the EConcat forbids weakly accepting states
-    formula_to_use =
-        spot::formula::EConcat(formula[0], spot::formula::tt());
-    //debug
-    //std::cout << to_string(formula_to_use) << "\n";
-  }
-
   spot::translator trans;
   trans.set_pref(spot::postprocessor::Deterministic);
-  auto aut = trans.run(formula_to_use);
+  auto aut = trans.run(formula);
 
   spot::postprocessor post;
   post.set_pref(spot::postprocessor::Complete);
   aut = post.run(aut);
 
   messageErrorIf(!spot::is_deterministic(aut),
-                 "The formula_to_use '" + to_string(formula_to_use) +
+                 "The formula '" + to_string(formula) +
                      "' generates a non-deterministic automaton");
   messageErrorIf(!spot::is_complete(aut),
-                 "The formula_to_use '" + to_string(formula_to_use) +
+                 "The formula '" + to_string(formula) +
                      "' generates an incomplete automaton");
-  //messageWarningIf(
-  //    aut->num_states() == 1,
-  //    "The formula '" + to_string(formula_to_use) +
-  //        "' generates a trivial automaton with only one state");
 
   //add to cache
   cache.insert({formulaStr, aut});
@@ -695,10 +281,6 @@ Automaton *buildAutomatonFromSpot(spot::twa_graph_ptr &automata,
   // set the initial state of the automaton
   retA->_root = retA->_idToNode.at(0);
 
-  //FIXME: do we still need this?
-  //messageErrorIf(retA->_rejecting == nullptr, "Automaton misses the rejecting state");
-  //messageErrorIf(retA->_accepting == nullptr, "Automaton misses the accepting state");
-
   return retA;
 }
 
@@ -775,5 +357,14 @@ bool isDTO_Str(const std::string &s) {
 }
 
 #endif
+
+void AutomataBasedEvaluator::changeTrace(
+    const harm::TracePtr &trace) {
+
+  size_t oldTraceLength = _trace->getLength();
+  _trace = trace;
+  expression::changeTrace(_formula, trace);
+  //extend the cache if the new trace is longer
+}
 
 } // namespace harm

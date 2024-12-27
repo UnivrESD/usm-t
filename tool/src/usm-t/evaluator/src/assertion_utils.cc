@@ -22,18 +22,19 @@
 #include <vector>
 
 using namespace harm;
+using namespace expression;
 
 namespace usmt {
 
 AssertionPtr makeAssertion(const std::string &assertion_str,
                            const TracePtr &trace) {
-  TemplateImplicationPtr ti = hparser::parseTemplateImplication(
-      assertion_str, trace, harm::DTLimits(), 0);
-  messageErrorIf(!ti->assHoldsOnTrace(harm::Location::AntCon),
-                 "Specification '" + assertion_str +
-                     "', does not hold on the input traces'");
-  AssertionPtr new_ass = generatePtr<Assertion>();
-  fillAssertion(new_ass, ti, false);
+  TemporalExpressionPtr te =
+      hparser::parseTemporalExpression(assertion_str, trace);
+  AssertionPtr new_ass = generatePtr<Assertion>(te);
+  //  new_ass->enableEvaluation(trace);
+  //  messageErrorIf(!new_ass->holdsOnTrace(),
+  //                 "Specification '" + assertion_str +
+  //                     "', does not hold on the input traces'");
   return new_ass;
 }
 

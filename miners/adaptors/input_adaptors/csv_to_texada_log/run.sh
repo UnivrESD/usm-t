@@ -58,7 +58,7 @@ elif [ -d "$input_path" ]; then
         echo "--"  # Separator between files
       fi
     done
-  } > "$concatenated_file"
+  } >> "$concatenated_file"
 
 else
   echo "Error: Input path '$input_path' is not a file or directory."
