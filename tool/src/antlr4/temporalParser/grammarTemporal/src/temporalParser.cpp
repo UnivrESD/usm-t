@@ -7,7 +7,7 @@ bool canUseSharedOperator(const std::string& unaryOp, const std::string& sharedO
 bool canTakeThisNot(const std::string& unaryOp, const std::string& ph);
 
 
-// Generated from temporal.g4 by ANTLR 4.10.1
+// Generated from temporal.g4 by ANTLR 4.12.0
 
 
 #include "temporalListener.h"
@@ -44,196 +44,172 @@ struct TemporalParserStaticData final {
   std::unique_ptr<antlr4::atn::ATN> atn;
 };
 
-std::once_flag temporalParserOnceFlag;
+::antlr4::internal::OnceFlag temporalParserOnceFlag;
 TemporalParserStaticData *temporalParserStaticData = nullptr;
 
 void temporalParserInitialize() {
   assert(temporalParserStaticData == nullptr);
   auto staticData = std::make_unique<TemporalParserStaticData>(
     std::vector<std::string>{
-      "formula", "sva_assert", "implication", "sere", "booleanLayer", "tformula", 
-      "dt_next", "dt_next_and", "dt_ncreps", "startBoolean", "startInt", 
-      "startFloat", "boolean", "booleanAtom", "numeric", "range", "intAtom", 
-      "int_constant", "floatAtom", "relop", "cls_op"
+      "formula", "sere", "booleanLayer", "tformula", "sere_implication", 
+      "startBoolean", "startInt", "startFloat", "boolean", "booleanAtom", 
+      "numeric", "range", "intAtom", "int_constant", "floatAtom", "relop", 
+      "cls_op"
     },
     std::vector<std::string>{
-      "", "'assert property'", "'@posedge'", "'..##'", "'..#'", "'..['", 
-      "']@'", "", "'..&&..'", "", "", "", "", "'R'", "'..'", "'=>'", "'->'", 
-      "'<->'", "", "", "'='", "'##'", "';'", "'first_match'", "'not'", "'and'", 
-      "'intersect'", "'or'", "", "", "", "", "", "", "'{'", "'}'", "'['", 
-      "']'", "'('", "')'", "'inside'", "", "", "", "", "", "", "", "", "'''", 
-      "'+'", "'-'", "'*'", "'/'", "'>'", "'>='", "'<'", "'<='", "'=='", 
-      "'!='", "'&'", "'|'", "'^'", "'~'", "'<<'", "'>>'", "'&&'", "'||'", 
-      "'!'", "':'", "'::'", "'$'", "'><'"
+      "", "", "", "", "", "", "'R'", "'..'", "'=>'", "'->'", "'<->'", "", 
+      "", "'='", "'##'", "';'", "'first_match'", "'not'", "'and'", "'intersect'", 
+      "'or'", "", "", "", "", "", "", "'{'", "'}'", "'['", "']'", "'('", 
+      "')'", "'inside'", "", "", "", "", "", "", "", "", "'''", "'+'", "'-'", 
+      "'*'", "'/'", "'>'", "'>='", "'<'", "'<='", "'=='", "'!='", "'&'", 
+      "'|'", "'^'", "'~'", "'<<'", "'>>'", "'&&'", "'||'", "'!'", "':'", 
+      "'::'", "'$'", "'><'"
     },
     std::vector<std::string>{
-      "", "", "", "", "", "", "", "PLACEHOLDER", "DT_AND", "EVENTUALLY", 
-      "ALWAYS", "NEXT", "UNTIL", "RELEASE", "DOTS", "IMPL", "IMPLO", "IFF", 
-      "SEREIMPL", "SEREIMPLO", "ASS", "DELAY", "SCOL", "FIRST_MATCH", "TNOT", 
-      "TAND", "INTERSECT", "TOR", "BOOLEAN_CONSTANT", "BOOLEAN_VARIABLE", 
-      "INT_VARIABLE", "CONST_SUFFIX", "FLOAT_CONSTANT", "FLOAT_VARIABLE", 
-      "LCURLY", "RCURLY", "LSQUARED", "RSQUARED", "LROUND", "RROUND", "INSIDE", 
-      "FUNCTION", "SINTEGER", "UINTEGER", "FLOAT", "GCC_BINARY", "HEX", 
-      "VERILOG_BINARY", "FVL", "SINGLE_QUOTE", "PLUS", "MINUS", "TIMES", 
+      "", "PLACEHOLDER", "EVENTUALLY", "ALWAYS", "NEXT", "UNTIL", "RELEASE", 
+      "DOTS", "IMPL", "IMPLO", "IFF", "SEREIMPL", "SEREIMPLO", "ASS", "DELAY", 
+      "SCOL", "FIRST_MATCH", "TNOT", "TAND", "INTERSECT", "TOR", "BOOLEAN_CONSTANT", 
+      "BOOLEAN_VARIABLE", "INT_VARIABLE", "CONST_SUFFIX", "FLOAT_CONSTANT", 
+      "FLOAT_VARIABLE", "LCURLY", "RCURLY", "LSQUARED", "RSQUARED", "LROUND", 
+      "RROUND", "INSIDE", "FUNCTION", "SINTEGER", "UINTEGER", "FLOAT", "GCC_BINARY", 
+      "HEX", "VERILOG_BINARY", "FVL", "SINGLE_QUOTE", "PLUS", "MINUS", "TIMES", 
       "DIV", "GT", "GE", "LT", "LE", "EQ", "NEQ", "BAND", "BOR", "BXOR", 
       "NEG", "LSHIFT", "RSHIFT", "AND", "OR", "NOT", "COL", "DCOL", "DOLLAR", 
       "RANGE", "CLS_TYPE", "WS"
     }
   );
   static const int32_t serializedATNSegment[] = {
-  	4,1,74,429,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,
+  	4,1,67,365,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,
   	7,7,7,2,8,7,8,2,9,7,9,2,10,7,10,2,11,7,11,2,12,7,12,2,13,7,13,2,14,7,
-  	14,2,15,7,15,2,16,7,16,2,17,7,17,2,18,7,18,2,19,7,19,2,20,7,20,1,0,1,
-  	0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,3,0,56,8,0,1,1,1,1,1,1,
-  	1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,
-  	1,78,8,1,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,3,2,89,8,2,1,2,1,2,3,2,93,
-  	8,2,1,2,1,2,1,2,1,2,3,2,99,8,2,1,2,1,2,3,2,103,8,2,1,2,1,2,1,2,3,2,108,
-  	8,2,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,
-  	3,1,3,3,3,128,8,3,1,3,3,3,131,8,3,1,3,3,3,134,8,3,1,3,1,3,1,3,1,3,1,3,
-  	1,3,3,3,142,8,3,1,3,3,3,145,8,3,1,3,3,3,148,8,3,1,3,1,3,1,3,1,3,1,3,1,
-  	3,3,3,156,8,3,1,3,3,3,159,8,3,1,3,3,3,162,8,3,1,3,3,3,165,8,3,1,3,3,3,
-  	168,8,3,1,3,1,3,1,3,1,3,3,3,174,8,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,
-  	3,1,3,1,3,1,3,3,3,188,8,3,1,3,3,3,191,8,3,1,3,3,3,194,8,3,1,3,3,3,197,
-  	8,3,1,3,3,3,200,8,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,3,3,213,
-  	8,3,1,3,3,3,216,8,3,1,3,3,3,219,8,3,1,3,1,3,1,3,1,3,1,3,5,3,226,8,3,10,
-  	3,12,3,229,9,3,1,4,1,4,1,4,1,4,1,4,1,4,3,4,237,8,4,1,4,3,4,240,8,4,1,
-  	5,1,5,1,5,1,5,1,5,1,5,1,5,3,5,249,8,5,1,5,1,5,3,5,253,8,5,1,5,1,5,1,5,
-  	1,5,1,5,3,5,260,8,5,1,5,3,5,263,8,5,1,5,3,5,266,8,5,1,5,1,5,1,5,1,5,1,
-  	5,3,5,273,8,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,5,5,284,8,5,10,5,12,
-  	5,287,9,5,1,6,1,6,1,6,1,6,1,7,1,7,1,7,1,7,1,7,1,8,1,8,1,8,1,8,1,8,1,8,
-  	1,8,1,9,1,9,1,9,1,10,1,10,1,10,1,11,1,11,1,11,1,12,1,12,1,12,1,12,1,12,
-  	1,12,1,12,1,12,1,12,1,12,1,12,1,12,1,12,1,12,1,12,1,12,1,12,1,12,1,12,
-  	1,12,1,12,3,12,335,8,12,1,12,1,12,1,12,1,12,1,12,1,12,1,12,1,12,1,12,
-  	1,12,1,12,1,12,5,12,349,8,12,10,12,12,12,352,9,12,1,13,1,13,1,14,1,14,
-  	1,14,1,14,1,14,1,14,1,14,1,14,1,14,3,14,365,8,14,1,14,1,14,1,14,1,14,
-  	1,14,1,14,1,14,1,14,1,14,1,14,1,14,1,14,1,14,1,14,1,14,1,14,1,14,1,14,
-  	1,14,1,14,1,14,1,14,1,14,5,14,390,8,14,10,14,12,14,393,9,14,1,15,1,15,
-  	1,15,1,15,3,15,399,8,15,1,15,1,15,1,16,1,16,3,16,405,8,16,1,17,1,17,1,
-  	17,3,17,410,8,17,1,17,1,17,3,17,414,8,17,1,17,3,17,417,8,17,1,17,1,17,
-  	3,17,421,8,17,1,18,1,18,1,19,1,19,1,20,1,20,1,20,0,4,6,10,24,28,21,0,
-  	2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,0,16,2,0,14,14,
-  	69,69,2,0,43,43,71,71,2,0,25,26,66,66,3,0,27,27,61,61,67,67,2,0,24,24,
-  	68,68,1,0,12,13,2,0,25,25,66,66,2,0,16,16,20,20,2,0,22,22,69,69,1,0,28,
-  	29,1,0,52,53,1,0,50,51,1,0,42,43,1,0,32,33,1,0,54,57,2,0,54,58,72,72,
-  	504,0,55,1,0,0,0,2,77,1,0,0,0,4,107,1,0,0,0,6,173,1,0,0,0,8,239,1,0,0,
-  	0,10,272,1,0,0,0,12,288,1,0,0,0,14,292,1,0,0,0,16,297,1,0,0,0,18,304,
-  	1,0,0,0,20,307,1,0,0,0,22,310,1,0,0,0,24,334,1,0,0,0,26,353,1,0,0,0,28,
-  	364,1,0,0,0,30,394,1,0,0,0,32,404,1,0,0,0,34,420,1,0,0,0,36,422,1,0,0,
-  	0,38,424,1,0,0,0,40,426,1,0,0,0,42,43,5,10,0,0,43,44,5,38,0,0,44,45,3,
-  	4,2,0,45,46,5,39,0,0,46,47,5,0,0,1,47,56,1,0,0,0,48,49,5,10,0,0,49,50,
-  	3,4,2,0,50,51,5,0,0,1,51,56,1,0,0,0,52,53,3,2,1,0,53,54,5,0,0,1,54,56,
-  	1,0,0,0,55,42,1,0,0,0,55,48,1,0,0,0,55,52,1,0,0,0,56,1,1,0,0,0,57,58,
-  	5,1,0,0,58,59,5,38,0,0,59,60,3,2,1,0,60,61,5,39,0,0,61,78,1,0,0,0,62,
-  	63,5,38,0,0,63,64,3,2,1,0,64,65,5,39,0,0,65,78,1,0,0,0,66,67,5,38,0,0,
-  	67,68,5,2,0,0,68,69,3,24,12,0,69,70,5,39,0,0,70,71,3,2,1,0,71,78,1,0,
-  	0,0,72,73,5,38,0,0,73,74,3,4,2,0,74,75,5,39,0,0,75,78,1,0,0,0,76,78,3,
-  	4,2,0,77,57,1,0,0,0,77,62,1,0,0,0,77,66,1,0,0,0,77,72,1,0,0,0,77,76,1,
-  	0,0,0,78,3,1,0,0,0,79,80,3,10,5,0,80,81,5,15,0,0,81,82,3,10,5,0,82,108,
-  	1,0,0,0,83,84,3,10,5,0,84,85,5,16,0,0,85,86,3,10,5,0,86,108,1,0,0,0,87,
-  	89,5,34,0,0,88,87,1,0,0,0,88,89,1,0,0,0,89,90,1,0,0,0,90,92,3,6,3,0,91,
-  	93,5,35,0,0,92,91,1,0,0,0,92,93,1,0,0,0,93,94,1,0,0,0,94,95,5,18,0,0,
-  	95,96,3,10,5,0,96,108,1,0,0,0,97,99,5,34,0,0,98,97,1,0,0,0,98,99,1,0,
-  	0,0,99,100,1,0,0,0,100,102,3,6,3,0,101,103,5,35,0,0,102,101,1,0,0,0,102,
-  	103,1,0,0,0,103,104,1,0,0,0,104,105,5,19,0,0,105,106,3,10,5,0,106,108,
-  	1,0,0,0,107,79,1,0,0,0,107,83,1,0,0,0,107,88,1,0,0,0,107,98,1,0,0,0,108,
-  	5,1,0,0,0,109,110,6,3,-1,0,110,111,5,23,0,0,111,112,5,38,0,0,112,113,
-  	3,6,3,0,113,114,5,39,0,0,114,174,1,0,0,0,115,116,5,38,0,0,116,117,3,6,
-  	3,0,117,118,5,39,0,0,118,174,1,0,0,0,119,120,5,34,0,0,120,121,3,6,3,0,
-  	121,122,5,35,0,0,122,174,1,0,0,0,123,124,3,8,4,0,124,125,5,36,0,0,125,
-  	127,5,20,0,0,126,128,5,43,0,0,127,126,1,0,0,0,127,128,1,0,0,0,128,130,
-  	1,0,0,0,129,131,7,0,0,0,130,129,1,0,0,0,130,131,1,0,0,0,131,133,1,0,0,
-  	0,132,134,7,1,0,0,133,132,1,0,0,0,133,134,1,0,0,0,134,135,1,0,0,0,135,
-  	136,5,37,0,0,136,174,1,0,0,0,137,138,3,8,4,0,138,139,5,36,0,0,139,141,
-  	5,16,0,0,140,142,5,43,0,0,141,140,1,0,0,0,141,142,1,0,0,0,142,144,1,0,
-  	0,0,143,145,7,0,0,0,144,143,1,0,0,0,144,145,1,0,0,0,145,147,1,0,0,0,146,
-  	148,7,1,0,0,147,146,1,0,0,0,147,148,1,0,0,0,148,149,1,0,0,0,149,150,5,
-  	37,0,0,150,174,1,0,0,0,151,174,3,16,8,0,152,174,5,8,0,0,153,155,5,21,
-  	0,0,154,156,5,36,0,0,155,154,1,0,0,0,155,156,1,0,0,0,156,158,1,0,0,0,
-  	157,159,5,43,0,0,158,157,1,0,0,0,158,159,1,0,0,0,159,161,1,0,0,0,160,
-  	162,7,0,0,0,161,160,1,0,0,0,161,162,1,0,0,0,162,164,1,0,0,0,163,165,7,
-  	1,0,0,164,163,1,0,0,0,164,165,1,0,0,0,165,167,1,0,0,0,166,168,5,37,0,
-  	0,167,166,1,0,0,0,167,168,1,0,0,0,168,169,1,0,0,0,169,174,3,6,3,6,170,
-  	174,3,12,6,0,171,174,3,14,7,0,172,174,3,8,4,0,173,109,1,0,0,0,173,115,
-  	1,0,0,0,173,119,1,0,0,0,173,123,1,0,0,0,173,137,1,0,0,0,173,151,1,0,0,
-  	0,173,152,1,0,0,0,173,153,1,0,0,0,173,170,1,0,0,0,173,171,1,0,0,0,173,
-  	172,1,0,0,0,174,227,1,0,0,0,175,176,10,11,0,0,176,177,5,60,0,0,177,226,
-  	3,6,3,12,178,179,10,10,0,0,179,180,7,2,0,0,180,226,3,6,3,11,181,182,10,
-  	8,0,0,182,183,7,3,0,0,183,226,3,6,3,9,184,185,10,7,0,0,185,187,5,21,0,
-  	0,186,188,5,36,0,0,187,186,1,0,0,0,187,188,1,0,0,0,188,190,1,0,0,0,189,
-  	191,5,43,0,0,190,189,1,0,0,0,190,191,1,0,0,0,191,193,1,0,0,0,192,194,
-  	7,0,0,0,193,192,1,0,0,0,193,194,1,0,0,0,194,196,1,0,0,0,195,197,7,1,0,
-  	0,196,195,1,0,0,0,196,197,1,0,0,0,197,199,1,0,0,0,198,200,5,37,0,0,199,
-  	198,1,0,0,0,199,200,1,0,0,0,200,201,1,0,0,0,201,226,3,6,3,8,202,203,10,
-  	3,0,0,203,204,5,69,0,0,204,226,3,6,3,4,205,206,10,2,0,0,206,207,5,22,
-  	0,0,207,226,3,6,3,3,208,209,10,16,0,0,209,210,5,36,0,0,210,212,5,52,0,
-  	0,211,213,5,43,0,0,212,211,1,0,0,0,212,213,1,0,0,0,213,215,1,0,0,0,214,
-  	216,7,0,0,0,215,214,1,0,0,0,215,216,1,0,0,0,216,218,1,0,0,0,217,219,7,
-  	1,0,0,218,217,1,0,0,0,218,219,1,0,0,0,219,220,1,0,0,0,220,226,5,37,0,
-  	0,221,222,10,15,0,0,222,223,5,36,0,0,223,224,5,50,0,0,224,226,5,37,0,
-  	0,225,175,1,0,0,0,225,178,1,0,0,0,225,181,1,0,0,0,225,184,1,0,0,0,225,
-  	202,1,0,0,0,225,205,1,0,0,0,225,208,1,0,0,0,225,221,1,0,0,0,226,229,1,
-  	0,0,0,227,225,1,0,0,0,227,228,1,0,0,0,228,7,1,0,0,0,229,227,1,0,0,0,230,
-  	231,5,38,0,0,231,232,3,8,4,0,232,233,5,39,0,0,233,240,1,0,0,0,234,240,
-  	3,24,12,0,235,237,5,68,0,0,236,235,1,0,0,0,236,237,1,0,0,0,237,238,1,
-  	0,0,0,238,240,5,7,0,0,239,230,1,0,0,0,239,234,1,0,0,0,239,236,1,0,0,0,
-  	240,9,1,0,0,0,241,242,6,5,-1,0,242,243,5,38,0,0,243,244,3,10,5,0,244,
-  	245,5,39,0,0,245,273,1,0,0,0,246,248,4,5,8,0,247,249,5,34,0,0,248,247,
-  	1,0,0,0,248,249,1,0,0,0,249,250,1,0,0,0,250,252,3,6,3,0,251,253,5,35,
-  	0,0,252,251,1,0,0,0,252,253,1,0,0,0,253,273,1,0,0,0,254,255,4,5,9,0,255,
-  	256,7,4,0,0,256,273,3,10,5,8,257,259,5,11,0,0,258,260,5,36,0,0,259,258,
-  	1,0,0,0,259,260,1,0,0,0,260,262,1,0,0,0,261,263,5,43,0,0,262,261,1,0,
-  	0,0,262,263,1,0,0,0,263,265,1,0,0,0,264,266,5,37,0,0,265,264,1,0,0,0,
-  	265,266,1,0,0,0,266,267,1,0,0,0,267,273,3,10,5,7,268,269,5,9,0,0,269,
-  	273,3,10,5,6,270,273,5,8,0,0,271,273,3,8,4,0,272,241,1,0,0,0,272,246,
-  	1,0,0,0,272,254,1,0,0,0,272,257,1,0,0,0,272,268,1,0,0,0,272,270,1,0,0,
-  	0,272,271,1,0,0,0,273,285,1,0,0,0,274,275,10,5,0,0,275,276,7,5,0,0,276,
-  	284,3,10,5,5,277,278,10,4,0,0,278,279,7,6,0,0,279,284,3,10,5,5,280,281,
-  	10,3,0,0,281,282,7,3,0,0,282,284,3,10,5,4,283,274,1,0,0,0,283,277,1,0,
-  	0,0,283,280,1,0,0,0,284,287,1,0,0,0,285,283,1,0,0,0,285,286,1,0,0,0,286,
-  	11,1,0,0,0,287,285,1,0,0,0,288,289,5,3,0,0,289,290,5,43,0,0,290,291,5,
-  	14,0,0,291,13,1,0,0,0,292,293,5,4,0,0,293,294,5,43,0,0,294,295,5,60,0,
-  	0,295,296,5,14,0,0,296,15,1,0,0,0,297,298,5,5,0,0,298,299,7,7,0,0,299,
-  	300,5,43,0,0,300,301,5,6,0,0,301,302,7,8,0,0,302,303,5,14,0,0,303,17,
-  	1,0,0,0,304,305,3,24,12,0,305,306,5,0,0,1,306,19,1,0,0,0,307,308,3,28,
-  	14,0,308,309,5,0,0,1,309,21,1,0,0,0,310,311,3,28,14,0,311,312,5,0,0,1,
-  	312,23,1,0,0,0,313,314,6,12,-1,0,314,315,5,68,0,0,315,335,3,24,12,11,
-  	316,317,3,28,14,0,317,318,3,38,19,0,318,319,3,28,14,0,319,335,1,0,0,0,
-  	320,321,3,28,14,0,321,322,5,58,0,0,322,323,3,28,14,0,323,335,1,0,0,0,
-  	324,325,3,28,14,0,325,326,5,59,0,0,326,327,3,28,14,0,327,335,1,0,0,0,
-  	328,335,3,26,13,0,329,335,3,28,14,0,330,331,5,38,0,0,331,332,3,24,12,
-  	0,332,333,5,39,0,0,333,335,1,0,0,0,334,313,1,0,0,0,334,316,1,0,0,0,334,
-  	320,1,0,0,0,334,324,1,0,0,0,334,328,1,0,0,0,334,329,1,0,0,0,334,330,1,
-  	0,0,0,335,350,1,0,0,0,336,337,10,7,0,0,337,338,5,58,0,0,338,349,3,24,
-  	12,8,339,340,10,6,0,0,340,341,5,59,0,0,341,349,3,24,12,7,342,343,10,5,
-  	0,0,343,344,5,66,0,0,344,349,3,24,12,6,345,346,10,4,0,0,346,347,5,67,
-  	0,0,347,349,3,24,12,5,348,336,1,0,0,0,348,339,1,0,0,0,348,342,1,0,0,0,
-  	348,345,1,0,0,0,349,352,1,0,0,0,350,348,1,0,0,0,350,351,1,0,0,0,351,25,
-  	1,0,0,0,352,350,1,0,0,0,353,354,7,9,0,0,354,27,1,0,0,0,355,356,6,14,-1,
-  	0,356,357,5,63,0,0,357,365,3,28,14,12,358,365,3,32,16,0,359,365,3,36,
-  	18,0,360,361,5,38,0,0,361,362,3,28,14,0,362,363,5,39,0,0,363,365,1,0,
-  	0,0,364,355,1,0,0,0,364,358,1,0,0,0,364,359,1,0,0,0,364,360,1,0,0,0,365,
-  	391,1,0,0,0,366,367,10,10,0,0,367,368,7,10,0,0,368,390,3,28,14,11,369,
-  	370,10,9,0,0,370,371,7,11,0,0,371,390,3,28,14,10,372,373,10,8,0,0,373,
-  	374,5,64,0,0,374,390,3,28,14,9,375,376,10,7,0,0,376,377,5,65,0,0,377,
-  	390,3,28,14,8,378,379,10,6,0,0,379,380,5,60,0,0,380,390,3,28,14,7,381,
-  	382,10,5,0,0,382,383,5,62,0,0,383,390,3,28,14,6,384,385,10,4,0,0,385,
-  	386,5,61,0,0,386,390,3,28,14,5,387,388,10,11,0,0,388,390,3,30,15,0,389,
-  	366,1,0,0,0,389,369,1,0,0,0,389,372,1,0,0,0,389,375,1,0,0,0,389,378,1,
-  	0,0,0,389,381,1,0,0,0,389,384,1,0,0,0,389,387,1,0,0,0,390,393,1,0,0,0,
-  	391,389,1,0,0,0,391,392,1,0,0,0,392,29,1,0,0,0,393,391,1,0,0,0,394,395,
-  	5,36,0,0,395,398,7,12,0,0,396,397,5,69,0,0,397,399,7,12,0,0,398,396,1,
-  	0,0,0,398,399,1,0,0,0,399,400,1,0,0,0,400,401,5,37,0,0,401,31,1,0,0,0,
-  	402,405,3,34,17,0,403,405,5,30,0,0,404,402,1,0,0,0,404,403,1,0,0,0,405,
-  	33,1,0,0,0,406,421,5,45,0,0,407,409,5,42,0,0,408,410,5,31,0,0,409,408,
-  	1,0,0,0,409,410,1,0,0,0,410,421,1,0,0,0,411,413,5,43,0,0,412,414,5,31,
-  	0,0,413,412,1,0,0,0,413,414,1,0,0,0,414,421,1,0,0,0,415,417,5,43,0,0,
-  	416,415,1,0,0,0,416,417,1,0,0,0,417,418,1,0,0,0,418,421,5,47,0,0,419,
-  	421,5,46,0,0,420,406,1,0,0,0,420,407,1,0,0,0,420,411,1,0,0,0,420,416,
-  	1,0,0,0,420,419,1,0,0,0,421,35,1,0,0,0,422,423,7,13,0,0,423,37,1,0,0,
-  	0,424,425,7,14,0,0,425,39,1,0,0,0,426,427,7,15,0,0,427,41,1,0,0,0,51,
-  	55,77,88,92,98,102,107,127,130,133,141,144,147,155,158,161,164,167,173,
-  	187,190,193,196,199,212,215,218,225,227,236,239,248,252,259,262,265,272,
-  	283,285,334,348,350,364,389,391,398,404,409,413,416,420
+  	14,2,15,7,15,2,16,7,16,1,0,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+  	1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,56,8,1,1,1,3,1,59,8,1,1,1,3,
+  	1,62,8,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,70,8,1,1,1,3,1,73,8,1,1,1,3,1,76,
+  	8,1,1,1,1,1,1,1,1,1,3,1,82,8,1,1,1,3,1,85,8,1,1,1,3,1,88,8,1,1,1,3,1,
+  	91,8,1,1,1,3,1,94,8,1,1,1,1,1,3,1,98,8,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+  	1,1,1,1,1,1,1,1,1,1,3,1,112,8,1,1,1,3,1,115,8,1,1,1,3,1,118,8,1,1,1,3,
+  	1,121,8,1,1,1,3,1,124,8,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+  	3,1,137,8,1,1,1,3,1,140,8,1,1,1,3,1,143,8,1,1,1,1,1,1,1,1,1,1,1,5,1,150,
+  	8,1,10,1,12,1,153,9,1,1,2,1,2,1,2,1,2,1,2,1,2,3,2,161,8,2,1,2,3,2,164,
+  	8,2,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,3,3,177,8,3,1,3,3,3,180,
+  	8,3,1,3,3,3,183,8,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,3,3,193,8,3,1,3,1,
+  	3,3,3,197,8,3,3,3,199,8,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,
+  	1,3,5,3,213,8,3,10,3,12,3,216,9,3,1,4,1,4,3,4,220,8,4,1,4,1,4,3,4,224,
+  	8,4,1,4,1,4,1,4,1,4,3,4,230,8,4,1,4,1,4,3,4,234,8,4,1,4,1,4,1,4,3,4,239,
+  	8,4,1,5,1,5,1,5,1,6,1,6,1,6,1,7,1,7,1,7,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,
+  	8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,3,8,271,8,8,1,8,
+  	1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,5,8,285,8,8,10,8,12,8,288,
+  	9,8,1,9,1,9,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,3,10,301,8,10,
+  	1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,
+  	1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,5,10,326,8,10,10,10,12,10,
+  	329,9,10,1,11,1,11,1,11,1,11,3,11,335,8,11,1,11,1,11,1,12,1,12,3,12,341,
+  	8,12,1,13,1,13,1,13,3,13,346,8,13,1,13,1,13,3,13,350,8,13,1,13,3,13,353,
+  	8,13,1,13,1,13,3,13,357,8,13,1,14,1,14,1,15,1,15,1,16,1,16,1,16,0,4,2,
+  	6,16,20,17,0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,0,15,2,0,7,7,
+  	62,62,2,0,36,36,64,64,2,0,18,19,59,59,3,0,20,20,54,54,60,60,2,0,17,17,
+  	61,61,1,0,5,6,2,0,18,18,59,59,1,0,8,9,1,0,21,22,1,0,45,46,1,0,43,44,1,
+  	0,35,36,1,0,25,26,1,0,47,50,2,0,47,51,65,65,435,0,34,1,0,0,0,2,97,1,0,
+  	0,0,4,163,1,0,0,0,6,198,1,0,0,0,8,238,1,0,0,0,10,240,1,0,0,0,12,243,1,
+  	0,0,0,14,246,1,0,0,0,16,270,1,0,0,0,18,289,1,0,0,0,20,300,1,0,0,0,22,
+  	330,1,0,0,0,24,340,1,0,0,0,26,356,1,0,0,0,28,358,1,0,0,0,30,360,1,0,0,
+  	0,32,362,1,0,0,0,34,35,3,6,3,0,35,36,5,0,0,1,36,1,1,0,0,0,37,38,6,1,-1,
+  	0,38,39,5,16,0,0,39,40,5,31,0,0,40,41,3,2,1,0,41,42,5,32,0,0,42,98,1,
+  	0,0,0,43,44,5,31,0,0,44,45,3,2,1,0,45,46,5,32,0,0,46,98,1,0,0,0,47,48,
+  	5,27,0,0,48,49,3,2,1,0,49,50,5,28,0,0,50,98,1,0,0,0,51,52,3,4,2,0,52,
+  	53,5,29,0,0,53,55,5,13,0,0,54,56,5,36,0,0,55,54,1,0,0,0,55,56,1,0,0,0,
+  	56,58,1,0,0,0,57,59,7,0,0,0,58,57,1,0,0,0,58,59,1,0,0,0,59,61,1,0,0,0,
+  	60,62,7,1,0,0,61,60,1,0,0,0,61,62,1,0,0,0,62,63,1,0,0,0,63,64,5,30,0,
+  	0,64,98,1,0,0,0,65,66,3,4,2,0,66,67,5,29,0,0,67,69,5,9,0,0,68,70,5,36,
+  	0,0,69,68,1,0,0,0,69,70,1,0,0,0,70,72,1,0,0,0,71,73,7,0,0,0,72,71,1,0,
+  	0,0,72,73,1,0,0,0,73,75,1,0,0,0,74,76,7,1,0,0,75,74,1,0,0,0,75,76,1,0,
+  	0,0,76,77,1,0,0,0,77,78,5,30,0,0,78,98,1,0,0,0,79,81,5,14,0,0,80,82,5,
+  	29,0,0,81,80,1,0,0,0,81,82,1,0,0,0,82,84,1,0,0,0,83,85,5,36,0,0,84,83,
+  	1,0,0,0,84,85,1,0,0,0,85,87,1,0,0,0,86,88,7,0,0,0,87,86,1,0,0,0,87,88,
+  	1,0,0,0,88,90,1,0,0,0,89,91,7,1,0,0,90,89,1,0,0,0,90,91,1,0,0,0,91,93,
+  	1,0,0,0,92,94,5,30,0,0,93,92,1,0,0,0,93,94,1,0,0,0,94,95,1,0,0,0,95,98,
+  	3,2,1,4,96,98,3,4,2,0,97,37,1,0,0,0,97,43,1,0,0,0,97,47,1,0,0,0,97,51,
+  	1,0,0,0,97,65,1,0,0,0,97,79,1,0,0,0,97,96,1,0,0,0,98,151,1,0,0,0,99,100,
+  	10,8,0,0,100,101,5,53,0,0,101,150,3,2,1,9,102,103,10,7,0,0,103,104,7,
+  	2,0,0,104,150,3,2,1,8,105,106,10,6,0,0,106,107,7,3,0,0,107,150,3,2,1,
+  	7,108,109,10,5,0,0,109,111,5,14,0,0,110,112,5,29,0,0,111,110,1,0,0,0,
+  	111,112,1,0,0,0,112,114,1,0,0,0,113,115,5,36,0,0,114,113,1,0,0,0,114,
+  	115,1,0,0,0,115,117,1,0,0,0,116,118,7,0,0,0,117,116,1,0,0,0,117,118,1,
+  	0,0,0,118,120,1,0,0,0,119,121,7,1,0,0,120,119,1,0,0,0,120,121,1,0,0,0,
+  	121,123,1,0,0,0,122,124,5,30,0,0,123,122,1,0,0,0,123,124,1,0,0,0,124,
+  	125,1,0,0,0,125,150,3,2,1,6,126,127,10,3,0,0,127,128,5,62,0,0,128,150,
+  	3,2,1,4,129,130,10,2,0,0,130,131,5,15,0,0,131,150,3,2,1,3,132,133,10,
+  	12,0,0,133,134,5,29,0,0,134,136,5,45,0,0,135,137,5,36,0,0,136,135,1,0,
+  	0,0,136,137,1,0,0,0,137,139,1,0,0,0,138,140,7,0,0,0,139,138,1,0,0,0,139,
+  	140,1,0,0,0,140,142,1,0,0,0,141,143,7,1,0,0,142,141,1,0,0,0,142,143,1,
+  	0,0,0,143,144,1,0,0,0,144,150,5,30,0,0,145,146,10,11,0,0,146,147,5,29,
+  	0,0,147,148,5,43,0,0,148,150,5,30,0,0,149,99,1,0,0,0,149,102,1,0,0,0,
+  	149,105,1,0,0,0,149,108,1,0,0,0,149,126,1,0,0,0,149,129,1,0,0,0,149,132,
+  	1,0,0,0,149,145,1,0,0,0,150,153,1,0,0,0,151,149,1,0,0,0,151,152,1,0,0,
+  	0,152,3,1,0,0,0,153,151,1,0,0,0,154,155,5,31,0,0,155,156,3,4,2,0,156,
+  	157,5,32,0,0,157,164,1,0,0,0,158,164,3,16,8,0,159,161,5,61,0,0,160,159,
+  	1,0,0,0,160,161,1,0,0,0,161,162,1,0,0,0,162,164,5,1,0,0,163,154,1,0,0,
+  	0,163,158,1,0,0,0,163,160,1,0,0,0,164,5,1,0,0,0,165,166,6,3,-1,0,166,
+  	199,3,4,2,0,167,168,5,31,0,0,168,169,3,6,3,0,169,170,5,32,0,0,170,199,
+  	1,0,0,0,171,172,4,3,8,0,172,173,7,4,0,0,173,199,3,6,3,10,174,176,5,4,
+  	0,0,175,177,5,29,0,0,176,175,1,0,0,0,176,177,1,0,0,0,177,179,1,0,0,0,
+  	178,180,5,36,0,0,179,178,1,0,0,0,179,180,1,0,0,0,180,182,1,0,0,0,181,
+  	183,5,30,0,0,182,181,1,0,0,0,182,183,1,0,0,0,183,184,1,0,0,0,184,199,
+  	3,6,3,9,185,186,5,3,0,0,186,199,3,6,3,8,187,188,5,2,0,0,188,199,3,6,3,
+  	7,189,199,3,8,4,0,190,192,4,3,9,0,191,193,5,27,0,0,192,191,1,0,0,0,192,
+  	193,1,0,0,0,193,194,1,0,0,0,194,196,3,2,1,0,195,197,5,28,0,0,196,195,
+  	1,0,0,0,196,197,1,0,0,0,197,199,1,0,0,0,198,165,1,0,0,0,198,167,1,0,0,
+  	0,198,171,1,0,0,0,198,174,1,0,0,0,198,185,1,0,0,0,198,187,1,0,0,0,198,
+  	189,1,0,0,0,198,190,1,0,0,0,199,214,1,0,0,0,200,201,10,6,0,0,201,202,
+  	7,5,0,0,202,213,3,6,3,6,203,204,10,5,0,0,204,205,7,6,0,0,205,213,3,6,
+  	3,6,206,207,10,4,0,0,207,208,7,3,0,0,208,213,3,6,3,5,209,210,10,3,0,0,
+  	210,211,7,7,0,0,211,213,3,6,3,3,212,200,1,0,0,0,212,203,1,0,0,0,212,206,
+  	1,0,0,0,212,209,1,0,0,0,213,216,1,0,0,0,214,212,1,0,0,0,214,215,1,0,0,
+  	0,215,7,1,0,0,0,216,214,1,0,0,0,217,239,1,0,0,0,218,220,5,27,0,0,219,
+  	218,1,0,0,0,219,220,1,0,0,0,220,221,1,0,0,0,221,223,3,2,1,0,222,224,5,
+  	28,0,0,223,222,1,0,0,0,223,224,1,0,0,0,224,225,1,0,0,0,225,226,5,11,0,
+  	0,226,227,3,6,3,0,227,239,1,0,0,0,228,230,5,27,0,0,229,228,1,0,0,0,229,
+  	230,1,0,0,0,230,231,1,0,0,0,231,233,3,2,1,0,232,234,5,28,0,0,233,232,
+  	1,0,0,0,233,234,1,0,0,0,234,235,1,0,0,0,235,236,5,12,0,0,236,237,3,6,
+  	3,0,237,239,1,0,0,0,238,217,1,0,0,0,238,219,1,0,0,0,238,229,1,0,0,0,239,
+  	9,1,0,0,0,240,241,3,16,8,0,241,242,5,0,0,1,242,11,1,0,0,0,243,244,3,20,
+  	10,0,244,245,5,0,0,1,245,13,1,0,0,0,246,247,3,20,10,0,247,248,5,0,0,1,
+  	248,15,1,0,0,0,249,250,6,8,-1,0,250,251,5,61,0,0,251,271,3,16,8,11,252,
+  	253,3,20,10,0,253,254,3,30,15,0,254,255,3,20,10,0,255,271,1,0,0,0,256,
+  	257,3,20,10,0,257,258,5,51,0,0,258,259,3,20,10,0,259,271,1,0,0,0,260,
+  	261,3,20,10,0,261,262,5,52,0,0,262,263,3,20,10,0,263,271,1,0,0,0,264,
+  	271,3,18,9,0,265,271,3,20,10,0,266,267,5,31,0,0,267,268,3,16,8,0,268,
+  	269,5,32,0,0,269,271,1,0,0,0,270,249,1,0,0,0,270,252,1,0,0,0,270,256,
+  	1,0,0,0,270,260,1,0,0,0,270,264,1,0,0,0,270,265,1,0,0,0,270,266,1,0,0,
+  	0,271,286,1,0,0,0,272,273,10,7,0,0,273,274,5,51,0,0,274,285,3,16,8,8,
+  	275,276,10,6,0,0,276,277,5,52,0,0,277,285,3,16,8,7,278,279,10,5,0,0,279,
+  	280,5,59,0,0,280,285,3,16,8,6,281,282,10,4,0,0,282,283,5,60,0,0,283,285,
+  	3,16,8,5,284,272,1,0,0,0,284,275,1,0,0,0,284,278,1,0,0,0,284,281,1,0,
+  	0,0,285,288,1,0,0,0,286,284,1,0,0,0,286,287,1,0,0,0,287,17,1,0,0,0,288,
+  	286,1,0,0,0,289,290,7,8,0,0,290,19,1,0,0,0,291,292,6,10,-1,0,292,293,
+  	5,56,0,0,293,301,3,20,10,12,294,301,3,24,12,0,295,301,3,28,14,0,296,297,
+  	5,31,0,0,297,298,3,20,10,0,298,299,5,32,0,0,299,301,1,0,0,0,300,291,1,
+  	0,0,0,300,294,1,0,0,0,300,295,1,0,0,0,300,296,1,0,0,0,301,327,1,0,0,0,
+  	302,303,10,10,0,0,303,304,7,9,0,0,304,326,3,20,10,11,305,306,10,9,0,0,
+  	306,307,7,10,0,0,307,326,3,20,10,10,308,309,10,8,0,0,309,310,5,57,0,0,
+  	310,326,3,20,10,9,311,312,10,7,0,0,312,313,5,58,0,0,313,326,3,20,10,8,
+  	314,315,10,6,0,0,315,316,5,53,0,0,316,326,3,20,10,7,317,318,10,5,0,0,
+  	318,319,5,55,0,0,319,326,3,20,10,6,320,321,10,4,0,0,321,322,5,54,0,0,
+  	322,326,3,20,10,5,323,324,10,11,0,0,324,326,3,22,11,0,325,302,1,0,0,0,
+  	325,305,1,0,0,0,325,308,1,0,0,0,325,311,1,0,0,0,325,314,1,0,0,0,325,317,
+  	1,0,0,0,325,320,1,0,0,0,325,323,1,0,0,0,326,329,1,0,0,0,327,325,1,0,0,
+  	0,327,328,1,0,0,0,328,21,1,0,0,0,329,327,1,0,0,0,330,331,5,29,0,0,331,
+  	334,7,11,0,0,332,333,5,62,0,0,333,335,7,11,0,0,334,332,1,0,0,0,334,335,
+  	1,0,0,0,335,336,1,0,0,0,336,337,5,30,0,0,337,23,1,0,0,0,338,341,3,26,
+  	13,0,339,341,5,23,0,0,340,338,1,0,0,0,340,339,1,0,0,0,341,25,1,0,0,0,
+  	342,357,5,38,0,0,343,345,5,35,0,0,344,346,5,24,0,0,345,344,1,0,0,0,345,
+  	346,1,0,0,0,346,357,1,0,0,0,347,349,5,36,0,0,348,350,5,24,0,0,349,348,
+  	1,0,0,0,349,350,1,0,0,0,350,357,1,0,0,0,351,353,5,36,0,0,352,351,1,0,
+  	0,0,352,353,1,0,0,0,353,354,1,0,0,0,354,357,5,40,0,0,355,357,5,39,0,0,
+  	356,342,1,0,0,0,356,343,1,0,0,0,356,347,1,0,0,0,356,352,1,0,0,0,356,355,
+  	1,0,0,0,357,27,1,0,0,0,358,359,7,12,0,0,359,29,1,0,0,0,360,361,7,13,0,
+  	0,361,31,1,0,0,0,362,363,7,14,0,0,363,33,1,0,0,0,49,55,58,61,69,72,75,
+  	81,84,87,90,93,97,111,114,117,120,123,136,139,142,149,151,160,163,176,
+  	179,182,192,196,198,212,214,219,223,229,233,238,270,284,286,300,325,327,
+  	334,340,345,349,352,356
   };
   staticData->serializedATN = antlr4::atn::SerializedATNView(serializedATNSegment, sizeof(serializedATNSegment) / sizeof(serializedATNSegment[0]));
 
@@ -288,28 +264,12 @@ temporalParser::FormulaContext::FormulaContext(ParserRuleContext *parent, size_t
   : ParserRuleContext(parent, invokingState) {
 }
 
-tree::TerminalNode* temporalParser::FormulaContext::ALWAYS() {
-  return getToken(temporalParser::ALWAYS, 0);
-}
-
-tree::TerminalNode* temporalParser::FormulaContext::LROUND() {
-  return getToken(temporalParser::LROUND, 0);
-}
-
-temporalParser::ImplicationContext* temporalParser::FormulaContext::implication() {
-  return getRuleContext<temporalParser::ImplicationContext>(0);
-}
-
-tree::TerminalNode* temporalParser::FormulaContext::RROUND() {
-  return getToken(temporalParser::RROUND, 0);
+temporalParser::TformulaContext* temporalParser::FormulaContext::tformula() {
+  return getRuleContext<temporalParser::TformulaContext>(0);
 }
 
 tree::TerminalNode* temporalParser::FormulaContext::EOF() {
   return getToken(temporalParser::EOF, 0);
-}
-
-temporalParser::Sva_assertContext* temporalParser::FormulaContext::sva_assert() {
-  return getRuleContext<temporalParser::Sva_assertContext>(0);
 }
 
 
@@ -341,351 +301,11 @@ temporalParser::FormulaContext* temporalParser::formula() {
     exitRule();
   });
   try {
-    setState(55);
-    _errHandler->sync(this);
-    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 0, _ctx)) {
-    case 1: {
-      enterOuterAlt(_localctx, 1);
-      setState(42);
-      match(temporalParser::ALWAYS);
-      setState(43);
-      match(temporalParser::LROUND);
-      setState(44);
-      implication();
-      setState(45);
-      match(temporalParser::RROUND);
-      setState(46);
-      match(temporalParser::EOF);
-      break;
-    }
-
-    case 2: {
-      enterOuterAlt(_localctx, 2);
-      setState(48);
-      match(temporalParser::ALWAYS);
-      setState(49);
-      implication();
-      setState(50);
-      match(temporalParser::EOF);
-      break;
-    }
-
-    case 3: {
-      enterOuterAlt(_localctx, 3);
-      setState(52);
-      sva_assert();
-      setState(53);
-      match(temporalParser::EOF);
-      break;
-    }
-
-    default:
-      break;
-    }
-   
-  }
-  catch (RecognitionException &e) {
-    _errHandler->reportError(this, e);
-    _localctx->exception = std::current_exception();
-    _errHandler->recover(this, _localctx->exception);
-  }
-
-  return _localctx;
-}
-
-//----------------- Sva_assertContext ------------------------------------------------------------------
-
-temporalParser::Sva_assertContext::Sva_assertContext(ParserRuleContext *parent, size_t invokingState)
-  : ParserRuleContext(parent, invokingState) {
-}
-
-tree::TerminalNode* temporalParser::Sva_assertContext::LROUND() {
-  return getToken(temporalParser::LROUND, 0);
-}
-
-temporalParser::Sva_assertContext* temporalParser::Sva_assertContext::sva_assert() {
-  return getRuleContext<temporalParser::Sva_assertContext>(0);
-}
-
-tree::TerminalNode* temporalParser::Sva_assertContext::RROUND() {
-  return getToken(temporalParser::RROUND, 0);
-}
-
-temporalParser::BooleanContext* temporalParser::Sva_assertContext::boolean() {
-  return getRuleContext<temporalParser::BooleanContext>(0);
-}
-
-temporalParser::ImplicationContext* temporalParser::Sva_assertContext::implication() {
-  return getRuleContext<temporalParser::ImplicationContext>(0);
-}
-
-
-size_t temporalParser::Sva_assertContext::getRuleIndex() const {
-  return temporalParser::RuleSva_assert;
-}
-
-void temporalParser::Sva_assertContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<temporalListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSva_assert(this);
-}
-
-void temporalParser::Sva_assertContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<temporalListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSva_assert(this);
-}
-
-temporalParser::Sva_assertContext* temporalParser::sva_assert() {
-  Sva_assertContext *_localctx = _tracker.createInstance<Sva_assertContext>(_ctx, getState());
-  enterRule(_localctx, 2, temporalParser::RuleSva_assert);
-
-#if __cplusplus > 201703L
-  auto onExit = finally([=, this] {
-#else
-  auto onExit = finally([=] {
-#endif
-    exitRule();
-  });
-  try {
-    setState(77);
-    _errHandler->sync(this);
-    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 1, _ctx)) {
-    case 1: {
-      enterOuterAlt(_localctx, 1);
-      setState(57);
-      match(temporalParser::T__0);
-      setState(58);
-      match(temporalParser::LROUND);
-      setState(59);
-      sva_assert();
-      setState(60);
-      match(temporalParser::RROUND);
-      break;
-    }
-
-    case 2: {
-      enterOuterAlt(_localctx, 2);
-      setState(62);
-      match(temporalParser::LROUND);
-      setState(63);
-      sva_assert();
-      setState(64);
-      match(temporalParser::RROUND);
-      break;
-    }
-
-    case 3: {
-      enterOuterAlt(_localctx, 3);
-      setState(66);
-      match(temporalParser::LROUND);
-      setState(67);
-      match(temporalParser::T__1);
-      setState(68);
-      boolean(0);
-      setState(69);
-      match(temporalParser::RROUND);
-      setState(70);
-      sva_assert();
-      break;
-    }
-
-    case 4: {
-      enterOuterAlt(_localctx, 4);
-      setState(72);
-      match(temporalParser::LROUND);
-      setState(73);
-      implication();
-      setState(74);
-      match(temporalParser::RROUND);
-      break;
-    }
-
-    case 5: {
-      enterOuterAlt(_localctx, 5);
-      setState(76);
-      implication();
-      break;
-    }
-
-    default:
-      break;
-    }
-   
-  }
-  catch (RecognitionException &e) {
-    _errHandler->reportError(this, e);
-    _localctx->exception = std::current_exception();
-    _errHandler->recover(this, _localctx->exception);
-  }
-
-  return _localctx;
-}
-
-//----------------- ImplicationContext ------------------------------------------------------------------
-
-temporalParser::ImplicationContext::ImplicationContext(ParserRuleContext *parent, size_t invokingState)
-  : ParserRuleContext(parent, invokingState) {
-}
-
-std::vector<temporalParser::TformulaContext *> temporalParser::ImplicationContext::tformula() {
-  return getRuleContexts<temporalParser::TformulaContext>();
-}
-
-temporalParser::TformulaContext* temporalParser::ImplicationContext::tformula(size_t i) {
-  return getRuleContext<temporalParser::TformulaContext>(i);
-}
-
-tree::TerminalNode* temporalParser::ImplicationContext::IMPL() {
-  return getToken(temporalParser::IMPL, 0);
-}
-
-tree::TerminalNode* temporalParser::ImplicationContext::IMPLO() {
-  return getToken(temporalParser::IMPLO, 0);
-}
-
-temporalParser::SereContext* temporalParser::ImplicationContext::sere() {
-  return getRuleContext<temporalParser::SereContext>(0);
-}
-
-tree::TerminalNode* temporalParser::ImplicationContext::SEREIMPL() {
-  return getToken(temporalParser::SEREIMPL, 0);
-}
-
-tree::TerminalNode* temporalParser::ImplicationContext::LCURLY() {
-  return getToken(temporalParser::LCURLY, 0);
-}
-
-tree::TerminalNode* temporalParser::ImplicationContext::RCURLY() {
-  return getToken(temporalParser::RCURLY, 0);
-}
-
-tree::TerminalNode* temporalParser::ImplicationContext::SEREIMPLO() {
-  return getToken(temporalParser::SEREIMPLO, 0);
-}
-
-
-size_t temporalParser::ImplicationContext::getRuleIndex() const {
-  return temporalParser::RuleImplication;
-}
-
-void temporalParser::ImplicationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<temporalListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterImplication(this);
-}
-
-void temporalParser::ImplicationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<temporalListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitImplication(this);
-}
-
-temporalParser::ImplicationContext* temporalParser::implication() {
-  ImplicationContext *_localctx = _tracker.createInstance<ImplicationContext>(_ctx, getState());
-  enterRule(_localctx, 4, temporalParser::RuleImplication);
-  size_t _la = 0;
-
-#if __cplusplus > 201703L
-  auto onExit = finally([=, this] {
-#else
-  auto onExit = finally([=] {
-#endif
-    exitRule();
-  });
-  try {
-    setState(107);
-    _errHandler->sync(this);
-    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 6, _ctx)) {
-    case 1: {
-      enterOuterAlt(_localctx, 1);
-      setState(79);
-      tformula(0);
-      setState(80);
-      match(temporalParser::IMPL);
-      setState(81);
-      tformula(0);
-      break;
-    }
-
-    case 2: {
-      enterOuterAlt(_localctx, 2);
-      setState(83);
-      tformula(0);
-      setState(84);
-      match(temporalParser::IMPLO);
-      setState(85);
-      tformula(0);
-      break;
-    }
-
-    case 3: {
-      enterOuterAlt(_localctx, 3);
-      setState(88);
-      _errHandler->sync(this);
-
-      switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 2, _ctx)) {
-      case 1: {
-        setState(87);
-        match(temporalParser::LCURLY);
-        break;
-      }
-
-      default:
-        break;
-      }
-      setState(90);
-      sere(0);
-      setState(92);
-      _errHandler->sync(this);
-
-      _la = _input->LA(1);
-      if (_la == temporalParser::RCURLY) {
-        setState(91);
-        match(temporalParser::RCURLY);
-      }
-      setState(94);
-      match(temporalParser::SEREIMPL);
-      setState(95);
-      tformula(0);
-      break;
-    }
-
-    case 4: {
-      enterOuterAlt(_localctx, 4);
-      setState(98);
-      _errHandler->sync(this);
-
-      switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 4, _ctx)) {
-      case 1: {
-        setState(97);
-        match(temporalParser::LCURLY);
-        break;
-      }
-
-      default:
-        break;
-      }
-      setState(100);
-      sere(0);
-      setState(102);
-      _errHandler->sync(this);
-
-      _la = _input->LA(1);
-      if (_la == temporalParser::RCURLY) {
-        setState(101);
-        match(temporalParser::RCURLY);
-      }
-      setState(104);
-      match(temporalParser::SEREIMPLO);
-      setState(105);
-      tformula(0);
-      break;
-    }
-
-    default:
-      break;
-    }
+    enterOuterAlt(_localctx, 1);
+    setState(34);
+    tformula(0);
+    setState(35);
+    match(temporalParser::EOF);
    
   }
   catch (RecognitionException &e) {
@@ -771,24 +391,8 @@ tree::TerminalNode* temporalParser::SereContext::IMPLO() {
   return getToken(temporalParser::IMPLO, 0);
 }
 
-temporalParser::Dt_ncrepsContext* temporalParser::SereContext::dt_ncreps() {
-  return getRuleContext<temporalParser::Dt_ncrepsContext>(0);
-}
-
-tree::TerminalNode* temporalParser::SereContext::DT_AND() {
-  return getToken(temporalParser::DT_AND, 0);
-}
-
 tree::TerminalNode* temporalParser::SereContext::DELAY() {
   return getToken(temporalParser::DELAY, 0);
-}
-
-temporalParser::Dt_nextContext* temporalParser::SereContext::dt_next() {
-  return getRuleContext<temporalParser::Dt_nextContext>(0);
-}
-
-temporalParser::Dt_next_andContext* temporalParser::SereContext::dt_next_and() {
-  return getRuleContext<temporalParser::Dt_next_andContext>(0);
 }
 
 tree::TerminalNode* temporalParser::SereContext::BAND() {
@@ -859,8 +463,8 @@ temporalParser::SereContext* temporalParser::sere(int precedence) {
   temporalParser::SereContext *_localctx = _tracker.createInstance<SereContext>(_ctx, parentState);
   temporalParser::SereContext *previousContext = _localctx;
   (void)previousContext; // Silence compiler, in case the context is not used by generated code.
-  size_t startState = 6;
-  enterRecursionRule(_localctx, 6, temporalParser::RuleSere, precedence);
+  size_t startState = 2;
+  enterRecursionRule(_localctx, 2, temporalParser::RuleSere, precedence);
 
     size_t _la = 0;
 
@@ -874,54 +478,54 @@ temporalParser::SereContext* temporalParser::sere(int precedence) {
   try {
     size_t alt;
     enterOuterAlt(_localctx, 1);
-    setState(173);
+    setState(97);
     _errHandler->sync(this);
-    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 18, _ctx)) {
+    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 11, _ctx)) {
     case 1: {
-      setState(110);
+      setState(38);
       match(temporalParser::FIRST_MATCH);
-      setState(111);
+      setState(39);
       match(temporalParser::LROUND);
-      setState(112);
+      setState(40);
       sere(0);
-      setState(113);
+      setState(41);
       match(temporalParser::RROUND);
       break;
     }
 
     case 2: {
-      setState(115);
+      setState(43);
       match(temporalParser::LROUND);
-      setState(116);
+      setState(44);
       sere(0);
-      setState(117);
+      setState(45);
       match(temporalParser::RROUND);
       break;
     }
 
     case 3: {
-      setState(119);
+      setState(47);
       match(temporalParser::LCURLY);
-      setState(120);
+      setState(48);
       sere(0);
-      setState(121);
+      setState(49);
       match(temporalParser::RCURLY);
       break;
     }
 
     case 4: {
-      setState(123);
+      setState(51);
       booleanLayer();
-      setState(124);
+      setState(52);
       match(temporalParser::LSQUARED);
-      setState(125);
+      setState(53);
       match(temporalParser::ASS);
-      setState(127);
+      setState(55);
       _errHandler->sync(this);
 
-      switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 7, _ctx)) {
+      switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 0, _ctx)) {
       case 1: {
-        setState(126);
+        setState(54);
         match(temporalParser::UINTEGER);
         break;
       }
@@ -929,14 +533,14 @@ temporalParser::SereContext* temporalParser::sere(int precedence) {
       default:
         break;
       }
-      setState(130);
+      setState(58);
       _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == temporalParser::DOTS
 
       || _la == temporalParser::COL) {
-        setState(129);
+        setState(57);
         _la = _input->LA(1);
         if (!(_la == temporalParser::DOTS
 
@@ -948,14 +552,14 @@ temporalParser::SereContext* temporalParser::sere(int precedence) {
           consume();
         }
       }
-      setState(133);
+      setState(61);
       _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == temporalParser::UINTEGER
 
       || _la == temporalParser::DOLLAR) {
-        setState(132);
+        setState(60);
         _la = _input->LA(1);
         if (!(_la == temporalParser::UINTEGER
 
@@ -967,24 +571,24 @@ temporalParser::SereContext* temporalParser::sere(int precedence) {
           consume();
         }
       }
-      setState(135);
+      setState(63);
       match(temporalParser::RSQUARED);
       break;
     }
 
     case 5: {
-      setState(137);
+      setState(65);
       booleanLayer();
-      setState(138);
+      setState(66);
       match(temporalParser::LSQUARED);
-      setState(139);
+      setState(67);
       match(temporalParser::IMPLO);
-      setState(141);
+      setState(69);
       _errHandler->sync(this);
 
-      switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 10, _ctx)) {
+      switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 3, _ctx)) {
       case 1: {
-        setState(140);
+        setState(68);
         match(temporalParser::UINTEGER);
         break;
       }
@@ -992,14 +596,14 @@ temporalParser::SereContext* temporalParser::sere(int precedence) {
       default:
         break;
       }
-      setState(144);
+      setState(72);
       _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == temporalParser::DOTS
 
       || _la == temporalParser::COL) {
-        setState(143);
+        setState(71);
         _la = _input->LA(1);
         if (!(_la == temporalParser::DOTS
 
@@ -1011,14 +615,14 @@ temporalParser::SereContext* temporalParser::sere(int precedence) {
           consume();
         }
       }
-      setState(147);
+      setState(75);
       _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == temporalParser::UINTEGER
 
       || _la == temporalParser::DOLLAR) {
-        setState(146);
+        setState(74);
         _la = _input->LA(1);
         if (!(_la == temporalParser::UINTEGER
 
@@ -1030,40 +634,28 @@ temporalParser::SereContext* temporalParser::sere(int precedence) {
           consume();
         }
       }
-      setState(149);
+      setState(77);
       match(temporalParser::RSQUARED);
       break;
     }
 
     case 6: {
-      setState(151);
-      dt_ncreps();
-      break;
-    }
-
-    case 7: {
-      setState(152);
-      match(temporalParser::DT_AND);
-      break;
-    }
-
-    case 8: {
-      setState(153);
+      setState(79);
       match(temporalParser::DELAY);
-      setState(155);
+      setState(81);
       _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == temporalParser::LSQUARED) {
-        setState(154);
+        setState(80);
         match(temporalParser::LSQUARED);
       }
-      setState(158);
+      setState(84);
       _errHandler->sync(this);
 
-      switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 14, _ctx)) {
+      switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 7, _ctx)) {
       case 1: {
-        setState(157);
+        setState(83);
         match(temporalParser::UINTEGER);
         break;
       }
@@ -1071,14 +663,14 @@ temporalParser::SereContext* temporalParser::sere(int precedence) {
       default:
         break;
       }
-      setState(161);
+      setState(87);
       _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == temporalParser::DOTS
 
       || _la == temporalParser::COL) {
-        setState(160);
+        setState(86);
         _la = _input->LA(1);
         if (!(_la == temporalParser::DOTS
 
@@ -1090,12 +682,12 @@ temporalParser::SereContext* temporalParser::sere(int precedence) {
           consume();
         }
       }
-      setState(164);
+      setState(90);
       _errHandler->sync(this);
 
-      switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 16, _ctx)) {
+      switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 9, _ctx)) {
       case 1: {
-        setState(163);
+        setState(89);
         _la = _input->LA(1);
         if (!(_la == temporalParser::UINTEGER
 
@@ -1112,33 +704,21 @@ temporalParser::SereContext* temporalParser::sere(int precedence) {
       default:
         break;
       }
-      setState(167);
+      setState(93);
       _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == temporalParser::RSQUARED) {
-        setState(166);
+        setState(92);
         match(temporalParser::RSQUARED);
       }
-      setState(169);
-      sere(6);
+      setState(95);
+      sere(4);
       break;
     }
 
-    case 9: {
-      setState(170);
-      dt_next();
-      break;
-    }
-
-    case 10: {
-      setState(171);
-      dt_next_and();
-      break;
-    }
-
-    case 11: {
-      setState(172);
+    case 7: {
+      setState(96);
       booleanLayer();
       break;
     }
@@ -1147,98 +727,94 @@ temporalParser::SereContext* temporalParser::sere(int precedence) {
       break;
     }
     _ctx->stop = _input->LT(-1);
-    setState(227);
+    setState(151);
     _errHandler->sync(this);
-    alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 28, _ctx);
+    alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 21, _ctx);
     while (alt != 2 && alt != atn::ATN::INVALID_ALT_NUMBER) {
       if (alt == 1) {
         if (!_parseListeners.empty())
           triggerExitRuleEvent();
         previousContext = _localctx;
-        setState(225);
+        setState(149);
         _errHandler->sync(this);
-        switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 27, _ctx)) {
+        switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 20, _ctx)) {
         case 1: {
           _localctx = _tracker.createInstance<SereContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleSere);
-          setState(175);
+          setState(99);
 
-          if (!(precpred(_ctx, 11))) throw FailedPredicateException(this, "precpred(_ctx, 11)");
-          setState(176);
+          if (!(precpred(_ctx, 8))) throw FailedPredicateException(this, "precpred(_ctx, 8)");
+          setState(100);
           match(temporalParser::BAND);
-          setState(177);
-          sere(12);
+          setState(101);
+          sere(9);
           break;
         }
 
         case 2: {
           _localctx = _tracker.createInstance<SereContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleSere);
-          setState(178);
+          setState(102);
 
-          if (!(precpred(_ctx, 10))) throw FailedPredicateException(this, "precpred(_ctx, 10)");
-          setState(179);
+          if (!(precpred(_ctx, 7))) throw FailedPredicateException(this, "precpred(_ctx, 7)");
+          setState(103);
           _la = _input->LA(1);
-          if (!(((((_la - 25) & ~ 0x3fULL) == 0) &&
-            ((1ULL << (_la - 25)) & ((1ULL << (temporalParser::TAND - 25))
-            | (1ULL << (temporalParser::INTERSECT - 25))
-            | (1ULL << (temporalParser::AND - 25)))) != 0))) {
+          if (!((((_la & ~ 0x3fULL) == 0) &&
+            ((1ULL << _la) & 576460752304209920) != 0))) {
           _errHandler->recoverInline(this);
           }
           else {
             _errHandler->reportMatch(this);
             consume();
           }
-          setState(180);
-          sere(11);
+          setState(104);
+          sere(8);
           break;
         }
 
         case 3: {
           _localctx = _tracker.createInstance<SereContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleSere);
-          setState(181);
+          setState(105);
 
-          if (!(precpred(_ctx, 8))) throw FailedPredicateException(this, "precpred(_ctx, 8)");
-          setState(182);
+          if (!(precpred(_ctx, 6))) throw FailedPredicateException(this, "precpred(_ctx, 6)");
+          setState(106);
           _la = _input->LA(1);
-          if (!(((((_la - 27) & ~ 0x3fULL) == 0) &&
-            ((1ULL << (_la - 27)) & ((1ULL << (temporalParser::TOR - 27))
-            | (1ULL << (temporalParser::BOR - 27))
-            | (1ULL << (temporalParser::OR - 27)))) != 0))) {
+          if (!((((_la & ~ 0x3fULL) == 0) &&
+            ((1ULL << _la) & 1170935903117377536) != 0))) {
           _errHandler->recoverInline(this);
           }
           else {
             _errHandler->reportMatch(this);
             consume();
           }
-          setState(183);
-          sere(9);
+          setState(107);
+          sere(7);
           break;
         }
 
         case 4: {
           _localctx = _tracker.createInstance<SereContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleSere);
-          setState(184);
+          setState(108);
 
-          if (!(precpred(_ctx, 7))) throw FailedPredicateException(this, "precpred(_ctx, 7)");
-          setState(185);
+          if (!(precpred(_ctx, 5))) throw FailedPredicateException(this, "precpred(_ctx, 5)");
+          setState(109);
           match(temporalParser::DELAY);
-          setState(187);
+          setState(111);
           _errHandler->sync(this);
 
           _la = _input->LA(1);
           if (_la == temporalParser::LSQUARED) {
-            setState(186);
+            setState(110);
             match(temporalParser::LSQUARED);
           }
-          setState(190);
+          setState(114);
           _errHandler->sync(this);
 
-          switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 20, _ctx)) {
+          switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 13, _ctx)) {
           case 1: {
-            setState(189);
+            setState(113);
             match(temporalParser::UINTEGER);
             break;
           }
@@ -1246,14 +822,14 @@ temporalParser::SereContext* temporalParser::sere(int precedence) {
           default:
             break;
           }
-          setState(193);
+          setState(117);
           _errHandler->sync(this);
 
           _la = _input->LA(1);
           if (_la == temporalParser::DOTS
 
           || _la == temporalParser::COL) {
-            setState(192);
+            setState(116);
             _la = _input->LA(1);
             if (!(_la == temporalParser::DOTS
 
@@ -1265,12 +841,12 @@ temporalParser::SereContext* temporalParser::sere(int precedence) {
               consume();
             }
           }
-          setState(196);
+          setState(120);
           _errHandler->sync(this);
 
-          switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 22, _ctx)) {
+          switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 15, _ctx)) {
           case 1: {
-            setState(195);
+            setState(119);
             _la = _input->LA(1);
             if (!(_la == temporalParser::UINTEGER
 
@@ -1287,28 +863,28 @@ temporalParser::SereContext* temporalParser::sere(int precedence) {
           default:
             break;
           }
-          setState(199);
+          setState(123);
           _errHandler->sync(this);
 
           _la = _input->LA(1);
           if (_la == temporalParser::RSQUARED) {
-            setState(198);
+            setState(122);
             match(temporalParser::RSQUARED);
           }
-          setState(201);
-          sere(8);
+          setState(125);
+          sere(6);
           break;
         }
 
         case 5: {
           _localctx = _tracker.createInstance<SereContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleSere);
-          setState(202);
+          setState(126);
 
           if (!(precpred(_ctx, 3))) throw FailedPredicateException(this, "precpred(_ctx, 3)");
-          setState(203);
+          setState(127);
           match(temporalParser::COL);
-          setState(204);
+          setState(128);
           sere(4);
           break;
         }
@@ -1316,12 +892,12 @@ temporalParser::SereContext* temporalParser::sere(int precedence) {
         case 6: {
           _localctx = _tracker.createInstance<SereContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleSere);
-          setState(205);
+          setState(129);
 
           if (!(precpred(_ctx, 2))) throw FailedPredicateException(this, "precpred(_ctx, 2)");
-          setState(206);
+          setState(130);
           match(temporalParser::SCOL);
-          setState(207);
+          setState(131);
           sere(3);
           break;
         }
@@ -1329,19 +905,19 @@ temporalParser::SereContext* temporalParser::sere(int precedence) {
         case 7: {
           _localctx = _tracker.createInstance<SereContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleSere);
-          setState(208);
+          setState(132);
 
-          if (!(precpred(_ctx, 16))) throw FailedPredicateException(this, "precpred(_ctx, 16)");
-          setState(209);
+          if (!(precpred(_ctx, 12))) throw FailedPredicateException(this, "precpred(_ctx, 12)");
+          setState(133);
           match(temporalParser::LSQUARED);
-          setState(210);
+          setState(134);
           match(temporalParser::TIMES);
-          setState(212);
+          setState(136);
           _errHandler->sync(this);
 
-          switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 24, _ctx)) {
+          switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 17, _ctx)) {
           case 1: {
-            setState(211);
+            setState(135);
             match(temporalParser::UINTEGER);
             break;
           }
@@ -1349,14 +925,14 @@ temporalParser::SereContext* temporalParser::sere(int precedence) {
           default:
             break;
           }
-          setState(215);
+          setState(139);
           _errHandler->sync(this);
 
           _la = _input->LA(1);
           if (_la == temporalParser::DOTS
 
           || _la == temporalParser::COL) {
-            setState(214);
+            setState(138);
             _la = _input->LA(1);
             if (!(_la == temporalParser::DOTS
 
@@ -1368,14 +944,14 @@ temporalParser::SereContext* temporalParser::sere(int precedence) {
               consume();
             }
           }
-          setState(218);
+          setState(142);
           _errHandler->sync(this);
 
           _la = _input->LA(1);
           if (_la == temporalParser::UINTEGER
 
           || _la == temporalParser::DOLLAR) {
-            setState(217);
+            setState(141);
             _la = _input->LA(1);
             if (!(_la == temporalParser::UINTEGER
 
@@ -1387,7 +963,7 @@ temporalParser::SereContext* temporalParser::sere(int precedence) {
               consume();
             }
           }
-          setState(220);
+          setState(144);
           match(temporalParser::RSQUARED);
           break;
         }
@@ -1395,14 +971,14 @@ temporalParser::SereContext* temporalParser::sere(int precedence) {
         case 8: {
           _localctx = _tracker.createInstance<SereContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleSere);
-          setState(221);
+          setState(145);
 
-          if (!(precpred(_ctx, 15))) throw FailedPredicateException(this, "precpred(_ctx, 15)");
-          setState(222);
+          if (!(precpred(_ctx, 11))) throw FailedPredicateException(this, "precpred(_ctx, 11)");
+          setState(146);
           match(temporalParser::LSQUARED);
-          setState(223);
+          setState(147);
           match(temporalParser::PLUS);
-          setState(224);
+          setState(148);
           match(temporalParser::RSQUARED);
           break;
         }
@@ -1411,9 +987,9 @@ temporalParser::SereContext* temporalParser::sere(int precedence) {
           break;
         } 
       }
-      setState(229);
+      setState(153);
       _errHandler->sync(this);
-      alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 28, _ctx);
+      alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 21, _ctx);
     }
   }
   catch (RecognitionException &e) {
@@ -1473,7 +1049,7 @@ void temporalParser::BooleanLayerContext::exitRule(tree::ParseTreeListener *list
 
 temporalParser::BooleanLayerContext* temporalParser::booleanLayer() {
   BooleanLayerContext *_localctx = _tracker.createInstance<BooleanLayerContext>(_ctx, getState());
-  enterRule(_localctx, 8, temporalParser::RuleBooleanLayer);
+  enterRule(_localctx, 4, temporalParser::RuleBooleanLayer);
   size_t _la = 0;
 
 #if __cplusplus > 201703L
@@ -1484,38 +1060,38 @@ temporalParser::BooleanLayerContext* temporalParser::booleanLayer() {
     exitRule();
   });
   try {
-    setState(239);
+    setState(163);
     _errHandler->sync(this);
-    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 30, _ctx)) {
+    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 23, _ctx)) {
     case 1: {
       enterOuterAlt(_localctx, 1);
-      setState(230);
+      setState(154);
       match(temporalParser::LROUND);
-      setState(231);
+      setState(155);
       booleanLayer();
-      setState(232);
+      setState(156);
       match(temporalParser::RROUND);
       break;
     }
 
     case 2: {
       enterOuterAlt(_localctx, 2);
-      setState(234);
+      setState(158);
       boolean(0);
       break;
     }
 
     case 3: {
       enterOuterAlt(_localctx, 3);
-      setState(236);
+      setState(160);
       _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == temporalParser::NOT) {
-        setState(235);
+        setState(159);
         match(temporalParser::NOT);
       }
-      setState(238);
+      setState(162);
       match(temporalParser::PLACEHOLDER);
       break;
     }
@@ -1540,6 +1116,10 @@ temporalParser::TformulaContext::TformulaContext(ParserRuleContext *parent, size
   : ParserRuleContext(parent, invokingState) {
 }
 
+temporalParser::BooleanLayerContext* temporalParser::TformulaContext::booleanLayer() {
+  return getRuleContext<temporalParser::BooleanLayerContext>(0);
+}
+
 tree::TerminalNode* temporalParser::TformulaContext::LROUND() {
   return getToken(temporalParser::LROUND, 0);
 }
@@ -1554,18 +1134,6 @@ temporalParser::TformulaContext* temporalParser::TformulaContext::tformula(size_
 
 tree::TerminalNode* temporalParser::TformulaContext::RROUND() {
   return getToken(temporalParser::RROUND, 0);
-}
-
-temporalParser::SereContext* temporalParser::TformulaContext::sere() {
-  return getRuleContext<temporalParser::SereContext>(0);
-}
-
-tree::TerminalNode* temporalParser::TformulaContext::LCURLY() {
-  return getToken(temporalParser::LCURLY, 0);
-}
-
-tree::TerminalNode* temporalParser::TformulaContext::RCURLY() {
-  return getToken(temporalParser::RCURLY, 0);
 }
 
 tree::TerminalNode* temporalParser::TformulaContext::TNOT() {
@@ -1592,16 +1160,28 @@ tree::TerminalNode* temporalParser::TformulaContext::RSQUARED() {
   return getToken(temporalParser::RSQUARED, 0);
 }
 
+tree::TerminalNode* temporalParser::TformulaContext::ALWAYS() {
+  return getToken(temporalParser::ALWAYS, 0);
+}
+
 tree::TerminalNode* temporalParser::TformulaContext::EVENTUALLY() {
   return getToken(temporalParser::EVENTUALLY, 0);
 }
 
-tree::TerminalNode* temporalParser::TformulaContext::DT_AND() {
-  return getToken(temporalParser::DT_AND, 0);
+temporalParser::Sere_implicationContext* temporalParser::TformulaContext::sere_implication() {
+  return getRuleContext<temporalParser::Sere_implicationContext>(0);
 }
 
-temporalParser::BooleanLayerContext* temporalParser::TformulaContext::booleanLayer() {
-  return getRuleContext<temporalParser::BooleanLayerContext>(0);
+temporalParser::SereContext* temporalParser::TformulaContext::sere() {
+  return getRuleContext<temporalParser::SereContext>(0);
+}
+
+tree::TerminalNode* temporalParser::TformulaContext::LCURLY() {
+  return getToken(temporalParser::LCURLY, 0);
+}
+
+tree::TerminalNode* temporalParser::TformulaContext::RCURLY() {
+  return getToken(temporalParser::RCURLY, 0);
 }
 
 tree::TerminalNode* temporalParser::TformulaContext::UNTIL() {
@@ -1632,6 +1212,14 @@ tree::TerminalNode* temporalParser::TformulaContext::BOR() {
   return getToken(temporalParser::BOR, 0);
 }
 
+tree::TerminalNode* temporalParser::TformulaContext::IMPLO() {
+  return getToken(temporalParser::IMPLO, 0);
+}
+
+tree::TerminalNode* temporalParser::TformulaContext::IMPL() {
+  return getToken(temporalParser::IMPL, 0);
+}
+
 
 size_t temporalParser::TformulaContext::getRuleIndex() const {
   return temporalParser::RuleTformula;
@@ -1660,8 +1248,8 @@ temporalParser::TformulaContext* temporalParser::tformula(int precedence) {
   temporalParser::TformulaContext *_localctx = _tracker.createInstance<TformulaContext>(_ctx, parentState);
   temporalParser::TformulaContext *previousContext = _localctx;
   (void)previousContext; // Silence compiler, in case the context is not used by generated code.
-  size_t startState = 10;
-  enterRecursionRule(_localctx, 10, temporalParser::RuleTformula, precedence);
+  size_t startState = 6;
+  enterRecursionRule(_localctx, 6, temporalParser::RuleTformula, precedence);
 
     size_t _la = 0;
 
@@ -1675,59 +1263,30 @@ temporalParser::TformulaContext* temporalParser::tformula(int precedence) {
   try {
     size_t alt;
     enterOuterAlt(_localctx, 1);
-    setState(272);
+    setState(198);
     _errHandler->sync(this);
-    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 36, _ctx)) {
+    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 29, _ctx)) {
     case 1: {
-      setState(242);
-      match(temporalParser::LROUND);
-      setState(243);
-      tformula(0);
-      setState(244);
-      match(temporalParser::RROUND);
+      setState(166);
+      booleanLayer();
       break;
     }
 
     case 2: {
-      setState(246);
-
-      if (!(canUseSharedOperator(_input->LT(-1)->getText(),_input->LT(2)->getText()))) throw FailedPredicateException(this, "canUseSharedOperator(_input->LT(-1)->getText(),_input->LT(2)->getText())");
-      setState(248);
-      _errHandler->sync(this);
-
-      switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 31, _ctx)) {
-      case 1: {
-        setState(247);
-        match(temporalParser::LCURLY);
-        break;
-      }
-
-      default:
-        break;
-      }
-      setState(250);
-      sere(0);
-      setState(252);
-      _errHandler->sync(this);
-
-      switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 32, _ctx)) {
-      case 1: {
-        setState(251);
-        match(temporalParser::RCURLY);
-        break;
-      }
-
-      default:
-        break;
-      }
+      setState(167);
+      match(temporalParser::LROUND);
+      setState(168);
+      tformula(0);
+      setState(169);
+      match(temporalParser::RROUND);
       break;
     }
 
     case 3: {
-      setState(254);
+      setState(171);
 
       if (!(canTakeThisNot(_input->LT(1)->getText(),_input->LT(2)->getText()))) throw FailedPredicateException(this, "canTakeThisNot(_input->LT(1)->getText(),_input->LT(2)->getText())");
-      setState(255);
+      setState(172);
       _la = _input->LA(1);
       if (!(_la == temporalParser::TNOT
 
@@ -1738,20 +1297,20 @@ temporalParser::TformulaContext* temporalParser::tformula(int precedence) {
         _errHandler->reportMatch(this);
         consume();
       }
-      setState(256);
-      tformula(8);
+      setState(173);
+      tformula(10);
       break;
     }
 
     case 4: {
-      setState(257);
+      setState(174);
       match(temporalParser::NEXT);
-      setState(259);
+      setState(176);
       _errHandler->sync(this);
 
-      switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 33, _ctx)) {
+      switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 24, _ctx)) {
       case 1: {
-        setState(258);
+        setState(175);
         match(temporalParser::LSQUARED);
         break;
       }
@@ -1759,12 +1318,12 @@ temporalParser::TformulaContext* temporalParser::tformula(int precedence) {
       default:
         break;
       }
-      setState(262);
+      setState(179);
       _errHandler->sync(this);
 
-      switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 34, _ctx)) {
+      switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 25, _ctx)) {
       case 1: {
-        setState(261);
+        setState(178);
         match(temporalParser::UINTEGER);
         break;
       }
@@ -1772,12 +1331,12 @@ temporalParser::TformulaContext* temporalParser::tformula(int precedence) {
       default:
         break;
       }
-      setState(265);
+      setState(182);
       _errHandler->sync(this);
 
-      switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 35, _ctx)) {
+      switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 26, _ctx)) {
       case 1: {
-        setState(264);
+        setState(181);
         match(temporalParser::RSQUARED);
         break;
       }
@@ -1785,28 +1344,65 @@ temporalParser::TformulaContext* temporalParser::tformula(int precedence) {
       default:
         break;
       }
-      setState(267);
-      tformula(7);
+      setState(184);
+      tformula(9);
       break;
     }
 
     case 5: {
-      setState(268);
-      match(temporalParser::EVENTUALLY);
-      setState(269);
-      tformula(6);
+      setState(185);
+      match(temporalParser::ALWAYS);
+      setState(186);
+      tformula(8);
       break;
     }
 
     case 6: {
-      setState(270);
-      match(temporalParser::DT_AND);
+      setState(187);
+      match(temporalParser::EVENTUALLY);
+      setState(188);
+      tformula(7);
       break;
     }
 
     case 7: {
-      setState(271);
-      booleanLayer();
+      setState(189);
+      sere_implication();
+      break;
+    }
+
+    case 8: {
+      setState(190);
+
+      if (!(_input->index()==0 || canUseSharedOperator(_input->LT(-1)->getText(),_input->LT(2)->getText()))) throw FailedPredicateException(this, "_input->index()==0 || canUseSharedOperator(_input->LT(-1)->getText(),_input->LT(2)->getText())");
+      setState(192);
+      _errHandler->sync(this);
+
+      switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 27, _ctx)) {
+      case 1: {
+        setState(191);
+        match(temporalParser::LCURLY);
+        break;
+      }
+
+      default:
+        break;
+      }
+      setState(194);
+      sere(0);
+      setState(196);
+      _errHandler->sync(this);
+
+      switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 28, _ctx)) {
+      case 1: {
+        setState(195);
+        match(temporalParser::RCURLY);
+        break;
+      }
+
+      default:
+        break;
+      }
       break;
     }
 
@@ -1814,24 +1410,24 @@ temporalParser::TformulaContext* temporalParser::tformula(int precedence) {
       break;
     }
     _ctx->stop = _input->LT(-1);
-    setState(285);
+    setState(214);
     _errHandler->sync(this);
-    alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 38, _ctx);
+    alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 31, _ctx);
     while (alt != 2 && alt != atn::ATN::INVALID_ALT_NUMBER) {
       if (alt == 1) {
         if (!_parseListeners.empty())
           triggerExitRuleEvent();
         previousContext = _localctx;
-        setState(283);
+        setState(212);
         _errHandler->sync(this);
-        switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 37, _ctx)) {
+        switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 30, _ctx)) {
         case 1: {
           _localctx = _tracker.createInstance<TformulaContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleTformula);
-          setState(274);
+          setState(200);
 
-          if (!(precpred(_ctx, 5))) throw FailedPredicateException(this, "precpred(_ctx, 5)");
-          setState(275);
+          if (!(precpred(_ctx, 6))) throw FailedPredicateException(this, "precpred(_ctx, 6)");
+          setState(201);
           _la = _input->LA(1);
           if (!(_la == temporalParser::UNTIL
 
@@ -1842,18 +1438,18 @@ temporalParser::TformulaContext* temporalParser::tformula(int precedence) {
             _errHandler->reportMatch(this);
             consume();
           }
-          setState(276);
-          tformula(5);
+          setState(202);
+          tformula(6);
           break;
         }
 
         case 2: {
           _localctx = _tracker.createInstance<TformulaContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleTformula);
-          setState(277);
+          setState(203);
 
-          if (!(precpred(_ctx, 4))) throw FailedPredicateException(this, "precpred(_ctx, 4)");
-          setState(278);
+          if (!(precpred(_ctx, 5))) throw FailedPredicateException(this, "precpred(_ctx, 5)");
+          setState(204);
           _la = _input->LA(1);
           if (!(_la == temporalParser::TAND
 
@@ -1864,31 +1460,51 @@ temporalParser::TformulaContext* temporalParser::tformula(int precedence) {
             _errHandler->reportMatch(this);
             consume();
           }
-          setState(279);
-          tformula(5);
+          setState(205);
+          tformula(6);
           break;
         }
 
         case 3: {
           _localctx = _tracker.createInstance<TformulaContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleTformula);
-          setState(280);
+          setState(206);
 
-          if (!(precpred(_ctx, 3))) throw FailedPredicateException(this, "precpred(_ctx, 3)");
-          setState(281);
+          if (!(precpred(_ctx, 4))) throw FailedPredicateException(this, "precpred(_ctx, 4)");
+          setState(207);
           _la = _input->LA(1);
-          if (!(((((_la - 27) & ~ 0x3fULL) == 0) &&
-            ((1ULL << (_la - 27)) & ((1ULL << (temporalParser::TOR - 27))
-            | (1ULL << (temporalParser::BOR - 27))
-            | (1ULL << (temporalParser::OR - 27)))) != 0))) {
+          if (!((((_la & ~ 0x3fULL) == 0) &&
+            ((1ULL << _la) & 1170935903117377536) != 0))) {
           _errHandler->recoverInline(this);
           }
           else {
             _errHandler->reportMatch(this);
             consume();
           }
-          setState(282);
-          tformula(4);
+          setState(208);
+          tformula(5);
+          break;
+        }
+
+        case 4: {
+          _localctx = _tracker.createInstance<TformulaContext>(parentContext, parentState);
+          pushNewRecursionContext(_localctx, startState, RuleTformula);
+          setState(209);
+
+          if (!(precpred(_ctx, 3))) throw FailedPredicateException(this, "precpred(_ctx, 3)");
+          setState(210);
+          _la = _input->LA(1);
+          if (!(_la == temporalParser::IMPL
+
+          || _la == temporalParser::IMPLO)) {
+          _errHandler->recoverInline(this);
+          }
+          else {
+            _errHandler->reportMatch(this);
+            consume();
+          }
+          setState(211);
+          tformula(3);
           break;
         }
 
@@ -1896,9 +1512,9 @@ temporalParser::TformulaContext* temporalParser::tformula(int precedence) {
           break;
         } 
       }
-      setState(287);
+      setState(216);
       _errHandler->sync(this);
-      alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 38, _ctx);
+      alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 31, _ctx);
     }
   }
   catch (RecognitionException &e) {
@@ -1909,184 +1525,56 @@ temporalParser::TformulaContext* temporalParser::tformula(int precedence) {
   return _localctx;
 }
 
-//----------------- Dt_nextContext ------------------------------------------------------------------
+//----------------- Sere_implicationContext ------------------------------------------------------------------
 
-temporalParser::Dt_nextContext::Dt_nextContext(ParserRuleContext *parent, size_t invokingState)
+temporalParser::Sere_implicationContext::Sere_implicationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-tree::TerminalNode* temporalParser::Dt_nextContext::UINTEGER() {
-  return getToken(temporalParser::UINTEGER, 0);
+temporalParser::SereContext* temporalParser::Sere_implicationContext::sere() {
+  return getRuleContext<temporalParser::SereContext>(0);
 }
 
-tree::TerminalNode* temporalParser::Dt_nextContext::DOTS() {
-  return getToken(temporalParser::DOTS, 0);
+tree::TerminalNode* temporalParser::Sere_implicationContext::SEREIMPL() {
+  return getToken(temporalParser::SEREIMPL, 0);
+}
+
+temporalParser::TformulaContext* temporalParser::Sere_implicationContext::tformula() {
+  return getRuleContext<temporalParser::TformulaContext>(0);
+}
+
+tree::TerminalNode* temporalParser::Sere_implicationContext::LCURLY() {
+  return getToken(temporalParser::LCURLY, 0);
+}
+
+tree::TerminalNode* temporalParser::Sere_implicationContext::RCURLY() {
+  return getToken(temporalParser::RCURLY, 0);
+}
+
+tree::TerminalNode* temporalParser::Sere_implicationContext::SEREIMPLO() {
+  return getToken(temporalParser::SEREIMPLO, 0);
 }
 
 
-size_t temporalParser::Dt_nextContext::getRuleIndex() const {
-  return temporalParser::RuleDt_next;
+size_t temporalParser::Sere_implicationContext::getRuleIndex() const {
+  return temporalParser::RuleSere_implication;
 }
 
-void temporalParser::Dt_nextContext::enterRule(tree::ParseTreeListener *listener) {
+void temporalParser::Sere_implicationContext::enterRule(tree::ParseTreeListener *listener) {
   auto parserListener = dynamic_cast<temporalListener *>(listener);
   if (parserListener != nullptr)
-    parserListener->enterDt_next(this);
+    parserListener->enterSere_implication(this);
 }
 
-void temporalParser::Dt_nextContext::exitRule(tree::ParseTreeListener *listener) {
+void temporalParser::Sere_implicationContext::exitRule(tree::ParseTreeListener *listener) {
   auto parserListener = dynamic_cast<temporalListener *>(listener);
   if (parserListener != nullptr)
-    parserListener->exitDt_next(this);
+    parserListener->exitSere_implication(this);
 }
 
-temporalParser::Dt_nextContext* temporalParser::dt_next() {
-  Dt_nextContext *_localctx = _tracker.createInstance<Dt_nextContext>(_ctx, getState());
-  enterRule(_localctx, 12, temporalParser::RuleDt_next);
-
-#if __cplusplus > 201703L
-  auto onExit = finally([=, this] {
-#else
-  auto onExit = finally([=] {
-#endif
-    exitRule();
-  });
-  try {
-    enterOuterAlt(_localctx, 1);
-    setState(288);
-    match(temporalParser::T__2);
-    setState(289);
-    match(temporalParser::UINTEGER);
-    setState(290);
-    match(temporalParser::DOTS);
-   
-  }
-  catch (RecognitionException &e) {
-    _errHandler->reportError(this, e);
-    _localctx->exception = std::current_exception();
-    _errHandler->recover(this, _localctx->exception);
-  }
-
-  return _localctx;
-}
-
-//----------------- Dt_next_andContext ------------------------------------------------------------------
-
-temporalParser::Dt_next_andContext::Dt_next_andContext(ParserRuleContext *parent, size_t invokingState)
-  : ParserRuleContext(parent, invokingState) {
-}
-
-tree::TerminalNode* temporalParser::Dt_next_andContext::UINTEGER() {
-  return getToken(temporalParser::UINTEGER, 0);
-}
-
-tree::TerminalNode* temporalParser::Dt_next_andContext::BAND() {
-  return getToken(temporalParser::BAND, 0);
-}
-
-tree::TerminalNode* temporalParser::Dt_next_andContext::DOTS() {
-  return getToken(temporalParser::DOTS, 0);
-}
-
-
-size_t temporalParser::Dt_next_andContext::getRuleIndex() const {
-  return temporalParser::RuleDt_next_and;
-}
-
-void temporalParser::Dt_next_andContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<temporalListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterDt_next_and(this);
-}
-
-void temporalParser::Dt_next_andContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<temporalListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitDt_next_and(this);
-}
-
-temporalParser::Dt_next_andContext* temporalParser::dt_next_and() {
-  Dt_next_andContext *_localctx = _tracker.createInstance<Dt_next_andContext>(_ctx, getState());
-  enterRule(_localctx, 14, temporalParser::RuleDt_next_and);
-
-#if __cplusplus > 201703L
-  auto onExit = finally([=, this] {
-#else
-  auto onExit = finally([=] {
-#endif
-    exitRule();
-  });
-  try {
-    enterOuterAlt(_localctx, 1);
-    setState(292);
-    match(temporalParser::T__3);
-    setState(293);
-    match(temporalParser::UINTEGER);
-    setState(294);
-    match(temporalParser::BAND);
-    setState(295);
-    match(temporalParser::DOTS);
-   
-  }
-  catch (RecognitionException &e) {
-    _errHandler->reportError(this, e);
-    _localctx->exception = std::current_exception();
-    _errHandler->recover(this, _localctx->exception);
-  }
-
-  return _localctx;
-}
-
-//----------------- Dt_ncrepsContext ------------------------------------------------------------------
-
-temporalParser::Dt_ncrepsContext::Dt_ncrepsContext(ParserRuleContext *parent, size_t invokingState)
-  : ParserRuleContext(parent, invokingState) {
-}
-
-tree::TerminalNode* temporalParser::Dt_ncrepsContext::UINTEGER() {
-  return getToken(temporalParser::UINTEGER, 0);
-}
-
-tree::TerminalNode* temporalParser::Dt_ncrepsContext::DOTS() {
-  return getToken(temporalParser::DOTS, 0);
-}
-
-tree::TerminalNode* temporalParser::Dt_ncrepsContext::IMPLO() {
-  return getToken(temporalParser::IMPLO, 0);
-}
-
-tree::TerminalNode* temporalParser::Dt_ncrepsContext::ASS() {
-  return getToken(temporalParser::ASS, 0);
-}
-
-tree::TerminalNode* temporalParser::Dt_ncrepsContext::COL() {
-  return getToken(temporalParser::COL, 0);
-}
-
-tree::TerminalNode* temporalParser::Dt_ncrepsContext::SCOL() {
-  return getToken(temporalParser::SCOL, 0);
-}
-
-
-size_t temporalParser::Dt_ncrepsContext::getRuleIndex() const {
-  return temporalParser::RuleDt_ncreps;
-}
-
-void temporalParser::Dt_ncrepsContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<temporalListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterDt_ncreps(this);
-}
-
-void temporalParser::Dt_ncrepsContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<temporalListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitDt_ncreps(this);
-}
-
-temporalParser::Dt_ncrepsContext* temporalParser::dt_ncreps() {
-  Dt_ncrepsContext *_localctx = _tracker.createInstance<Dt_ncrepsContext>(_ctx, getState());
-  enterRule(_localctx, 16, temporalParser::RuleDt_ncreps);
+temporalParser::Sere_implicationContext* temporalParser::sere_implication() {
+  Sere_implicationContext *_localctx = _tracker.createInstance<Sere_implicationContext>(_ctx, getState());
+  enterRule(_localctx, 8, temporalParser::RuleSere_implication);
   size_t _la = 0;
 
 #if __cplusplus > 201703L
@@ -2097,37 +1585,82 @@ temporalParser::Dt_ncrepsContext* temporalParser::dt_ncreps() {
     exitRule();
   });
   try {
-    enterOuterAlt(_localctx, 1);
-    setState(297);
-    match(temporalParser::T__4);
-    setState(298);
-    _la = _input->LA(1);
-    if (!(_la == temporalParser::IMPLO
+    setState(238);
+    _errHandler->sync(this);
+    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 36, _ctx)) {
+    case 1: {
+      enterOuterAlt(_localctx, 1);
 
-    || _la == temporalParser::ASS)) {
-    _errHandler->recoverInline(this);
+      break;
     }
-    else {
-      _errHandler->reportMatch(this);
-      consume();
-    }
-    setState(299);
-    match(temporalParser::UINTEGER);
-    setState(300);
-    match(temporalParser::T__5);
-    setState(301);
-    _la = _input->LA(1);
-    if (!(_la == temporalParser::SCOL
 
-    || _la == temporalParser::COL)) {
-    _errHandler->recoverInline(this);
+    case 2: {
+      enterOuterAlt(_localctx, 2);
+      setState(219);
+      _errHandler->sync(this);
+
+      switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 32, _ctx)) {
+      case 1: {
+        setState(218);
+        match(temporalParser::LCURLY);
+        break;
+      }
+
+      default:
+        break;
+      }
+      setState(221);
+      sere(0);
+      setState(223);
+      _errHandler->sync(this);
+
+      _la = _input->LA(1);
+      if (_la == temporalParser::RCURLY) {
+        setState(222);
+        match(temporalParser::RCURLY);
+      }
+      setState(225);
+      match(temporalParser::SEREIMPL);
+      setState(226);
+      tformula(0);
+      break;
     }
-    else {
-      _errHandler->reportMatch(this);
-      consume();
+
+    case 3: {
+      enterOuterAlt(_localctx, 3);
+      setState(229);
+      _errHandler->sync(this);
+
+      switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 34, _ctx)) {
+      case 1: {
+        setState(228);
+        match(temporalParser::LCURLY);
+        break;
+      }
+
+      default:
+        break;
+      }
+      setState(231);
+      sere(0);
+      setState(233);
+      _errHandler->sync(this);
+
+      _la = _input->LA(1);
+      if (_la == temporalParser::RCURLY) {
+        setState(232);
+        match(temporalParser::RCURLY);
+      }
+      setState(235);
+      match(temporalParser::SEREIMPLO);
+      setState(236);
+      tformula(0);
+      break;
     }
-    setState(302);
-    match(temporalParser::DOTS);
+
+    default:
+      break;
+    }
    
   }
   catch (RecognitionException &e) {
@@ -2172,7 +1705,7 @@ void temporalParser::StartBooleanContext::exitRule(tree::ParseTreeListener *list
 
 temporalParser::StartBooleanContext* temporalParser::startBoolean() {
   StartBooleanContext *_localctx = _tracker.createInstance<StartBooleanContext>(_ctx, getState());
-  enterRule(_localctx, 18, temporalParser::RuleStartBoolean);
+  enterRule(_localctx, 10, temporalParser::RuleStartBoolean);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
@@ -2183,9 +1716,9 @@ temporalParser::StartBooleanContext* temporalParser::startBoolean() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(304);
+    setState(240);
     boolean(0);
-    setState(305);
+    setState(241);
     match(temporalParser::EOF);
    
   }
@@ -2231,7 +1764,7 @@ void temporalParser::StartIntContext::exitRule(tree::ParseTreeListener *listener
 
 temporalParser::StartIntContext* temporalParser::startInt() {
   StartIntContext *_localctx = _tracker.createInstance<StartIntContext>(_ctx, getState());
-  enterRule(_localctx, 20, temporalParser::RuleStartInt);
+  enterRule(_localctx, 12, temporalParser::RuleStartInt);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
@@ -2242,9 +1775,9 @@ temporalParser::StartIntContext* temporalParser::startInt() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(307);
+    setState(243);
     numeric(0);
-    setState(308);
+    setState(244);
     match(temporalParser::EOF);
    
   }
@@ -2290,7 +1823,7 @@ void temporalParser::StartFloatContext::exitRule(tree::ParseTreeListener *listen
 
 temporalParser::StartFloatContext* temporalParser::startFloat() {
   StartFloatContext *_localctx = _tracker.createInstance<StartFloatContext>(_ctx, getState());
-  enterRule(_localctx, 22, temporalParser::RuleStartFloat);
+  enterRule(_localctx, 14, temporalParser::RuleStartFloat);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
@@ -2301,9 +1834,9 @@ temporalParser::StartFloatContext* temporalParser::startFloat() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(310);
+    setState(246);
     numeric(0);
-    setState(311);
+    setState(247);
     match(temporalParser::EOF);
    
   }
@@ -2402,8 +1935,8 @@ temporalParser::BooleanContext* temporalParser::boolean(int precedence) {
   temporalParser::BooleanContext *_localctx = _tracker.createInstance<BooleanContext>(_ctx, parentState);
   temporalParser::BooleanContext *previousContext = _localctx;
   (void)previousContext; // Silence compiler, in case the context is not used by generated code.
-  size_t startState = 24;
-  enterRecursionRule(_localctx, 24, temporalParser::RuleBoolean, precedence);
+  size_t startState = 16;
+  enterRecursionRule(_localctx, 16, temporalParser::RuleBoolean, precedence);
 
     
 
@@ -2417,65 +1950,65 @@ temporalParser::BooleanContext* temporalParser::boolean(int precedence) {
   try {
     size_t alt;
     enterOuterAlt(_localctx, 1);
-    setState(334);
+    setState(270);
     _errHandler->sync(this);
-    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 39, _ctx)) {
+    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 37, _ctx)) {
     case 1: {
-      setState(314);
+      setState(250);
       match(temporalParser::NOT);
-      setState(315);
+      setState(251);
       boolean(11);
       break;
     }
 
     case 2: {
-      setState(316);
+      setState(252);
       numeric(0);
-      setState(317);
+      setState(253);
       relop();
-      setState(318);
+      setState(254);
       numeric(0);
       break;
     }
 
     case 3: {
-      setState(320);
+      setState(256);
       numeric(0);
-      setState(321);
+      setState(257);
       match(temporalParser::EQ);
-      setState(322);
+      setState(258);
       numeric(0);
       break;
     }
 
     case 4: {
-      setState(324);
+      setState(260);
       numeric(0);
-      setState(325);
+      setState(261);
       match(temporalParser::NEQ);
-      setState(326);
+      setState(262);
       numeric(0);
       break;
     }
 
     case 5: {
-      setState(328);
+      setState(264);
       booleanAtom();
       break;
     }
 
     case 6: {
-      setState(329);
+      setState(265);
       numeric(0);
       break;
     }
 
     case 7: {
-      setState(330);
+      setState(266);
       match(temporalParser::LROUND);
-      setState(331);
+      setState(267);
       boolean(0);
-      setState(332);
+      setState(268);
       match(temporalParser::RROUND);
       break;
     }
@@ -2484,26 +2017,26 @@ temporalParser::BooleanContext* temporalParser::boolean(int precedence) {
       break;
     }
     _ctx->stop = _input->LT(-1);
-    setState(350);
+    setState(286);
     _errHandler->sync(this);
-    alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 41, _ctx);
+    alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 39, _ctx);
     while (alt != 2 && alt != atn::ATN::INVALID_ALT_NUMBER) {
       if (alt == 1) {
         if (!_parseListeners.empty())
           triggerExitRuleEvent();
         previousContext = _localctx;
-        setState(348);
+        setState(284);
         _errHandler->sync(this);
-        switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 40, _ctx)) {
+        switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 38, _ctx)) {
         case 1: {
           _localctx = _tracker.createInstance<BooleanContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleBoolean);
-          setState(336);
+          setState(272);
 
           if (!(precpred(_ctx, 7))) throw FailedPredicateException(this, "precpred(_ctx, 7)");
-          setState(337);
+          setState(273);
           match(temporalParser::EQ);
-          setState(338);
+          setState(274);
           boolean(8);
           break;
         }
@@ -2511,12 +2044,12 @@ temporalParser::BooleanContext* temporalParser::boolean(int precedence) {
         case 2: {
           _localctx = _tracker.createInstance<BooleanContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleBoolean);
-          setState(339);
+          setState(275);
 
           if (!(precpred(_ctx, 6))) throw FailedPredicateException(this, "precpred(_ctx, 6)");
-          setState(340);
+          setState(276);
           match(temporalParser::NEQ);
-          setState(341);
+          setState(277);
           boolean(7);
           break;
         }
@@ -2524,12 +2057,12 @@ temporalParser::BooleanContext* temporalParser::boolean(int precedence) {
         case 3: {
           _localctx = _tracker.createInstance<BooleanContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleBoolean);
-          setState(342);
+          setState(278);
 
           if (!(precpred(_ctx, 5))) throw FailedPredicateException(this, "precpred(_ctx, 5)");
-          setState(343);
+          setState(279);
           antlrcpp::downCast<BooleanContext *>(_localctx)->booleanop = match(temporalParser::AND);
-          setState(344);
+          setState(280);
           boolean(6);
           break;
         }
@@ -2537,12 +2070,12 @@ temporalParser::BooleanContext* temporalParser::boolean(int precedence) {
         case 4: {
           _localctx = _tracker.createInstance<BooleanContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleBoolean);
-          setState(345);
+          setState(281);
 
           if (!(precpred(_ctx, 4))) throw FailedPredicateException(this, "precpred(_ctx, 4)");
-          setState(346);
+          setState(282);
           antlrcpp::downCast<BooleanContext *>(_localctx)->booleanop = match(temporalParser::OR);
-          setState(347);
+          setState(283);
           boolean(5);
           break;
         }
@@ -2551,9 +2084,9 @@ temporalParser::BooleanContext* temporalParser::boolean(int precedence) {
           break;
         } 
       }
-      setState(352);
+      setState(288);
       _errHandler->sync(this);
-      alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 41, _ctx);
+      alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 39, _ctx);
     }
   }
   catch (RecognitionException &e) {
@@ -2597,7 +2130,7 @@ void temporalParser::BooleanAtomContext::exitRule(tree::ParseTreeListener *liste
 
 temporalParser::BooleanAtomContext* temporalParser::booleanAtom() {
   BooleanAtomContext *_localctx = _tracker.createInstance<BooleanAtomContext>(_ctx, getState());
-  enterRule(_localctx, 26, temporalParser::RuleBooleanAtom);
+  enterRule(_localctx, 18, temporalParser::RuleBooleanAtom);
   size_t _la = 0;
 
 #if __cplusplus > 201703L
@@ -2609,7 +2142,7 @@ temporalParser::BooleanAtomContext* temporalParser::booleanAtom() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(353);
+    setState(289);
     _la = _input->LA(1);
     if (!(_la == temporalParser::BOOLEAN_CONSTANT
 
@@ -2733,8 +2266,8 @@ temporalParser::NumericContext* temporalParser::numeric(int precedence) {
   temporalParser::NumericContext *_localctx = _tracker.createInstance<NumericContext>(_ctx, parentState);
   temporalParser::NumericContext *previousContext = _localctx;
   (void)previousContext; // Silence compiler, in case the context is not used by generated code.
-  size_t startState = 28;
-  enterRecursionRule(_localctx, 28, temporalParser::RuleNumeric, precedence);
+  size_t startState = 20;
+  enterRecursionRule(_localctx, 20, temporalParser::RuleNumeric, precedence);
 
     size_t _la = 0;
 
@@ -2748,13 +2281,13 @@ temporalParser::NumericContext* temporalParser::numeric(int precedence) {
   try {
     size_t alt;
     enterOuterAlt(_localctx, 1);
-    setState(364);
+    setState(300);
     _errHandler->sync(this);
     switch (_input->LA(1)) {
       case temporalParser::NEG: {
-        setState(356);
+        setState(292);
         match(temporalParser::NEG);
-        setState(357);
+        setState(293);
         numeric(12);
         break;
       }
@@ -2765,24 +2298,24 @@ temporalParser::NumericContext* temporalParser::numeric(int precedence) {
       case temporalParser::GCC_BINARY:
       case temporalParser::HEX:
       case temporalParser::VERILOG_BINARY: {
-        setState(358);
+        setState(294);
         intAtom();
         break;
       }
 
       case temporalParser::FLOAT_CONSTANT:
       case temporalParser::FLOAT_VARIABLE: {
-        setState(359);
+        setState(295);
         floatAtom();
         break;
       }
 
       case temporalParser::LROUND: {
-        setState(360);
+        setState(296);
         match(temporalParser::LROUND);
-        setState(361);
+        setState(297);
         numeric(0);
-        setState(362);
+        setState(298);
         match(temporalParser::RROUND);
         break;
       }
@@ -2791,24 +2324,24 @@ temporalParser::NumericContext* temporalParser::numeric(int precedence) {
       throw NoViableAltException(this);
     }
     _ctx->stop = _input->LT(-1);
-    setState(391);
+    setState(327);
     _errHandler->sync(this);
-    alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 44, _ctx);
+    alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 42, _ctx);
     while (alt != 2 && alt != atn::ATN::INVALID_ALT_NUMBER) {
       if (alt == 1) {
         if (!_parseListeners.empty())
           triggerExitRuleEvent();
         previousContext = _localctx;
-        setState(389);
+        setState(325);
         _errHandler->sync(this);
-        switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 43, _ctx)) {
+        switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 41, _ctx)) {
         case 1: {
           _localctx = _tracker.createInstance<NumericContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleNumeric);
-          setState(366);
+          setState(302);
 
           if (!(precpred(_ctx, 10))) throw FailedPredicateException(this, "precpred(_ctx, 10)");
-          setState(367);
+          setState(303);
           antlrcpp::downCast<NumericContext *>(_localctx)->artop = _input->LT(1);
           _la = _input->LA(1);
           if (!(_la == temporalParser::TIMES
@@ -2820,7 +2353,7 @@ temporalParser::NumericContext* temporalParser::numeric(int precedence) {
             _errHandler->reportMatch(this);
             consume();
           }
-          setState(368);
+          setState(304);
           numeric(11);
           break;
         }
@@ -2828,10 +2361,10 @@ temporalParser::NumericContext* temporalParser::numeric(int precedence) {
         case 2: {
           _localctx = _tracker.createInstance<NumericContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleNumeric);
-          setState(369);
+          setState(305);
 
           if (!(precpred(_ctx, 9))) throw FailedPredicateException(this, "precpred(_ctx, 9)");
-          setState(370);
+          setState(306);
           antlrcpp::downCast<NumericContext *>(_localctx)->artop = _input->LT(1);
           _la = _input->LA(1);
           if (!(_la == temporalParser::PLUS
@@ -2843,7 +2376,7 @@ temporalParser::NumericContext* temporalParser::numeric(int precedence) {
             _errHandler->reportMatch(this);
             consume();
           }
-          setState(371);
+          setState(307);
           numeric(10);
           break;
         }
@@ -2851,12 +2384,12 @@ temporalParser::NumericContext* temporalParser::numeric(int precedence) {
         case 3: {
           _localctx = _tracker.createInstance<NumericContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleNumeric);
-          setState(372);
+          setState(308);
 
           if (!(precpred(_ctx, 8))) throw FailedPredicateException(this, "precpred(_ctx, 8)");
-          setState(373);
+          setState(309);
           antlrcpp::downCast<NumericContext *>(_localctx)->logop = match(temporalParser::LSHIFT);
-          setState(374);
+          setState(310);
           numeric(9);
           break;
         }
@@ -2864,12 +2397,12 @@ temporalParser::NumericContext* temporalParser::numeric(int precedence) {
         case 4: {
           _localctx = _tracker.createInstance<NumericContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleNumeric);
-          setState(375);
+          setState(311);
 
           if (!(precpred(_ctx, 7))) throw FailedPredicateException(this, "precpred(_ctx, 7)");
-          setState(376);
+          setState(312);
           antlrcpp::downCast<NumericContext *>(_localctx)->logop = match(temporalParser::RSHIFT);
-          setState(377);
+          setState(313);
           numeric(8);
           break;
         }
@@ -2877,12 +2410,12 @@ temporalParser::NumericContext* temporalParser::numeric(int precedence) {
         case 5: {
           _localctx = _tracker.createInstance<NumericContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleNumeric);
-          setState(378);
+          setState(314);
 
           if (!(precpred(_ctx, 6))) throw FailedPredicateException(this, "precpred(_ctx, 6)");
-          setState(379);
+          setState(315);
           antlrcpp::downCast<NumericContext *>(_localctx)->logop = match(temporalParser::BAND);
-          setState(380);
+          setState(316);
           numeric(7);
           break;
         }
@@ -2890,12 +2423,12 @@ temporalParser::NumericContext* temporalParser::numeric(int precedence) {
         case 6: {
           _localctx = _tracker.createInstance<NumericContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleNumeric);
-          setState(381);
+          setState(317);
 
           if (!(precpred(_ctx, 5))) throw FailedPredicateException(this, "precpred(_ctx, 5)");
-          setState(382);
+          setState(318);
           antlrcpp::downCast<NumericContext *>(_localctx)->logop = match(temporalParser::BXOR);
-          setState(383);
+          setState(319);
           numeric(6);
           break;
         }
@@ -2903,12 +2436,12 @@ temporalParser::NumericContext* temporalParser::numeric(int precedence) {
         case 7: {
           _localctx = _tracker.createInstance<NumericContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleNumeric);
-          setState(384);
+          setState(320);
 
           if (!(precpred(_ctx, 4))) throw FailedPredicateException(this, "precpred(_ctx, 4)");
-          setState(385);
+          setState(321);
           antlrcpp::downCast<NumericContext *>(_localctx)->logop = match(temporalParser::BOR);
-          setState(386);
+          setState(322);
           numeric(5);
           break;
         }
@@ -2916,10 +2449,10 @@ temporalParser::NumericContext* temporalParser::numeric(int precedence) {
         case 8: {
           _localctx = _tracker.createInstance<NumericContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleNumeric);
-          setState(387);
+          setState(323);
 
           if (!(precpred(_ctx, 11))) throw FailedPredicateException(this, "precpred(_ctx, 11)");
-          setState(388);
+          setState(324);
           range();
           break;
         }
@@ -2928,9 +2461,9 @@ temporalParser::NumericContext* temporalParser::numeric(int precedence) {
           break;
         } 
       }
-      setState(393);
+      setState(329);
       _errHandler->sync(this);
-      alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 44, _ctx);
+      alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 42, _ctx);
     }
   }
   catch (RecognitionException &e) {
@@ -2994,7 +2527,7 @@ void temporalParser::RangeContext::exitRule(tree::ParseTreeListener *listener) {
 
 temporalParser::RangeContext* temporalParser::range() {
   RangeContext *_localctx = _tracker.createInstance<RangeContext>(_ctx, getState());
-  enterRule(_localctx, 30, temporalParser::RuleRange);
+  enterRule(_localctx, 22, temporalParser::RuleRange);
   size_t _la = 0;
 
 #if __cplusplus > 201703L
@@ -3006,9 +2539,9 @@ temporalParser::RangeContext* temporalParser::range() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(394);
+    setState(330);
     match(temporalParser::LSQUARED);
-    setState(395);
+    setState(331);
     _la = _input->LA(1);
     if (!(_la == temporalParser::SINTEGER
 
@@ -3019,14 +2552,14 @@ temporalParser::RangeContext* temporalParser::range() {
       _errHandler->reportMatch(this);
       consume();
     }
-    setState(398);
+    setState(334);
     _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == temporalParser::COL) {
-      setState(396);
+      setState(332);
       match(temporalParser::COL);
-      setState(397);
+      setState(333);
       _la = _input->LA(1);
       if (!(_la == temporalParser::SINTEGER
 
@@ -3038,7 +2571,7 @@ temporalParser::RangeContext* temporalParser::range() {
         consume();
       }
     }
-    setState(400);
+    setState(336);
     match(temporalParser::RSQUARED);
    
   }
@@ -3084,7 +2617,7 @@ void temporalParser::IntAtomContext::exitRule(tree::ParseTreeListener *listener)
 
 temporalParser::IntAtomContext* temporalParser::intAtom() {
   IntAtomContext *_localctx = _tracker.createInstance<IntAtomContext>(_ctx, getState());
-  enterRule(_localctx, 32, temporalParser::RuleIntAtom);
+  enterRule(_localctx, 24, temporalParser::RuleIntAtom);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
@@ -3094,7 +2627,7 @@ temporalParser::IntAtomContext* temporalParser::intAtom() {
     exitRule();
   });
   try {
-    setState(404);
+    setState(340);
     _errHandler->sync(this);
     switch (_input->LA(1)) {
       case temporalParser::SINTEGER:
@@ -3103,14 +2636,14 @@ temporalParser::IntAtomContext* temporalParser::intAtom() {
       case temporalParser::HEX:
       case temporalParser::VERILOG_BINARY: {
         enterOuterAlt(_localctx, 1);
-        setState(402);
+        setState(338);
         int_constant();
         break;
       }
 
       case temporalParser::INT_VARIABLE: {
         enterOuterAlt(_localctx, 2);
-        setState(403);
+        setState(339);
         match(temporalParser::INT_VARIABLE);
         break;
       }
@@ -3178,7 +2711,7 @@ void temporalParser::Int_constantContext::exitRule(tree::ParseTreeListener *list
 
 temporalParser::Int_constantContext* temporalParser::int_constant() {
   Int_constantContext *_localctx = _tracker.createInstance<Int_constantContext>(_ctx, getState());
-  enterRule(_localctx, 34, temporalParser::RuleInt_constant);
+  enterRule(_localctx, 26, temporalParser::RuleInt_constant);
   size_t _la = 0;
 
 #if __cplusplus > 201703L
@@ -3189,26 +2722,26 @@ temporalParser::Int_constantContext* temporalParser::int_constant() {
     exitRule();
   });
   try {
-    setState(420);
+    setState(356);
     _errHandler->sync(this);
-    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 50, _ctx)) {
+    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 48, _ctx)) {
     case 1: {
       enterOuterAlt(_localctx, 1);
-      setState(406);
+      setState(342);
       match(temporalParser::GCC_BINARY);
       break;
     }
 
     case 2: {
       enterOuterAlt(_localctx, 2);
-      setState(407);
+      setState(343);
       match(temporalParser::SINTEGER);
-      setState(409);
+      setState(345);
       _errHandler->sync(this);
 
-      switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 47, _ctx)) {
+      switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 45, _ctx)) {
       case 1: {
-        setState(408);
+        setState(344);
         match(temporalParser::CONST_SUFFIX);
         break;
       }
@@ -3221,14 +2754,14 @@ temporalParser::Int_constantContext* temporalParser::int_constant() {
 
     case 3: {
       enterOuterAlt(_localctx, 3);
-      setState(411);
+      setState(347);
       match(temporalParser::UINTEGER);
-      setState(413);
+      setState(349);
       _errHandler->sync(this);
 
-      switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 48, _ctx)) {
+      switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 46, _ctx)) {
       case 1: {
-        setState(412);
+        setState(348);
         match(temporalParser::CONST_SUFFIX);
         break;
       }
@@ -3241,22 +2774,22 @@ temporalParser::Int_constantContext* temporalParser::int_constant() {
 
     case 4: {
       enterOuterAlt(_localctx, 4);
-      setState(416);
+      setState(352);
       _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == temporalParser::UINTEGER) {
-        setState(415);
+        setState(351);
         match(temporalParser::UINTEGER);
       }
-      setState(418);
+      setState(354);
       match(temporalParser::VERILOG_BINARY);
       break;
     }
 
     case 5: {
       enterOuterAlt(_localctx, 5);
-      setState(419);
+      setState(355);
       match(temporalParser::HEX);
       break;
     }
@@ -3308,7 +2841,7 @@ void temporalParser::FloatAtomContext::exitRule(tree::ParseTreeListener *listene
 
 temporalParser::FloatAtomContext* temporalParser::floatAtom() {
   FloatAtomContext *_localctx = _tracker.createInstance<FloatAtomContext>(_ctx, getState());
-  enterRule(_localctx, 36, temporalParser::RuleFloatAtom);
+  enterRule(_localctx, 28, temporalParser::RuleFloatAtom);
   size_t _la = 0;
 
 #if __cplusplus > 201703L
@@ -3320,7 +2853,7 @@ temporalParser::FloatAtomContext* temporalParser::floatAtom() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(422);
+    setState(358);
     _la = _input->LA(1);
     if (!(_la == temporalParser::FLOAT_CONSTANT
 
@@ -3383,7 +2916,7 @@ void temporalParser::RelopContext::exitRule(tree::ParseTreeListener *listener) {
 
 temporalParser::RelopContext* temporalParser::relop() {
   RelopContext *_localctx = _tracker.createInstance<RelopContext>(_ctx, getState());
-  enterRule(_localctx, 38, temporalParser::RuleRelop);
+  enterRule(_localctx, 30, temporalParser::RuleRelop);
   size_t _la = 0;
 
 #if __cplusplus > 201703L
@@ -3395,13 +2928,10 @@ temporalParser::RelopContext* temporalParser::relop() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(424);
+    setState(360);
     _la = _input->LA(1);
     if (!((((_la & ~ 0x3fULL) == 0) &&
-      ((1ULL << _la) & ((1ULL << temporalParser::GT)
-      | (1ULL << temporalParser::GE)
-      | (1ULL << temporalParser::LT)
-      | (1ULL << temporalParser::LE))) != 0))) {
+      ((1ULL << _la) & 2111062325329920) != 0))) {
     _errHandler->recoverInline(this);
     }
     else {
@@ -3468,7 +2998,7 @@ void temporalParser::Cls_opContext::exitRule(tree::ParseTreeListener *listener) 
 
 temporalParser::Cls_opContext* temporalParser::cls_op() {
   Cls_opContext *_localctx = _tracker.createInstance<Cls_opContext>(_ctx, getState());
-  enterRule(_localctx, 40, temporalParser::RuleCls_op);
+  enterRule(_localctx, 32, temporalParser::RuleCls_op);
   size_t _la = 0;
 
 #if __cplusplus > 201703L
@@ -3480,15 +3010,10 @@ temporalParser::Cls_opContext* temporalParser::cls_op() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(426);
+    setState(362);
     _la = _input->LA(1);
-    if (!(((((_la - 54) & ~ 0x3fULL) == 0) &&
-      ((1ULL << (_la - 54)) & ((1ULL << (temporalParser::GT - 54))
-      | (1ULL << (temporalParser::GE - 54))
-      | (1ULL << (temporalParser::LT - 54))
-      | (1ULL << (temporalParser::LE - 54))
-      | (1ULL << (temporalParser::EQ - 54))
-      | (1ULL << (temporalParser::RANGE - 54)))) != 0))) {
+    if (!(((((_la - 47) & ~ 0x3fULL) == 0) &&
+      ((1ULL << (_la - 47)) & 262175) != 0))) {
     _errHandler->recoverInline(this);
     }
     else {
@@ -3508,10 +3033,10 @@ temporalParser::Cls_opContext* temporalParser::cls_op() {
 
 bool temporalParser::sempred(RuleContext *context, size_t ruleIndex, size_t predicateIndex) {
   switch (ruleIndex) {
-    case 3: return sereSempred(antlrcpp::downCast<SereContext *>(context), predicateIndex);
-    case 5: return tformulaSempred(antlrcpp::downCast<TformulaContext *>(context), predicateIndex);
-    case 12: return booleanSempred(antlrcpp::downCast<BooleanContext *>(context), predicateIndex);
-    case 14: return numericSempred(antlrcpp::downCast<NumericContext *>(context), predicateIndex);
+    case 1: return sereSempred(antlrcpp::downCast<SereContext *>(context), predicateIndex);
+    case 3: return tformulaSempred(antlrcpp::downCast<TformulaContext *>(context), predicateIndex);
+    case 8: return booleanSempred(antlrcpp::downCast<BooleanContext *>(context), predicateIndex);
+    case 10: return numericSempred(antlrcpp::downCast<NumericContext *>(context), predicateIndex);
 
   default:
     break;
@@ -3521,14 +3046,14 @@ bool temporalParser::sempred(RuleContext *context, size_t ruleIndex, size_t pred
 
 bool temporalParser::sereSempred(SereContext *_localctx, size_t predicateIndex) {
   switch (predicateIndex) {
-    case 0: return precpred(_ctx, 11);
-    case 1: return precpred(_ctx, 10);
-    case 2: return precpred(_ctx, 8);
-    case 3: return precpred(_ctx, 7);
+    case 0: return precpred(_ctx, 8);
+    case 1: return precpred(_ctx, 7);
+    case 2: return precpred(_ctx, 6);
+    case 3: return precpred(_ctx, 5);
     case 4: return precpred(_ctx, 3);
     case 5: return precpred(_ctx, 2);
-    case 6: return precpred(_ctx, 16);
-    case 7: return precpred(_ctx, 15);
+    case 6: return precpred(_ctx, 12);
+    case 7: return precpred(_ctx, 11);
 
   default:
     break;
@@ -3538,11 +3063,12 @@ bool temporalParser::sereSempred(SereContext *_localctx, size_t predicateIndex) 
 
 bool temporalParser::tformulaSempred(TformulaContext *_localctx, size_t predicateIndex) {
   switch (predicateIndex) {
-    case 8: return canUseSharedOperator(_input->LT(-1)->getText(),_input->LT(2)->getText());
-    case 9: return canTakeThisNot(_input->LT(1)->getText(),_input->LT(2)->getText());
-    case 10: return precpred(_ctx, 5);
-    case 11: return precpred(_ctx, 4);
-    case 12: return precpred(_ctx, 3);
+    case 8: return canTakeThisNot(_input->LT(1)->getText(),_input->LT(2)->getText());
+    case 9: return _input->index()==0 || canUseSharedOperator(_input->LT(-1)->getText(),_input->LT(2)->getText());
+    case 10: return precpred(_ctx, 6);
+    case 11: return precpred(_ctx, 5);
+    case 12: return precpred(_ctx, 4);
+    case 13: return precpred(_ctx, 3);
 
   default:
     break;
@@ -3552,10 +3078,10 @@ bool temporalParser::tformulaSempred(TformulaContext *_localctx, size_t predicat
 
 bool temporalParser::booleanSempred(BooleanContext *_localctx, size_t predicateIndex) {
   switch (predicateIndex) {
-    case 13: return precpred(_ctx, 7);
-    case 14: return precpred(_ctx, 6);
-    case 15: return precpred(_ctx, 5);
-    case 16: return precpred(_ctx, 4);
+    case 14: return precpred(_ctx, 7);
+    case 15: return precpred(_ctx, 6);
+    case 16: return precpred(_ctx, 5);
+    case 17: return precpred(_ctx, 4);
 
   default:
     break;
@@ -3565,14 +3091,14 @@ bool temporalParser::booleanSempred(BooleanContext *_localctx, size_t predicateI
 
 bool temporalParser::numericSempred(NumericContext *_localctx, size_t predicateIndex) {
   switch (predicateIndex) {
-    case 17: return precpred(_ctx, 10);
-    case 18: return precpred(_ctx, 9);
-    case 19: return precpred(_ctx, 8);
-    case 20: return precpred(_ctx, 7);
-    case 21: return precpred(_ctx, 6);
-    case 22: return precpred(_ctx, 5);
-    case 23: return precpred(_ctx, 4);
-    case 24: return precpred(_ctx, 11);
+    case 18: return precpred(_ctx, 10);
+    case 19: return precpred(_ctx, 9);
+    case 20: return precpred(_ctx, 8);
+    case 21: return precpred(_ctx, 7);
+    case 22: return precpred(_ctx, 6);
+    case 23: return precpred(_ctx, 5);
+    case 24: return precpred(_ctx, 4);
+    case 25: return precpred(_ctx, 11);
 
   default:
     break;
@@ -3581,5 +3107,5 @@ bool temporalParser::numericSempred(NumericContext *_localctx, size_t predicateI
 }
 
 void temporalParser::initialize() {
-  std::call_once(temporalParserOnceFlag, temporalParserInitialize);
+  ::antlr4::internal::call_once(temporalParserOnceFlag, temporalParserInitialize);
 }

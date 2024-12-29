@@ -3,14 +3,15 @@
 # Function to display usage
 usage() {
   echo "Usage: $0 <in_path> <out_path>"
-  echo "  in_path: Path to the input text file"
-  echo "  out_path: Path to the output text file"
+  echo " in_path: Path to the input text file"
+  echo " out_path: Path to the output text file"
+  echo " var_map: Path to the variable map file"
   exit 1
 }
 
 
-# Ensure correct number of arguments
-if [ "$#" -ne 2 ]; then
+# Ensure the correct number of arguments are provided
+if [ "$#" -ne 3 ]; then
   usage
 fi
 

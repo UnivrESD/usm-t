@@ -6,7 +6,9 @@
 #include "assertion_utils.hh"
 #include "gedlibWrapper.hh"
 #include <algorithm>
+#include <exception>
 #include <map>
+#include <stdexcept>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -63,17 +65,28 @@ void evaluateWithEditDistance(
 
   for (const auto &ea : expectedAssertions) {
     //Extract the automaton without the G
-    Automaton *aut =
-        //generateAutomatonFromTemporal(ea->_formula->getItems()[0]);
-        generateAutomatonFromTemporal(ea->_formula);
+
+    Automaton *aut = nullptr;
+    try {
+      aut = generateAutomatonFromTemporal(ea->_formula);
+    } catch (const std::exception &e) {
+      messageWarning("(Edit distance) ignoring specification: " +
+                     std::string(e.what()));
+      continue;
+    }
     expectedToSAutomaton[ea] = serializeAutomaton(aut);
   }
 
   for (const auto &ma : minedAssertions) {
     //Extract the automaton without the G
-    Automaton *aut =
-        //generateAutomatonFromTemporal(ma->_formula->getItems()[0]);
-        generateAutomatonFromTemporal(ma->_formula);
+    Automaton *aut = nullptr;
+    try {
+      aut = generateAutomatonFromTemporal(ma->_formula);
+    } catch (const std::exception &e) {
+      messageWarning("(Edit distance) ignoring specification: " +
+                     std::string(e.what()));
+      continue;
+    }
     minedToSAutomaton[ma] = serializeAutomaton(aut);
   }
 

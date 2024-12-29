@@ -1,13 +1,5 @@
 
-#include <string>
-// Forward declaration
-bool isUnary(const std::string& token);
-bool isSharedOperator(const std::string& token);
-bool canUseSharedOperator(const std::string& unaryOp, const std::string& sharedOp);
-bool canTakeThisNot(const std::string& unaryOp, const std::string& ph);
-
-
-// Generated from temporal.g4 by ANTLR 4.10.1
+// Generated from temporal.g4 by ANTLR 4.12.0
 
 #pragma once
 
@@ -25,12 +17,6 @@ public:
   virtual void enterFormula(temporalParser::FormulaContext *ctx) = 0;
   virtual void exitFormula(temporalParser::FormulaContext *ctx) = 0;
 
-  virtual void enterSva_assert(temporalParser::Sva_assertContext *ctx) = 0;
-  virtual void exitSva_assert(temporalParser::Sva_assertContext *ctx) = 0;
-
-  virtual void enterImplication(temporalParser::ImplicationContext *ctx) = 0;
-  virtual void exitImplication(temporalParser::ImplicationContext *ctx) = 0;
-
   virtual void enterSere(temporalParser::SereContext *ctx) = 0;
   virtual void exitSere(temporalParser::SereContext *ctx) = 0;
 
@@ -40,14 +26,8 @@ public:
   virtual void enterTformula(temporalParser::TformulaContext *ctx) = 0;
   virtual void exitTformula(temporalParser::TformulaContext *ctx) = 0;
 
-  virtual void enterDt_next(temporalParser::Dt_nextContext *ctx) = 0;
-  virtual void exitDt_next(temporalParser::Dt_nextContext *ctx) = 0;
-
-  virtual void enterDt_next_and(temporalParser::Dt_next_andContext *ctx) = 0;
-  virtual void exitDt_next_and(temporalParser::Dt_next_andContext *ctx) = 0;
-
-  virtual void enterDt_ncreps(temporalParser::Dt_ncrepsContext *ctx) = 0;
-  virtual void exitDt_ncreps(temporalParser::Dt_ncrepsContext *ctx) = 0;
+  virtual void enterSere_implication(temporalParser::Sere_implicationContext *ctx) = 0;
+  virtual void exitSere_implication(temporalParser::Sere_implicationContext *ctx) = 0;
 
   virtual void enterStartBoolean(temporalParser::StartBooleanContext *ctx) = 0;
   virtual void exitStartBoolean(temporalParser::StartBooleanContext *ctx) = 0;

@@ -7,7 +7,7 @@ bool canUseSharedOperator(const std::string& unaryOp, const std::string& sharedO
 bool canTakeThisNot(const std::string& unaryOp, const std::string& ph);
 
 
-// Generated from temporal.g4 by ANTLR 4.10.1
+// Generated from temporal.g4 by ANTLR 4.12.0
 
 #pragma once
 
@@ -20,28 +20,26 @@ bool canTakeThisNot(const std::string& unaryOp, const std::string& ph);
 class  temporalParser : public antlr4::Parser {
 public:
   enum {
-    T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, PLACEHOLDER = 7, 
-    DT_AND = 8, EVENTUALLY = 9, ALWAYS = 10, NEXT = 11, UNTIL = 12, RELEASE = 13, 
-    DOTS = 14, IMPL = 15, IMPLO = 16, IFF = 17, SEREIMPL = 18, SEREIMPLO = 19, 
-    ASS = 20, DELAY = 21, SCOL = 22, FIRST_MATCH = 23, TNOT = 24, TAND = 25, 
-    INTERSECT = 26, TOR = 27, BOOLEAN_CONSTANT = 28, BOOLEAN_VARIABLE = 29, 
-    INT_VARIABLE = 30, CONST_SUFFIX = 31, FLOAT_CONSTANT = 32, FLOAT_VARIABLE = 33, 
-    LCURLY = 34, RCURLY = 35, LSQUARED = 36, RSQUARED = 37, LROUND = 38, 
-    RROUND = 39, INSIDE = 40, FUNCTION = 41, SINTEGER = 42, UINTEGER = 43, 
-    FLOAT = 44, GCC_BINARY = 45, HEX = 46, VERILOG_BINARY = 47, FVL = 48, 
-    SINGLE_QUOTE = 49, PLUS = 50, MINUS = 51, TIMES = 52, DIV = 53, GT = 54, 
-    GE = 55, LT = 56, LE = 57, EQ = 58, NEQ = 59, BAND = 60, BOR = 61, BXOR = 62, 
-    NEG = 63, LSHIFT = 64, RSHIFT = 65, AND = 66, OR = 67, NOT = 68, COL = 69, 
-    DCOL = 70, DOLLAR = 71, RANGE = 72, CLS_TYPE = 73, WS = 74
+    PLACEHOLDER = 1, EVENTUALLY = 2, ALWAYS = 3, NEXT = 4, UNTIL = 5, RELEASE = 6, 
+    DOTS = 7, IMPL = 8, IMPLO = 9, IFF = 10, SEREIMPL = 11, SEREIMPLO = 12, 
+    ASS = 13, DELAY = 14, SCOL = 15, FIRST_MATCH = 16, TNOT = 17, TAND = 18, 
+    INTERSECT = 19, TOR = 20, BOOLEAN_CONSTANT = 21, BOOLEAN_VARIABLE = 22, 
+    INT_VARIABLE = 23, CONST_SUFFIX = 24, FLOAT_CONSTANT = 25, FLOAT_VARIABLE = 26, 
+    LCURLY = 27, RCURLY = 28, LSQUARED = 29, RSQUARED = 30, LROUND = 31, 
+    RROUND = 32, INSIDE = 33, FUNCTION = 34, SINTEGER = 35, UINTEGER = 36, 
+    FLOAT = 37, GCC_BINARY = 38, HEX = 39, VERILOG_BINARY = 40, FVL = 41, 
+    SINGLE_QUOTE = 42, PLUS = 43, MINUS = 44, TIMES = 45, DIV = 46, GT = 47, 
+    GE = 48, LT = 49, LE = 50, EQ = 51, NEQ = 52, BAND = 53, BOR = 54, BXOR = 55, 
+    NEG = 56, LSHIFT = 57, RSHIFT = 58, AND = 59, OR = 60, NOT = 61, COL = 62, 
+    DCOL = 63, DOLLAR = 64, RANGE = 65, CLS_TYPE = 66, WS = 67
   };
 
   enum {
-    RuleFormula = 0, RuleSva_assert = 1, RuleImplication = 2, RuleSere = 3, 
-    RuleBooleanLayer = 4, RuleTformula = 5, RuleDt_next = 6, RuleDt_next_and = 7, 
-    RuleDt_ncreps = 8, RuleStartBoolean = 9, RuleStartInt = 10, RuleStartFloat = 11, 
-    RuleBoolean = 12, RuleBooleanAtom = 13, RuleNumeric = 14, RuleRange = 15, 
-    RuleIntAtom = 16, RuleInt_constant = 17, RuleFloatAtom = 18, RuleRelop = 19, 
-    RuleCls_op = 20
+    RuleFormula = 0, RuleSere = 1, RuleBooleanLayer = 2, RuleTformula = 3, 
+    RuleSere_implication = 4, RuleStartBoolean = 5, RuleStartInt = 6, RuleStartFloat = 7, 
+    RuleBoolean = 8, RuleBooleanAtom = 9, RuleNumeric = 10, RuleRange = 11, 
+    RuleIntAtom = 12, RuleInt_constant = 13, RuleFloatAtom = 14, RuleRelop = 15, 
+    RuleCls_op = 16
   };
 
   explicit temporalParser(antlr4::TokenStream *input);
@@ -63,7 +61,7 @@ public:
 
   // Definition
   bool isUnary(const std::string& token){
-  return token=="X" || token=="nexttime" || token=="F" || token=="eventually" || token=="!" || token=="not";
+  return token=="X" || token=="nexttime" || token=="F" || token=="G" || token=="always" || token=="eventually" || token=="!" || token=="not";
   }
   bool isSharedOperator(const std::string& token){
   return token=="and" || token=="&&" || token=="or" || token=="||" || token=="|";
@@ -79,14 +77,10 @@ public:
 
 
   class FormulaContext;
-  class Sva_assertContext;
-  class ImplicationContext;
   class SereContext;
   class BooleanLayerContext;
   class TformulaContext;
-  class Dt_nextContext;
-  class Dt_next_andContext;
-  class Dt_ncrepsContext;
+  class Sere_implicationContext;
   class StartBooleanContext;
   class StartIntContext;
   class StartFloatContext;
@@ -104,12 +98,8 @@ public:
   public:
     FormulaContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *ALWAYS();
-    antlr4::tree::TerminalNode *LROUND();
-    ImplicationContext *implication();
-    antlr4::tree::TerminalNode *RROUND();
+    TformulaContext *tformula();
     antlr4::tree::TerminalNode *EOF();
-    Sva_assertContext *sva_assert();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -117,44 +107,6 @@ public:
   };
 
   FormulaContext* formula();
-
-  class  Sva_assertContext : public antlr4::ParserRuleContext {
-  public:
-    Sva_assertContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *LROUND();
-    Sva_assertContext *sva_assert();
-    antlr4::tree::TerminalNode *RROUND();
-    BooleanContext *boolean();
-    ImplicationContext *implication();
-
-    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
-    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
-   
-  };
-
-  Sva_assertContext* sva_assert();
-
-  class  ImplicationContext : public antlr4::ParserRuleContext {
-  public:
-    ImplicationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    std::vector<TformulaContext *> tformula();
-    TformulaContext* tformula(size_t i);
-    antlr4::tree::TerminalNode *IMPL();
-    antlr4::tree::TerminalNode *IMPLO();
-    SereContext *sere();
-    antlr4::tree::TerminalNode *SEREIMPL();
-    antlr4::tree::TerminalNode *LCURLY();
-    antlr4::tree::TerminalNode *RCURLY();
-    antlr4::tree::TerminalNode *SEREIMPLO();
-
-    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
-    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
-   
-  };
-
-  ImplicationContext* implication();
 
   class  SereContext : public antlr4::ParserRuleContext {
   public:
@@ -177,11 +129,7 @@ public:
     antlr4::tree::TerminalNode *COL();
     antlr4::tree::TerminalNode *DOLLAR();
     antlr4::tree::TerminalNode *IMPLO();
-    Dt_ncrepsContext *dt_ncreps();
-    antlr4::tree::TerminalNode *DT_AND();
     antlr4::tree::TerminalNode *DELAY();
-    Dt_nextContext *dt_next();
-    Dt_next_andContext *dt_next_and();
     antlr4::tree::TerminalNode *BAND();
     antlr4::tree::TerminalNode *TAND();
     antlr4::tree::TerminalNode *INTERSECT();
@@ -222,22 +170,23 @@ public:
   public:
     TformulaContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
+    BooleanLayerContext *booleanLayer();
     antlr4::tree::TerminalNode *LROUND();
     std::vector<TformulaContext *> tformula();
     TformulaContext* tformula(size_t i);
     antlr4::tree::TerminalNode *RROUND();
-    SereContext *sere();
-    antlr4::tree::TerminalNode *LCURLY();
-    antlr4::tree::TerminalNode *RCURLY();
     antlr4::tree::TerminalNode *TNOT();
     antlr4::tree::TerminalNode *NOT();
     antlr4::tree::TerminalNode *NEXT();
     antlr4::tree::TerminalNode *LSQUARED();
     antlr4::tree::TerminalNode *UINTEGER();
     antlr4::tree::TerminalNode *RSQUARED();
+    antlr4::tree::TerminalNode *ALWAYS();
     antlr4::tree::TerminalNode *EVENTUALLY();
-    antlr4::tree::TerminalNode *DT_AND();
-    BooleanLayerContext *booleanLayer();
+    Sere_implicationContext *sere_implication();
+    SereContext *sere();
+    antlr4::tree::TerminalNode *LCURLY();
+    antlr4::tree::TerminalNode *RCURLY();
     antlr4::tree::TerminalNode *UNTIL();
     antlr4::tree::TerminalNode *RELEASE();
     antlr4::tree::TerminalNode *TAND();
@@ -245,6 +194,8 @@ public:
     antlr4::tree::TerminalNode *TOR();
     antlr4::tree::TerminalNode *OR();
     antlr4::tree::TerminalNode *BOR();
+    antlr4::tree::TerminalNode *IMPLO();
+    antlr4::tree::TerminalNode *IMPL();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -253,52 +204,23 @@ public:
 
   TformulaContext* tformula();
   TformulaContext* tformula(int precedence);
-  class  Dt_nextContext : public antlr4::ParserRuleContext {
+  class  Sere_implicationContext : public antlr4::ParserRuleContext {
   public:
-    Dt_nextContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    Sere_implicationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *UINTEGER();
-    antlr4::tree::TerminalNode *DOTS();
+    SereContext *sere();
+    antlr4::tree::TerminalNode *SEREIMPL();
+    TformulaContext *tformula();
+    antlr4::tree::TerminalNode *LCURLY();
+    antlr4::tree::TerminalNode *RCURLY();
+    antlr4::tree::TerminalNode *SEREIMPLO();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
    
   };
 
-  Dt_nextContext* dt_next();
-
-  class  Dt_next_andContext : public antlr4::ParserRuleContext {
-  public:
-    Dt_next_andContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *UINTEGER();
-    antlr4::tree::TerminalNode *BAND();
-    antlr4::tree::TerminalNode *DOTS();
-
-    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
-    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
-   
-  };
-
-  Dt_next_andContext* dt_next_and();
-
-  class  Dt_ncrepsContext : public antlr4::ParserRuleContext {
-  public:
-    Dt_ncrepsContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *UINTEGER();
-    antlr4::tree::TerminalNode *DOTS();
-    antlr4::tree::TerminalNode *IMPLO();
-    antlr4::tree::TerminalNode *ASS();
-    antlr4::tree::TerminalNode *COL();
-    antlr4::tree::TerminalNode *SCOL();
-
-    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
-    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
-   
-  };
-
-  Dt_ncrepsContext* dt_ncreps();
+  Sere_implicationContext* sere_implication();
 
   class  StartBooleanContext : public antlr4::ParserRuleContext {
   public:

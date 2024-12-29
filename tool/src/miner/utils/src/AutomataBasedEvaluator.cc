@@ -4,6 +4,8 @@
 #include "Semaphore.hh"
 #include "globals.hh"
 #include "minerUtils.hh"
+#include "spot/misc/trival.hh"
+#include <stdexcept>
 #include <thread>
 #include <unordered_map>
 
@@ -175,16 +177,33 @@ generateDeterministicSpotAutomaton(const spot::formula &formula) {
   trans.set_pref(spot::postprocessor::Deterministic);
   auto aut = trans.run(formula);
 
-  spot::postprocessor post;
-  post.set_pref(spot::postprocessor::Complete);
-  aut = post.run(aut);
+  spot::postprocessor post2;
+  post2.set_pref(spot::postprocessor::Complete);
+  aut = post2.run(aut);
 
-  messageErrorIf(!spot::is_deterministic(aut),
-                 "The formula '" + to_string(formula) +
-                     "' generates a non-deterministic automaton");
-  messageErrorIf(!spot::is_complete(aut),
-                 "The formula '" + to_string(formula) +
-                     "' generates an incomplete automaton");
+  if (!spot::is_deterministic(aut)) {
+    throw std::runtime_error(
+        "The formula '" + to_string(formula) +
+        "' generates a non-deterministic automaton");
+  }
+
+  if (!spot::is_complete(aut)) {
+    throw std::runtime_error("The formula '" + to_string(formula) +
+                             "' generates an incomplete automaton");
+  }
+
+  if (!aut->prop_state_acc().is_true()) {
+    throw std::runtime_error(
+        "The formula '" + to_string(formula) +
+        "' generates an automaton that does not allow "
+        "state-based acceptance");
+  }
+
+  if (aut->num_states() == 1) {
+    throw std::runtime_error(
+        "The formula '" + to_string(formula) +
+        "' generates an automaton that is trivially true or false");
+  }
 
   //add to cache
   cache.insert({formulaStr, aut});
@@ -361,7 +380,6 @@ bool isDTO_Str(const std::string &s) {
 void AutomataBasedEvaluator::changeTrace(
     const harm::TracePtr &trace) {
 
-  size_t oldTraceLength = _trace->getLength();
   _trace = trace;
   expression::changeTrace(_formula, trace);
   //extend the cache if the new trace is longer

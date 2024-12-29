@@ -45,6 +45,15 @@
     <output_adaptor path="spin_to_spotltl/run.sh"/>
   </usecase>
 
+  <usecase id="samples2ltl_usecase_1">
+    <miner name="samples2ltl"/> 
+    <input type="csv" path="arb2/traces/bool/t1.csv"/>
+    <output path="mixed_ass.txt"/>
+    <config type="run" path="config1/run_miner.sh"/>
+    <input_adaptor path="csv_to_samples2ltl_csv/run.sh"/>
+    <output_adaptor path="samples2ltl_to_spotltl/run.sh"/>
+  </usecase>
+
   <usecase id="goldminer_usecase_1">
     <miner name="goldminer"/> 
     <input type="vcd" path="arb2/traces/bool/t1.vcd" clk="clk" rst="rst" scope="arb2_bench::arb2_" />
@@ -68,16 +77,22 @@
     <compare with_strategy="edit_distance" expected="input/arb2/expected/arb2_golden_ass_numeric.txt"/>
     <usecase id="harm_usecase_1_numeric"/> 
   </test>
-    <usecase id="texada_usecase_1"/> 
+  -->
+
+  <!--
   -->
 
   <test name="test1_bool" mode="sequential">
 
+    <usecase id="goldminer_usecase_1"/>
+    <usecase id="texada_usecase_1"/> 
     <usecase id="harm_usecase_1_bool"/>
+    <usecase id="samples2ltl_usecase_1"/>
 
-    <compare with_strategy="time_to_mine"/>
-    <compare with_strategy="edit_distance" expected="input/arb2/expected/arb2_golden_ass_bool.txt"/>
     <compare with_strategy="semantic_equivalence" expected="input/arb2/expected/arb2_golden_ass_bool.txt"/>
+    <compare with_strategy="edit_distance" expected="input/arb2/expected/arb2_golden_ass_bool.txt"/>
+    <compare with_strategy="fault_coverage" faulty_traces="input/arb2/faulty_traces/" trace_type="csv" />
+    <compare with_strategy="time_to_mine"/>
   </test>
 
 

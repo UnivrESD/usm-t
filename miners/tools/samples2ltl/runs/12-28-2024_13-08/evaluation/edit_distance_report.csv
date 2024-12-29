@@ -1,0 +1,5 @@
+Expected, BestCoveredWith, Similarity
+G((req1 && !req2) -> gnt1), G((gnt1 -> gnt2 U gnt1)), 1
+G(!req2 -> !gnt2), G((gnt1 -> gnt2 U gnt1)), 1
+G(!req1 -> !gnt1), G((gnt1 -> gnt2 U gnt1)), 1
+G((req2 && !req1) -> gnt2), G((gnt1 -> gnt2 U gnt1)), 1

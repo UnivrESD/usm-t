@@ -10,9 +10,10 @@ usage() {
 
 
 # Ensure correct number of arguments
-if [ "$#" -ne 2 ]; then
+if [ "$#" -lt 2 ]; then
   usage
 fi
+
 
 #check that sed is installed
 if ! command -v sed &> /dev/null

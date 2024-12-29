@@ -46,10 +46,11 @@ void adaptOutput(const UseCase &use_case) {
   for (auto output : use_case.output) {
     std::string adapt_output_command =
         "bash " + ph.output_adaptor_path;
-    //add the path to the input and output file of the output adaptor
+    //add the path to the input and output file of the output adaptor (add an optional var map file)
     adapt_output_command +=
         " " + ph.work_path + ph.work_output + output.path;
     adapt_output_command += " " + adapted_output_folder;
+    adapt_output_command += " " + ph.work_path + ph.work_input + "/var_map.txt";
 
     systemCheckExit(adapt_output_command);
   }

@@ -51,7 +51,7 @@ private:
 
   void exitFormula(temporalParser::FormulaContext *ctx) override;
   virtual void
-  exitImplication(temporalParser::ImplicationContext *ctx) override;
+  exitSere_implication(temporalParser::Sere_implicationContext *ctx) override;
   virtual void visitErrorNode(antlr4::tree::ErrorNode *node) override;
   virtual void
   exitTformula(temporalParser::TformulaContext *ctx) override;
@@ -80,8 +80,6 @@ private:
   /// map from the string representation of a instance proposition to the temporal name
   std::unordered_map<std::string, std::string> _propStrToInst;
 
-  ///keeps track of the number of DT operators
-  size_t dtCount = 0;
   ///keeps track of the number of instance propositions
   size_t instCount = 0;
 

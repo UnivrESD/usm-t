@@ -59,13 +59,13 @@ TemporalParserHandler::handleNewInst(const std::string &prop) {
 
 void TemporalParserHandler::exitFormula(
     temporalParser::FormulaContext *ctx) {
-  auto tformula = _tsubFormulas.top();
+  _temporalExpression = _tsubFormulas.top();
   _tsubFormulas.pop();
-  _temporalExpression = generatePtr<PropertyAlways>(tformula);
   _errorMessages.clear();
 }
-void TemporalParserHandler::exitImplication(
-    temporalParser::ImplicationContext *ctx) {
+
+void TemporalParserHandler::exitSere_implication(
+    temporalParser::Sere_implicationContext *ctx) {
 
   TemporalExpressionPtr right = _tsubFormulas.top();
   _tsubFormulas.pop();
@@ -85,54 +85,16 @@ void TemporalParserHandler::exitImplication(
           "allow this.\n" +
           printErrorMessage());
 
-  messageErrorIf(
-      clc::outputLang == Language::SVA &&
-          (ctx->IMPL() != nullptr || ctx->IMPLO() != nullptr),
-      "SystemVerilog implications requires to use |-> or |=>\n"
-      "Change the output language to PSL or SpotLTL to "
-      "allow the use of -> or =>\n" +
-          printErrorMessage());
-
-  //property
-  if (ctx->tformula().size() == 2 &&
-      (ctx->IMPL() != nullptr || ctx->IMPLO() != nullptr)) {
-    _tsubFormulas.push(generatePtr<PropertyImplication>(
-        left, right, false,
-        (ctx->IMPLO() != nullptr) ? true : false));
-
-    return;
-  }
-
   //sere
-  if (ctx->tformula().size() == 1 && ctx->sere() != nullptr &&
-      (ctx->SEREIMPL() != nullptr || ctx->SEREIMPLO() != nullptr)) {
-    _tsubFormulas.push(generatePtr<PropertyImplication>(
-        left, right, true,
-        (ctx->SEREIMPLO() != nullptr) ? true : false));
+  _tsubFormulas.push(generatePtr<PropertyImplication>(
+      left, right, true,
+      (ctx->SEREIMPLO() != nullptr) ? true : false));
 
-    return;
-  }
-  messageError("Error in formula\n" + printErrorMessage());
+  return;
 }
 
 void TemporalParserHandler::exitTformula(
     temporalParser::TformulaContext *ctx) {
-
-  if (ctx->DT_AND() != nullptr) {
-    messageErrorIf(dtCount > 0,
-                   "More than one dt operator defined\n" +
-                       printErrorMessage());
-    std::string ph = "_dtAnd" + std::to_string(dtCount++);
-    _dto_param._type = harm::DTO_Type::And;
-    _tsubFormulas.push(generatePtr<BooleanLayerDTPlaceholder>(
-        harm::DTO_Type::And,
-        generatePtr<PropositionPtr>(
-            makeGenericExpression<PropositionAnd>(
-                _trace->getLength())),
-        ph, 0));
-    _phToIdsDomain["DT"];
-    return;
-  }
 
   if (ctx->tformula().size() == 2 &&
       (ctx->TAND() != nullptr || ctx->AND() != nullptr)) {
@@ -154,6 +116,31 @@ void TemporalParserHandler::exitTformula(
     _tsubFormulas.pop();
     _tsubFormulas.push(generatePtr<PropertyOr>({left, right}));
     return;
+  }
+
+  if (ctx->tformula().size() == 2 &&
+      (ctx->IMPL() != nullptr || ctx->IMPLO() != nullptr)) {
+    TemporalExpressionPtr right = _tsubFormulas.top();
+    _tsubFormulas.pop();
+    TemporalExpressionPtr left = _tsubFormulas.top();
+    _tsubFormulas.pop();
+    messageErrorIf(
+        clc::outputLang == Language::SVA &&
+            (ctx->IMPL() != nullptr || ctx->IMPLO() != nullptr),
+        "SystemVerilog implications requires to use |-> or |=>\n"
+        "Change the output language to PSL or SpotLTL to "
+        "allow the use of -> or =>\n" +
+            printErrorMessage());
+
+    //property
+    if (ctx->tformula().size() == 2 &&
+        (ctx->IMPL() != nullptr || ctx->IMPLO() != nullptr)) {
+      _tsubFormulas.push(generatePtr<PropertyImplication>(
+          left, right, false,
+          (ctx->IMPLO() != nullptr) ? true : false));
+
+      return;
+    }
   }
 
   if (ctx->tformula().size() == 1 && ctx->NEXT() != nullptr) {
@@ -199,6 +186,12 @@ void TemporalParserHandler::exitTformula(
     _tsubFormulas.push(generatePtr<PropertyEventually>(right));
     return;
   }
+  if (ctx->tformula().size() == 1 && ctx->ALWAYS() != nullptr) {
+    TemporalExpressionPtr right = _tsubFormulas.top();
+    _tsubFormulas.pop();
+    _tsubFormulas.push(generatePtr<PropertyAlways>(right));
+    return;
+  }
 }
 
 void TemporalParserHandler::enterBooleanLayer(
@@ -232,90 +225,6 @@ void TemporalParserHandler::exitSere(
     TemporalExpressionPtr right = _tsubFormulas.top();
     _tsubFormulas.pop();
     _tsubFormulas.push(generatePtr<SereFirstMatch>(right));
-    return;
-  }
-
-  if (ctx->dt_next() != nullptr) {
-    messageErrorIf(dtCount > 0,
-                   "More than one dt operator defined\n" +
-                       printErrorMessage());
-    std::string ph = "_dtNext" + std::to_string(dtCount++);
-    _dto_param._step =
-        safeStoull(ctx->dt_next()->UINTEGER()->getText());
-    _dto_param._type = harm::DTO_Type::Next;
-
-    _tsubFormulas.push(generatePtr<BooleanLayerDTPlaceholder>(
-        harm::DTO_Type::Next,
-        generatePtr<PropositionPtr>(generatePtr<BooleanConstant>(
-            true, ExpType::Bool, 1, _trace->getLength())),
-        ph, 0));
-    _phToIdsDomain["DT"];
-
-    return;
-  }
-
-  if (ctx->dt_ncreps() != nullptr) {
-    messageErrorIf(dtCount > 0,
-                   "More than one dt operator defined\n" +
-                       printErrorMessage());
-    std::string ph = "_dtNCReps0";
-    _dto_param._step =
-        safeStoull(ctx->dt_ncreps()->UINTEGER()->getText());
-    if (ctx->dt_ncreps()->COL() != nullptr) {
-      _dto_param._separator = ":";
-    } else if (ctx->dt_ncreps()->SCOL() != nullptr) {
-      _dto_param._separator = ";";
-    } else {
-      messageError("Unknown NCReps separator");
-    }
-    if (ctx->dt_ncreps()->ASS() != nullptr) {
-      _dto_param._type = harm::DTO_Type::NCReps;
-    } else if (ctx->dt_ncreps()->IMPLO() != nullptr) {
-      _dto_param._type = harm::DTO_Type::GoTo;
-    } else {
-      messageError("Unknown NCReps type");
-    }
-
-    _tsubFormulas.push(generatePtr<BooleanLayerDTPlaceholder>(
-        _dto_param._type,
-        generatePtr<PropositionPtr>(generatePtr<BooleanConstant>(
-            true, ExpType::Bool, 1, _trace->getLength())),
-        ph, 0));
-    _phToIdsDomain["DT"];
-    return;
-  }
-
-  if (ctx->dt_next_and() != nullptr) {
-    messageErrorIf(dtCount > 0,
-                   "More than one dt operator defined\n" +
-                       printErrorMessage());
-    std::string ph = "_dtNextAnd" + std::to_string(dtCount++);
-    _dto_param._step =
-        safeStoull(ctx->dt_next_and()->UINTEGER()->getText());
-    _dto_param._type = harm::DTO_Type::NextAnd;
-    _tsubFormulas.push(generatePtr<BooleanLayerDTPlaceholder>(
-        harm::DTO_Type::NextAnd,
-        generatePtr<PropositionPtr>(
-            makeGenericExpression<PropositionAnd>(
-                _trace->getLength())),
-        ph, 0));
-    _phToIdsDomain["DT"];
-    return;
-  }
-
-  if (ctx->DT_AND() != nullptr) {
-    messageErrorIf(dtCount > 0,
-                   "More than one dt operator defined\n" +
-                       printErrorMessage());
-    std::string ph = "_dtAnd" + std::to_string(dtCount++);
-    _dto_param._type = harm::DTO_Type::And;
-    _tsubFormulas.push(generatePtr<BooleanLayerDTPlaceholder>(
-        harm::DTO_Type::And,
-        generatePtr<PropositionPtr>(
-            makeGenericExpression<PropositionAnd>(
-                _trace->getLength())),
-        ph, 0));
-    _phToIdsDomain["DT"];
     return;
   }
 

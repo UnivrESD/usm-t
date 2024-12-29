@@ -1,13 +1,5 @@
 
-#include <string>
-// Forward declaration
-bool isUnary(const std::string& token);
-bool isSharedOperator(const std::string& token);
-bool canUseSharedOperator(const std::string& unaryOp, const std::string& sharedOp);
-bool canTakeThisNot(const std::string& unaryOp, const std::string& ph);
-
-
-// Generated from temporal.g4 by ANTLR 4.10.1
+// Generated from temporal.g4 by ANTLR 4.12.0
 
 #pragma once
 
@@ -27,12 +19,6 @@ public:
   virtual void enterFormula(temporalParser::FormulaContext * /*ctx*/) override { }
   virtual void exitFormula(temporalParser::FormulaContext * /*ctx*/) override { }
 
-  virtual void enterSva_assert(temporalParser::Sva_assertContext * /*ctx*/) override { }
-  virtual void exitSva_assert(temporalParser::Sva_assertContext * /*ctx*/) override { }
-
-  virtual void enterImplication(temporalParser::ImplicationContext * /*ctx*/) override { }
-  virtual void exitImplication(temporalParser::ImplicationContext * /*ctx*/) override { }
-
   virtual void enterSere(temporalParser::SereContext * /*ctx*/) override { }
   virtual void exitSere(temporalParser::SereContext * /*ctx*/) override { }
 
@@ -42,14 +28,8 @@ public:
   virtual void enterTformula(temporalParser::TformulaContext * /*ctx*/) override { }
   virtual void exitTformula(temporalParser::TformulaContext * /*ctx*/) override { }
 
-  virtual void enterDt_next(temporalParser::Dt_nextContext * /*ctx*/) override { }
-  virtual void exitDt_next(temporalParser::Dt_nextContext * /*ctx*/) override { }
-
-  virtual void enterDt_next_and(temporalParser::Dt_next_andContext * /*ctx*/) override { }
-  virtual void exitDt_next_and(temporalParser::Dt_next_andContext * /*ctx*/) override { }
-
-  virtual void enterDt_ncreps(temporalParser::Dt_ncrepsContext * /*ctx*/) override { }
-  virtual void exitDt_ncreps(temporalParser::Dt_ncrepsContext * /*ctx*/) override { }
+  virtual void enterSere_implication(temporalParser::Sere_implicationContext * /*ctx*/) override { }
+  virtual void exitSere_implication(temporalParser::Sere_implicationContext * /*ctx*/) override { }
 
   virtual void enterStartBoolean(temporalParser::StartBooleanContext * /*ctx*/) override { }
   virtual void exitStartBoolean(temporalParser::StartBooleanContext * /*ctx*/) override { }

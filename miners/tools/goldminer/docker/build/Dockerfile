@@ -4,21 +4,17 @@ FROM ubuntu:22.04
 RUN apt update && apt upgrade -y
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN apt install -y wget unzip cmake python3 python3-distutils python3-apt
+RUN apt install -y wget unzip cmake python3 python3-distutils python3-apt python3-pip
 RUN apt install -y git
 RUN apt install -y uuid-dev pkg-config
 RUN apt install -y build-essential
 RUN apt install iverilog
 RUN apt install -y vim
 ENV PYTHON=python3
-RUN apt install -y python3-virtualenv
 
 RUN git clone https://bitbucket.org/debjitp/goldminer.git
 WORKDIR "/goldminer"
-RUN virtualenv --python="/usr/bin/python3" 3vgoldmine
 
-SHELL ["/bin/bash", "-c"]
-RUN source 3vgoldmine/bin/activate
 RUN apt install -y graphviz libgraphviz-dev
 RUN pip install pygraphviz
 RUN pip install -r requirements3.txt

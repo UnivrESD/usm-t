@@ -1,0 +1,5 @@
+gnt1,x0
+gnt2,x1
+req1,x2
+req2,x3
+rst,x4

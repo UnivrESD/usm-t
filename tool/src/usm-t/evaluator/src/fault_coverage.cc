@@ -121,18 +121,33 @@ void usmt_fbqUsingFaultyTraces(
                             selected.size(), 70);
   progressBarPS.display();
 
+  std::vector<AssertionPtr> selected_copy = selected;
+
   //make a new template for each assertion to allow the use of templates utils
-  for (const AssertionPtr &a : selected) {
-    a->enableEvaluation(originalTrace);
+  for (AssertionPtr &a : selected_copy) {
+    try {
+      a->enableEvaluation(originalTrace);
+    } catch (const std::exception &e) {
+      messageWarning("(Fault coverage) ignoring specification: " +
+                     std::string(e.what()));
+      a = nullptr;
+      goto next;
+    }
     messageErrorIf(!a->holdsOnTrace(),
                    "Specification '" + a->toString() +
                        "', does not hold on the golden traces'");
 
+  next:
     progressBarPS.increment(0);
     progressBarPS.display();
   }
 
   progressBarPS.done(0);
+
+  //remove the assertions that are not valid
+  selected_copy.erase(std::remove(selected_copy.begin(),
+                                  selected_copy.end(), nullptr),
+                      selected_copy.end());
 
   //silence warnings and infos (to silence the traceReader)
   clc::isilent = 1;
@@ -143,7 +158,7 @@ void usmt_fbqUsingFaultyTraces(
       0,
       "Fault coverage 0/" +
           std::to_string(fc_result._faultyTraceFiles.size()),
-      selected.size() * fc_result._faultyTraceFiles.size(), 70);
+      selected_copy.size() * fc_result._faultyTraceFiles.size(), 70);
   progressBar.display();
 
   for (size_t j = 0; j < fc_result._faultyTraceFiles.size(); j++) {
@@ -162,7 +177,7 @@ void usmt_fbqUsingFaultyTraces(
 
     auto ft = parseFaultyTrace(fc_result._faultyTraceFiles[j]);
     size_t elaborated = 0;
-    for (auto assertion : selected) {
+    for (auto assertion : selected_copy) {
       //test if the assertion fails on the faulty trace
 
       //new assertion with faulty trace
@@ -177,7 +192,7 @@ void usmt_fbqUsingFaultyTraces(
         if (!clc::findMinSubset) {
           //stop search for this fault if you do not want the optimal covering set
           //fill the progress bar with the remaining assertions not elaborated
-          progressBar.increment(0, selected.size() - elaborated);
+          progressBar.increment(0, selected_copy.size() - elaborated);
           progressBar.display();
 
           break;

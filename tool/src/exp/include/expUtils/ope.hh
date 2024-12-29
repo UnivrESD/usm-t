@@ -119,7 +119,7 @@ inline std::string opeToString(temporalOpe o,
   case PropertyUntil:
     switch (lang) {
     case Language::SpotLTL:
-      return "W";
+      return "U";
     case Language::PSL:
       return "until";
     case Language::SVA:
