@@ -89,6 +89,8 @@ getBooleaLayerInst(const AssertionPtr &a) {
 std::unordered_map<std::string, std::vector<FlattenedAssertion>>
 getFlattenedAssertions(const usmt::UseCase &use_case,
                        const std::string expected_assertion_path) {
+  const std::string MINED_ASSERTIONS_FILE =
+      getenv("MINED_ASSERTIONS_FILE");
   std::unordered_map<std::string, std::vector<FlattenedAssertion>>
       ret;
 
@@ -116,24 +118,22 @@ getFlattenedAssertions(const usmt::UseCase &use_case,
   }
 
   std::vector<AssertionPtr> mined_assertions;
-  for (const auto &output : use_case.output) {
-    std::string adapted_output_folder =
-        ph.work_path + "adapted/" + output.path;
-    auto mined_assertions_tmp =
-        getAssertionsFromFile(adapted_output_folder, trace);
-    mined_assertions.insert(mined_assertions.end(),
-                            mined_assertions_tmp.begin(),
-                            mined_assertions_tmp.end());
+  std::string adapted_output_folder =
+      ph.work_path + "adapted/" + MINED_ASSERTIONS_FILE;
+  auto mined_assertions_tmp =
+      getAssertionsFromFile(adapted_output_folder, trace);
+  mined_assertions.insert(mined_assertions.end(),
+                          mined_assertions_tmp.begin(),
+                          mined_assertions_tmp.end());
 
-    for (const auto &a : mined_assertions) {
-      auto insts = getBooleaLayerInst(a);
-      for (const auto &i : insts) {
-        PropositionPtr p = i->getProposition();
-        std::unordered_map<std::string, PropositionPtr> rtargets =
-            prop2RemapTargets(p);
-        all_rtarget_toProposition.insert(rtargets.begin(),
-                                         rtargets.end());
-      }
+  for (const auto &a : mined_assertions) {
+    auto insts = getBooleaLayerInst(a);
+    for (const auto &i : insts) {
+      PropositionPtr p = i->getProposition();
+      std::unordered_map<std::string, PropositionPtr> rtargets =
+          prop2RemapTargets(p);
+      all_rtarget_toProposition.insert(rtargets.begin(),
+                                       rtargets.end());
     }
   }
 
@@ -298,9 +298,7 @@ runSemanticEquivalence(const usmt::UseCase &use_case,
   auto flattenedAssertions =
       getFlattenedAssertions(use_case, expected_assertion_path);
 
-  for (const auto &output : use_case.output) {
-    evaluateWithSemanticComparison(report, flattenedAssertions);
-  }
+  evaluateWithSemanticComparison(report, flattenedAssertions);
 
   //compute final score
   for (const auto &[ea, coveredWith] :

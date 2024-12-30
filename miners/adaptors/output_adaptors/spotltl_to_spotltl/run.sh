@@ -6,9 +6,11 @@ if [ -z "$in_path" ] || [ -z "$out_path" ]; then
     exit 1
 fi
 
+cat $in_path
+
 #check that in_path is a file
 if [ ! -f $in_path ]; then
-    echo "Error: $in_path is not a file"
+  echo "Error: $in_path is not a file"
     exit 1
 fi
 

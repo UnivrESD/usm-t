@@ -3,7 +3,7 @@
 # Function to display usage
 usage() {
   echo "Usage: $0 <in_path> <out_path>"
-  echo "  in_path: Path to the directory the lsit of target variables, ex. goldmine.out/arb2/verif/prism/"
+  echo "  in_path: Path to the directory with the assertions, ex. goldmine.out/arb2/verif/prism/"
   echo "  out_path: Path to the output text file"
   exit 1
 }

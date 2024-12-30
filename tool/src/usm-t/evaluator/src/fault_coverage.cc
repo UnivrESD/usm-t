@@ -36,6 +36,7 @@ getCoverageSet(const fault_coverage_t &fc_result);
 
 EvalReportPtr runFaultCoverage(const UseCase &use_case,
                                const Comparator comp) {
+  const std::string MINED_ASSERTIONS_FILE = getenv("MINED_ASSERTIONS_FILE");
 
   FaultCoverageReportPtr ret = generatePtr<FaultCoverageReport>();
 
@@ -45,15 +46,13 @@ EvalReportPtr runFaultCoverage(const UseCase &use_case,
 
   std::vector<AssertionPtr> mined_assertions;
 
-  for (const auto &output : use_case.output) {
-    std::string adapted_output_folder =
-        ph.work_path + "adapted/" + output.path;
-    auto mined_assertions_tmp =
-        getAssertionsFromFile(adapted_output_folder, trace);
-    mined_assertions.insert(mined_assertions.end(),
-                            mined_assertions_tmp.begin(),
-                            mined_assertions_tmp.end());
-  }
+  std::string adapted_output_folder =
+      ph.work_path + "adapted/" + MINED_ASSERTIONS_FILE;
+  auto mined_assertions_tmp =
+      getAssertionsFromFile(adapted_output_folder, trace);
+  mined_assertions.insert(mined_assertions.end(),
+                          mined_assertions_tmp.begin(),
+                          mined_assertions_tmp.end());
 
   auto rng = std::default_random_engine{};
   std::shuffle(std::begin(mined_assertions),

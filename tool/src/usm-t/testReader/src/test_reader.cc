@@ -53,10 +53,6 @@ void parseInput(XmlNode *inputNode, Input &input) {
 
   input.scope = getAttributeValue(inputNode, "scope", "");
 }
-void parseOutput(XmlNode *outputNode, Output &output) {
-  output.path = getAttributeValue(outputNode, "path", "");
-  messageErrorIf(output.path.empty(), "Output path cannot be empty");
-}
 
 void parseConfigs(XmlNode *configNode, std::vector<Config> &configs) {
   XmlNodeList configNodes;
@@ -130,15 +126,6 @@ UseCase parseUseCase(XmlNode *usecaseNode) {
     Input new_input;
     parseInput(n, new_input);
     usecase.input.push_back(new_input);
-  }
-
-  // Parse output
-  std::vector<rapidxml::xml_node<> *> outputNodes;
-  getNodesFromName(usecaseNode, "output", outputNodes);
-  for (auto n : outputNodes) {
-    Output new_output;
-    parseOutput(n, new_output);
-    usecase.output.push_back(new_output);
   }
 
   // Parse configs
@@ -238,9 +225,6 @@ std::vector<Test> parseTests(XmlNode *root) {
       for (auto input : usecase.input) {
         std::cout << "\t\t\t Input: " << input.type << " "
                   << input.path << " " << input.clk << std::endl;
-      }
-      for (auto output : usecase.output) {
-        std::cout << "\t\t\t Output: " << output.path << std::endl;
       }
       for (auto config : usecase.configs) {
         std::cout << "\t\t\t Config: " << config.type << " "

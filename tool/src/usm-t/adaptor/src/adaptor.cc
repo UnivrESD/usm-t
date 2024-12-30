@@ -31,6 +31,8 @@ void adaptInput(const UseCase &use_case) {
 }
 
 void adaptOutput(const UseCase &use_case) {
+  const std::string VARIABLES_MAP_FILE = getenv("VARIABLES_MAP_FILE");
+  const std::string MINED_ASSERTIONS_FILE = getenv("MINED_ASSERTIONS_FILE");
 
   const UseCasePathHandler &ph = use_case.ph;
   messageInfo("Adapting output...");
@@ -43,16 +45,17 @@ void adaptOutput(const UseCase &use_case) {
                  adapted_output_folder + "'");
   }
 
-  for (auto output : use_case.output) {
-    std::string adapt_output_command =
-        "bash " + ph.output_adaptor_path;
-    //add the path to the input and output file of the output adaptor (add an optional var map file)
-    adapt_output_command +=
-        " " + ph.work_path + ph.work_output + output.path;
-    adapt_output_command += " " + adapted_output_folder;
-    adapt_output_command += " " + ph.work_path + ph.work_input + "/var_map.txt";
+  std::string adapt_output_command = "bash " + ph.output_adaptor_path;
+  //add the path to the input and output file of the output adaptor (add an optional var map file)
+  //in
+  adapt_output_command +=
+      " " + ph.work_path + ph.work_output + MINED_ASSERTIONS_FILE;
+  //out
+  adapt_output_command += " " + adapted_output_folder;
+  //add the path to the variables map file
+  adapt_output_command +=
+      " " + ph.work_path + ph.work_input + VARIABLES_MAP_FILE;
 
-    systemCheckExit(adapt_output_command);
-  }
+  systemCheckExit(adapt_output_command);
 }
 } // namespace usmt

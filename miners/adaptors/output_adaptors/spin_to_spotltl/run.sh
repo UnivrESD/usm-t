@@ -25,6 +25,7 @@ fi
 # Input and output paths
 in_path=$1
 out_path=$2
+substitutions_file="$3"
 
 # Ensure the input file exists
 if [ ! -f "$in_path" ]; then
@@ -59,4 +60,12 @@ for original in "${!replacements[@]}"; do
   replacement=${replacements[$original]}
   sed -i "s/$original/$replacement/g" "$out_path"
 done
+
+
+# Read the substitutions file line by line
+while IFS=, read -r to from
+do
+    # Use sed to replace the text in the output file
+    sed -i "s/$from/$to/g" "$out_path"
+done < "$substitutions_file"
 

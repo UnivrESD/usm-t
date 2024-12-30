@@ -72,14 +72,13 @@ else
   exit 1
 fi
 
-# if var_map.txt exists in the output directory, remove it
-if [ -f "$output_dir/var_map.txt" ]; then
-  rm "$output_dir/var_map.txt"
+# if exists in the output directory, remove it
+if [ -f "$output_dir/$VARIABLES_MAP_FILE" ]; then
+  rm "$output_dir/$VARIABLES_MAP_FILE"
 fi
 
 # Handle variable mapping after processing all files
-var_map_file="$output_dir/var_map.txt"
 for (( i=0; i<${#header[@]}; i++ )); do
-  echo "${header[$i]},x$i" >> "$var_map_file"
+  echo "${header[$i]},x$i" >> "$output_dir/$VARIABLES_MAP_FILE"
 done
 

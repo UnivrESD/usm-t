@@ -12,9 +12,6 @@ struct Input {
   std::string clk;
   std::string scope;
 };
-struct Output {
-  std::string path;
-};
 
 struct Config {
   std::string type;
@@ -25,7 +22,6 @@ struct UseCase {
   std::string usecase_id;
   std::string miner_name;
   std::vector<Input> input;
-  std::vector<Output> output;
   std::vector<Config> configs;
   std::string input_adaptor_path;
   std::string output_adaptor_path;

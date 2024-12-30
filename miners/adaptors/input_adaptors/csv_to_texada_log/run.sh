@@ -27,7 +27,7 @@ process_csv() {
     # Process the remaining lines
     tail -n +2 "$input_file" | while IFS=',' read -r -a values; do
       for (( i=0; i<${#header[@]}; i++ )); do
-        echo "${header[$i]} = ${values[$i]}"
+        echo "x$i = ${values[$i]}"
       done
       echo ".."
     done
@@ -64,4 +64,9 @@ else
   echo "Error: Input path '$input_path' is not a file or directory."
   exit 1
 fi
+
+# Handle variable mapping after processing all files
+for (( i=0; i<${#header[@]}; i++ )); do
+  echo "${header[$i]},x$i" >> "$output_dir/$VARIABLES_MAP_FILE"
+done
 

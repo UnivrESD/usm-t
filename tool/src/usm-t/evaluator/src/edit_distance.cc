@@ -23,6 +23,9 @@ getAssertions(const usmt::UseCase &use_case,
               const std::string expected_assertion_path) {
   std::unordered_map<std::string, std::vector<AssertionPtr>> ret;
 
+  const std::string MINED_ASSERTIONS_FILE =
+      getenv("MINED_ASSERTIONS_FILE");
+
   const UseCasePathHandler &ph = use_case.ph;
   TracePtr trace = parseInputTraces(use_case);
   auto expected_assertions =
@@ -33,15 +36,13 @@ getAssertions(const usmt::UseCase &use_case,
   ret["expected"] = expected_assertions;
 
   std::vector<AssertionPtr> mined_assertions;
-  for (const auto &output : use_case.output) {
-    std::string adapted_output_folder =
-        ph.work_path + "adapted/" + output.path;
-    auto mined_assertions_tmp =
-        getAssertionsFromFile(adapted_output_folder, trace);
-    mined_assertions.insert(mined_assertions.end(),
-                            mined_assertions_tmp.begin(),
-                            mined_assertions_tmp.end());
-  }
+  std::string adapted_output_folder =
+      ph.work_path + "adapted/" + MINED_ASSERTIONS_FILE;
+  auto mined_assertions_tmp =
+      getAssertionsFromFile(adapted_output_folder, trace);
+  mined_assertions.insert(mined_assertions.end(),
+                          mined_assertions_tmp.begin(),
+                          mined_assertions_tmp.end());
   ret["mined"] = mined_assertions;
 
   return ret;
@@ -126,9 +127,7 @@ runEditDistance(const usmt::UseCase &use_case,
   std::unordered_map<std::string, std::vector<AssertionPtr>>
       assertions = getAssertions(use_case, expected_assertion_path);
 
-  for (const auto &output : use_case.output) {
-    evaluateWithEditDistance(report, assertions);
-  }
+  evaluateWithEditDistance(report, assertions);
 
   //compute final score
   for (const auto &[ea, closest] : report->_expectedToClosest) {
