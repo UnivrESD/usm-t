@@ -35,6 +35,7 @@
 #include "Assertion.hh"
 #include "CSVtraceReader.hh"
 #include "EvalReport.hh"
+#include "FlattenedAssertion.hh"
 #include "ProgressBar.hpp"
 #include "Trace.hh"
 #include "VCDtraceReader.hh"
@@ -42,9 +43,6 @@
 #include "propositionParsingUtils.hh"
 #include "temporalParsingUtils.hh"
 #include "usmt-evaluator.hh"
-
-#include "FlattenedAssertion.hh"
-#include "z3CheckSat.hh"
 
 //normal include
 
@@ -70,172 +68,6 @@ int compareLanguage(const FlattenedAssertion &a1,
     }
   }
   return -1;
-}
-
-std::vector<BooleanLayerInstPtr>
-getBooleaLayerInst(const AssertionPtr &a) {
-  const TemporalExpressionPtr &te = a->_formula;
-  std::vector<BooleanLayerInstPtr> ret;
-  traverse(te, [&](const TemporalExpressionPtr &current) {
-    if (isInst(current)) {
-      ret.push_back(
-          std::dynamic_pointer_cast<BooleanLayerInst>(current));
-    }
-    return false;
-  });
-  return ret;
-}
-
-std::unordered_map<std::string, std::vector<FlattenedAssertion>>
-getFlattenedAssertions(const usmt::UseCase &use_case,
-                       const std::string expected_assertion_path) {
-  const std::string MINED_ASSERTIONS_FILE =
-      getenv("MINED_ASSERTIONS_FILE");
-  std::unordered_map<std::string, std::vector<FlattenedAssertion>>
-      ret;
-
-  const UseCasePathHandler &ph = use_case.ph;
-  TracePtr trace = parseInputTraces(use_case);
-  auto expected_assertions =
-      getAssertionsFromFile(expected_assertion_path, trace);
-  messageErrorIf(expected_assertions.empty(),
-                 "No expected assertions found in " +
-                     expected_assertion_path);
-
-  std::unordered_map<std::string, PropositionPtr>
-      all_rtarget_toProposition;
-
-  //gather all remap targets--------------------------
-  for (const auto &a : expected_assertions) {
-    auto insts = getBooleaLayerInst(a);
-    for (const auto &i : insts) {
-      PropositionPtr p = i->getProposition();
-      std::unordered_map<std::string, PropositionPtr> rtargets =
-          prop2RemapTargets(p);
-      all_rtarget_toProposition.insert(rtargets.begin(),
-                                       rtargets.end());
-    }
-  }
-
-  std::vector<AssertionPtr> mined_assertions;
-  std::string adapted_output_folder =
-      ph.work_path + "adapted/" + MINED_ASSERTIONS_FILE;
-  auto mined_assertions_tmp =
-      getAssertionsFromFile(adapted_output_folder, trace);
-  mined_assertions.insert(mined_assertions.end(),
-                          mined_assertions_tmp.begin(),
-                          mined_assertions_tmp.end());
-
-  for (const auto &a : mined_assertions) {
-    auto insts = getBooleaLayerInst(a);
-    for (const auto &i : insts) {
-      PropositionPtr p = i->getProposition();
-      std::unordered_map<std::string, PropositionPtr> rtargets =
-          prop2RemapTargets(p);
-      all_rtarget_toProposition.insert(rtargets.begin(),
-                                       rtargets.end());
-    }
-  }
-
-  //semanticaly reduce the remap targets
-
-  //---------------------------------------------------
-
-  std::unordered_map<std::string, std::string> targetToRemap;
-  //perform remapping
-  size_t tokenID = 0;
-  for (const auto &[rt1, p1] : all_rtarget_toProposition) {
-    for (const auto &[rt2, p2] : all_rtarget_toProposition) {
-      if (p1 == nullptr || p2 == nullptr) {
-        continue;
-      }
-    }
-  }
-  progresscpp::ParallelProgressBar pb;
-  pb.addInstance(0, "Mergin semanticaly equivalent propositions",
-                 all_rtarget_toProposition.size(), 70);
-  std::unordered_map<std::string, std::set<std::string>>
-      semantically_equivalent;
-  for (auto it1 = all_rtarget_toProposition.begin();
-       it1 != all_rtarget_toProposition.end(); it1++) {
-    auto &[rt1, p1] = *it1;
-    if (p1 == nullptr) {
-      pb.increment(0);
-      pb.display();
-      continue;
-    } else {
-      semantically_equivalent[rt1];
-    }
-    for (auto it2 = std::next(it1);
-         it2 != all_rtarget_toProposition.end(); it2++) {
-      auto &[rt2, p2] = *it2;
-      if (p2 == nullptr || it1 == it2) {
-        continue;
-      }
-
-      bool p1_implies_p2 = false;
-      bool p2_implies_p1 = false;
-      if (non_bool_prop_cache.count(std::make_pair(rt1, rt2))) {
-        p1_implies_p2 =
-            non_bool_prop_cache.at(std::make_pair(rt1, rt2));
-      } else {
-        p1_implies_p2 = z3::check_implies(p1, p2);
-        non_bool_prop_cache[std::make_pair(rt1, rt2)] = p1_implies_p2;
-      }
-      if (non_bool_prop_cache.count(std::make_pair(rt2, rt1))) {
-        p2_implies_p1 =
-            non_bool_prop_cache.at(std::make_pair(rt2, rt1));
-      } else {
-        p2_implies_p1 = z3::check_implies(p2, p1);
-        non_bool_prop_cache[std::make_pair(rt2, rt1)] = p2_implies_p1;
-      }
-
-      if (p1_implies_p2 && p2_implies_p1) {
-        semantically_equivalent[rt1].insert(rt2);
-        p2 = nullptr;
-      }
-
-    } //end for it2
-    pb.increment(0);
-    pb.display();
-  }
-  pb.done(0);
-  //print semantically equivalent'
-  //for (const auto &[rt, eqs] : semantically_equivalent) {
-  //  std::cout << rt << " is semantically equivalent to: ";
-  //  for (const auto &eq : eqs) {
-  //    std::cout << eq << " ";
-  //  }
-  //  std::cout << "\n";
-  //}
-  //exit(0);
-
-  for (const auto &[representant, equivalents] :
-       semantically_equivalent) {
-    targetToRemap[representant] =
-        "__rt" + std::to_string(tokenID) + "__";
-    for (auto eq : equivalents) {
-      targetToRemap[eq] = "__rt" + std::to_string(tokenID) + "__";
-    }
-    tokenID++;
-  }
-
-  //retrive flattened expected assertions
-  for (const auto &a : expected_assertions) {
-    auto flattened_str =
-        temp2RemapString(a->_formula->getItems()[0], targetToRemap,
-                         Language::SpotLTL, PrintMode::ShowAll);
-    ret["expected"].push_back({a, flattened_str});
-  }
-
-  //retrieve flattened mined assertions
-  for (const auto &a : mined_assertions) {
-    auto flattened_str =
-        temp2RemapString(a->_formula->getItems()[0], targetToRemap,
-                         Language::SpotLTL, PrintMode::ShowAll);
-    ret["mined"].push_back({a, flattened_str});
-  }
-  return ret;
 }
 
 void evaluateWithSemanticComparison(
@@ -304,8 +136,27 @@ runSemanticEquivalence(const usmt::UseCase &use_case,
   SemanticEquivalenceReportPtr report =
       std::make_shared<SemanticEquivalenceReport>();
 
+  const std::string MINED_ASSERTIONS_FILE =
+      getenv("MINED_ASSERTIONS_FILE");
+  std::unordered_map<std::string, std::vector<FlattenedAssertion>>
+      ret;
+
+  //get assertions from file--------------------------------
+  const UseCasePathHandler &ph = use_case.ph;
+  TracePtr trace = parseInputTraces(use_case);
+  auto expected_assertions =
+      getAssertionsFromFile(expected_assertion_path, trace);
+  messageErrorIf(expected_assertions.empty(),
+                 "No expected assertions found in " +
+                     expected_assertion_path);
+  std::string adapted_output_folder =
+      ph.work_path + "adapted/" + MINED_ASSERTIONS_FILE;
+  auto mined_assertions =
+      getAssertionsFromFile(adapted_output_folder, trace);
+
+  //Flatten assertions--------------------------------------
   auto flattenedAssertions =
-      getFlattenedAssertions(use_case, expected_assertion_path);
+      getFlattenedAssertions(expected_assertions, mined_assertions);
 
   evaluateWithSemanticComparison(report, flattenedAssertions);
 

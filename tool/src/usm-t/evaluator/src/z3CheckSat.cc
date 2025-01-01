@@ -38,9 +38,28 @@ bool check_implies(const expression::PropositionPtr &p1,
   //  std::cout << s << "\n";
 
   return s.check() == unsat;
+}
 
-} // end fun
-//
+bool check_equivalence(const expression::PropositionPtr &p1,
+                       const expression::PropositionPtr &p2) {
+
+  PropositionPtr not_p1_eq_p2 = makeGenericExpression<PropositionNot>(
+      makeGenericExpression<PropositionEq>(p1, p2));
+
+  Z3ExpWrapper z3_not_eq = expression::to_z3exp(not_p1_eq_p2);
+  z3::context *ctx = z3_not_eq._ctx.get();
+
+  z3::solver s(*ctx);
+  z3::params params(*ctx);
+
+  // max 1 second before aborting the solver
+  params.set(":timeout", 1000U);
+  s.set(params);
+
+  s.add(*z3_not_eq._exp);
+
+  return s.check() == unsat;
+}
 
 bool check_implies(harm::EdgeProposition *edge1,
                    harm::EdgeProposition *edge2) {

@@ -16,4 +16,6 @@ bool check_implies(const expression::PropositionPtr &p1,
 bool check_implies(harm::EdgeProposition *p1,
                    harm::EdgeProposition *p2);
 
+bool check_equivalence(const expression::PropositionPtr &p1,
+                       const expression::PropositionPtr &p2);
 } // namespace z3

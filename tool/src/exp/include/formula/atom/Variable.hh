@@ -173,4 +173,8 @@ template <typename T> bool isVariable(const GenericPtr<T> &exp) {
   }
 }
 
+inline bool isBooleanVariable(const PropositionPtr &exp) {
+  return std::dynamic_pointer_cast<BooleanVariable>(exp) != nullptr;
+}
+
 } // namespace expression

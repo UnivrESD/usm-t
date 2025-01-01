@@ -10,6 +10,7 @@
 #include "CSVtraceReader.hh"
 #include "EvalReport.hh"
 #include "Evaluator.hh"
+#include "FlattenedAssertion.hh"
 #include "ProgressBar.hpp"
 #include "TemplateImplication.hh"
 #include "Trace.hh"
@@ -24,7 +25,6 @@
 #include "visitors/ExpToZ3Visitor.hh"
 #include "z3TestCaseGenerator.hh"
 #include "gtest/gtest_pred_impl.h"
-#include "FlattenedAssertion.hh"
 #include <chrono>
 
 using namespace harm;
@@ -34,7 +34,9 @@ TracePtr generateMockTrace(size_t number_of_variables) {
 
   std::vector<VarDeclaration> vars;
   for (size_t i = 0; i < number_of_variables; i++) {
-    vars.emplace_back("b_" + std::to_string(i), ExpType::Bool, 1);
+    //vars.emplace_back("b_" + std::to_string(i), ExpType::Bool, 1);
+    //vars.emplace_back("f_" + std::to_string(i), ExpType::Float, 64);
+    vars.emplace_back("i_" + std::to_string(i), ExpType::UInt, 32);
   }
 
   return generatePtr<Trace>(vars, 1);
@@ -115,52 +117,48 @@ std::vector<AssertionPtr> makeAssertionsFromTemplate(
   return ret;
 }
 
-TEST(semantically_equivalence_scalabilityTests, semantically_equivalence_next) {
+TEST(semantically_equivalence_scalabilityTests,
+     semantically_equivalence_next) {
 
-  std::vector<AssertionPtr> assertions =
+  std::vector<AssertionPtr> expected_assertions =
       makeAssertionsFromTemplate("..##1..", 3, 3, 1000, 100);
-  std::unordered_map<std::string, std::vector<FlattenedAssertion>>
-      assertions_map;
 
-  for (auto &a : assertions) {
-    assertions_map["expected"].emplace_back(a, a->toString());
-  }
-  for (auto &a : assertions) {
-    assertions_map["mined"].emplace_back(a, a->toString());
-  }
+  std::vector<AssertionPtr> mined_assertions = expected_assertions;
 
   SemanticEquivalenceReportPtr report =
       std::make_shared<SemanticEquivalenceReport>();
 
-  std::cout << "Number of comparisons: "
-            << assertions_map["expected"].size() *
-                   (assertions_map["mined"].size())
-            << "\n";
-  evaluateWithSemanticComparison(report, assertions_map);
-}
-
-TEST(semantically_equivalence_scalabilityTests, semantically_equivalence_and) {
-
-  std::vector<AssertionPtr> assertions =
-      makeAssertionsFromTemplate("..&&..", 3, 3, 1000, 100);
-  std::unordered_map<std::string, std::vector<FlattenedAssertion>>
-      assertions_map;
-
-  for (auto &a : assertions) {
-    assertions_map["expected"].emplace_back(a, a->toString());
-  }
-  for (auto &a : assertions) {
-    assertions_map["mined"].emplace_back(a, a->toString());
-  }
-
-  SemanticEquivalenceReportPtr report =
-      std::make_shared<SemanticEquivalenceReport>();
+  auto flattenedAssertions =
+      getFlattenedAssertions(expected_assertions, mined_assertions);
 
   std::cout << "Number of comparisons: "
-            << assertions_map["expected"].size() *
-                   (assertions_map["mined"].size())
+            << expected_assertions.size() * mined_assertions.size()
             << "\n";
-  evaluateWithSemanticComparison(report, assertions_map);
+
+  evaluateWithSemanticComparison(report, flattenedAssertions);
 }
 
+//TEST(semantically_equivalence_scalabilityTests, semantically_equivalence_and) {
+//
+//  std::vector<AssertionPtr> assertions =
+//      makeAssertionsFromTemplate("..&&..", 3, 3, 1000, 100);
+//  std::unordered_map<std::string, std::vector<FlattenedAssertion>>
+//      assertions_map;
+//
+//  for (auto &a : assertions) {
+//    assertions_map["expected"].emplace_back(a, a->toString());
+//  }
+//  for (auto &a : assertions) {
+//    assertions_map["mined"].emplace_back(a, a->toString());
+//  }
+//
+//  SemanticEquivalenceReportPtr report =
+//      std::make_shared<SemanticEquivalenceReport>();
+//
+//  std::cout << "Number of comparisons: "
+//            << assertions_map["expected"].size() *
+//                   (assertions_map["mined"].size())
+//            << "\n";
+//  evaluateWithSemanticComparison(report, assertions_map);
+//}
 

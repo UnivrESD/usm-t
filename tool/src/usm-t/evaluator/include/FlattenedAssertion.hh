@@ -1,6 +1,7 @@
 #pragma once
 #include "Assertion.hh"
 #include <string>
+#include <unordered_map>
 
 namespace usmt {
 struct FlattenedAssertion {
@@ -11,4 +12,8 @@ struct FlattenedAssertion {
   harm::AssertionPtr original;
   std::string flattened_str;
 };
+std::unordered_map<std::string, std::vector<FlattenedAssertion>>
+getFlattenedAssertions(
+    const std::vector<harm::AssertionPtr> &expected_assertions,
+    const std::vector<harm::AssertionPtr> &mined_assertions);
 } // namespace usmt
