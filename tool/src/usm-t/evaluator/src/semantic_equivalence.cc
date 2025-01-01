@@ -155,8 +155,10 @@ runSemanticEquivalence(const usmt::UseCase &use_case,
       getAssertionsFromFile(adapted_output_folder, trace);
 
   //Flatten assertions--------------------------------------
-  auto flattenedAssertions =
-      getFlattenedAssertions(expected_assertions, mined_assertions);
+  std::unordered_map<std::string, std::string>
+      targetToRemap; //not used
+  auto flattenedAssertions = getFlattenedAssertions(
+      expected_assertions, mined_assertions, targetToRemap);
 
   evaluateWithSemanticComparison(report, flattenedAssertions);
 

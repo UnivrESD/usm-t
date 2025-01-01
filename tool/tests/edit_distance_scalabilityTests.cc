@@ -27,44 +27,6 @@
 #include <chrono>
 #include <z3++.h>
 
-void exceptionHandler() { exit(EXIT_FAILURE); }
-
-void handleErrors() {
-  pid_t pid = fork();
-
-  if (pid == -1) {
-    messageError("Fork failed");
-    exit(EXIT_FAILURE);
-  }
-
-  if (pid == 0) {
-    //handle catchable errors
-    std::set_terminate(exceptionHandler);
-    return;
-  } else {
-    //handle uncatchable errors
-    int status;
-    waitpid(pid, &status, 0);
-
-    if (WIFSIGNALED(status)) {
-      //abnormal termination with a signal
-      std::cerr << "Abnormal termination with signal "
-                << WTERMSIG(status) << "\n";
-      exit(WTERMSIG(status));
-    } else if (WIFEXITED(status)) {
-      //normal exit
-      exit(WEXITSTATUS(status));
-    } else {
-      //abnormal exit
-      std::cerr << "Abnormal termination with status "
-                << WEXITSTATUS(status) << "\n";
-      exit(WEXITSTATUS(status));
-    }
-  }
-
-  exit(0);
-}
-
 using namespace harm;
 using namespace usmt;
 using TraceReaderPtr = std::shared_ptr<TraceReader>;
@@ -72,7 +34,8 @@ TracePtr generateMockTrace(size_t number_of_variables) {
 
   std::vector<VarDeclaration> vars;
   for (size_t i = 0; i < number_of_variables; i++) {
-    vars.emplace_back("b_" + std::to_string(i), ExpType::Bool, 1);
+    //vars.emplace_back("b_" + std::to_string(i), ExpType::Bool, 1);
+    vars.emplace_back("i_" + std::to_string(i), ExpType::UInt, 32);
   }
 
   return generatePtr<Trace>(vars, 1);
@@ -106,7 +69,8 @@ std::vector<AssertionPtr> makeAssertionsFromTemplate(
       for (size_t j = 0; j < on_length; j++) {
         std::string randomVarName =
             all_vars[rand() % all_vars.size()].getName();
-        assertionStr_tmp += randomVarName;
+        assertionStr_tmp +=
+            "(" + randomVarName + +" + " + randomVarName + ") > 0";
         if (j != on_length - 1) {
           assertionStr_tmp += " && ";
         }
@@ -126,7 +90,8 @@ std::vector<AssertionPtr> makeAssertionsFromTemplate(
       for (size_t j = 0; j < ant_length; j++) {
         std::string randomVarName =
             all_vars[rand() % all_vars.size()].getName();
-        assertionStr_tmp += randomVarName;
+        assertionStr_tmp +=
+            "(" + randomVarName + +" + " + randomVarName + ") > 0";
         if (j != ant_length - 1) {
           assertionStr_tmp += " ##1 ";
         }
@@ -183,9 +148,10 @@ TEST(edit_distance_scalabilityTests, edit_distance_and) {
   //std::cout << prop2ColoredString(imp) << "\n";
   //auto z3_expr = expression::to_z3exp(imp);
   //std::cout << *z3_expr._exp << "\n";
+  //clc::psilent = 1;
 
   std::vector<AssertionPtr> assertions =
-      makeAssertionsFromTemplate("..&&..", 3, 3, 50, 10);
+      makeAssertionsFromTemplate("..##1..", 3, 3, 1000, 100);
   std::unordered_map<std::string, std::vector<AssertionPtr>>
       assertions_map;
   assertions_map["expected"] = assertions;

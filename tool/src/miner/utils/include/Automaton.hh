@@ -1,5 +1,6 @@
 
 #pragma once
+#include <memory>
 #include <stddef.h>
 #include <string>
 #include <unordered_map>
@@ -60,4 +61,7 @@ public:
 };
 
 std::string printAutomaton(const Automaton *aut);
+
+//-----------------------------------------------
 } // namespace harm
+

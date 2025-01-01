@@ -1,10 +1,13 @@
 #include "Assertion.hh"
 #include "AutomataBasedEvaluator.hh"
 #include "EvalReport.hh"
+#include "FlattenedAssertion.hh"
 #include "ProgressBar.hpp"
 #include "Test.hh"
+#include "Trace.hh"
 #include "assertion_utils.hh"
 #include "gedlibWrapper.hh"
+#include "minerUtils.hh"
 #include <algorithm>
 #include <exception>
 #include <map>
@@ -64,12 +67,34 @@ void evaluateWithEditDistance(
   const std::vector<AssertionPtr> &minedAssertions =
       assertions.at("mined");
 
-  for (const auto &ea : expectedAssertions) {
+  std::unordered_map<std::string, std::string> targetToRemap;
+
+  auto flattenedAssertions = getFlattenedAssertions(
+      expectedAssertions, minedAssertions, targetToRemap);
+
+  //Create a mock trace with all the remap targets
+  std::vector<VarDeclaration> trace_vars;
+  for (auto &[t, r] : targetToRemap) {
+    trace_vars.emplace_back(r, ExpType::Bool, 1);
+  }
+  TracePtr remap_trace = generatePtr<Trace>(trace_vars, 1);
+  //make a placeholder pack with the remap targets
+  PlaceholderPack ppack;
+  for (auto &[t, r] : targetToRemap) {
+    ppack._tokenToInst[r] = remap_trace->getBooleanVariable(r);
+  }
+
+  const std::vector<FlattenedAssertion> &expectedFAssertions =
+      flattenedAssertions.at("expected");
+  const std::vector<FlattenedAssertion> &minedFAssertions =
+      flattenedAssertions.at("mined");
+
+  for (const auto &[ea, fea] : expectedFAssertions) {
     //Extract the automaton without the G
 
     Automaton *aut = nullptr;
     try {
-      aut = generateAutomatonFromTemporal(ea->_formula);
+      aut = generateAutomatonFromString(fea, ppack);
     } catch (const std::exception &e) {
       messageWarning("(Edit distance) ignoring specification: " +
                      std::string(e.what()));
@@ -78,11 +103,11 @@ void evaluateWithEditDistance(
     expectedToSAutomaton[ea] = serializeAutomaton(aut);
   }
 
-  for (const auto &ma : minedAssertions) {
+  for (const auto &[ma, fma] : minedFAssertions) {
     //Extract the automaton without the G
     Automaton *aut = nullptr;
     try {
-      aut = generateAutomatonFromTemporal(ma->_formula);
+      aut = generateAutomatonFromString(fma, ppack);
     } catch (const std::exception &e) {
       messageWarning("(Edit distance) ignoring specification: " +
                      std::string(e.what()));
@@ -90,6 +115,8 @@ void evaluateWithEditDistance(
     }
     minedToSAutomaton[ma] = serializeAutomaton(aut);
   }
+
+  //Compute the similarity between each expected and mined automaton
 
   progresscpp::ParallelProgressBar pb;
   pb.addInstance(0, "Computing Edit Distance Similarity...",
@@ -108,9 +135,11 @@ void evaluateWithEditDistance(
       }
 
       double similarity = 0.f;
-      if (ea_assertionStr == ma_assertionStr) { //Optimization
+      //Syntatic equality
+      if (ea_assertionStr == ma_assertionStr) {
         similarity = 1.f;
       } else {
+        //Edit distance
         similarity = computeEditDistanceSimilarity(ea_sa, ma_sa);
       }
 

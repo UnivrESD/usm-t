@@ -128,8 +128,10 @@ TEST(semantically_equivalence_scalabilityTests,
   SemanticEquivalenceReportPtr report =
       std::make_shared<SemanticEquivalenceReport>();
 
-  auto flattenedAssertions =
-      getFlattenedAssertions(expected_assertions, mined_assertions);
+  std::unordered_map<std::string, std::string>
+      targetToRemap; //not used
+  auto flattenedAssertions = getFlattenedAssertions(
+      expected_assertions, mined_assertions, targetToRemap);
 
   std::cout << "Number of comparisons: "
             << expected_assertions.size() * mined_assertions.size()

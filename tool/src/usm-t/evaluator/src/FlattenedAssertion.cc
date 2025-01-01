@@ -2,6 +2,7 @@
 #include "ProgressBar.hpp"
 #include "formula/formula.hh"
 #include "z3CheckSat.hh"
+#include <optional>
 
 #include <set>
 
@@ -16,7 +17,7 @@ void remapTargets(
 
   progresscpp::ParallelProgressBar pb;
   pb.addInstance(
-      0, "(Semantic equivalence) Mergin equivalent propositions",
+      0, "Flattening specifications",
       all_rtarget_toProposition.size(), 70);
 
   //find semantically equivalent propositions
@@ -59,7 +60,9 @@ void remapTargets(
     pb.display();
   }
   pb.done(0);
-  //print semantically equivalent'
+
+  //debug
+  //print semantically equivalent
   //for (const auto &[rt, eqs] : semantically_equivalent) {
   //  std::cout << rt << " is semantically equivalent to: ";
   //  for (const auto &eq : eqs) {
@@ -72,12 +75,11 @@ void remapTargets(
   size_t tokenID = 0;
   for (const auto &[representant, equivalents] :
        semantically_equivalent) {
-    targetToRemap[representant] =
-        "__rt" + std::to_string(tokenID) + "__";
+    std::string newToken = "_inst_" + std::to_string(tokenID++);
+    targetToRemap[representant] = newToken;
     for (auto eq : equivalents) {
-      targetToRemap[eq] = "__rt" + std::to_string(tokenID) + "__";
+      targetToRemap[eq] = newToken;
     }
-    tokenID++;
   }
 }
 
@@ -116,7 +118,8 @@ void gatherRemapTargets(
 std::unordered_map<std::string, std::vector<FlattenedAssertion>>
 getFlattenedAssertions(
     const std::vector<AssertionPtr> &expected_assertions,
-    const std::vector<AssertionPtr> &mined_assertions) {
+    const std::vector<AssertionPtr> &mined_assertions,
+    std::unordered_map<std::string, std::string> &targetToRemap) {
 
   std::unordered_map<std::string, std::vector<FlattenedAssertion>>
       ret;
@@ -126,8 +129,12 @@ getFlattenedAssertions(
 
   gatherRemapTargets(expected_assertions, all_rtarget_toProposition);
   gatherRemapTargets(mined_assertions, all_rtarget_toProposition);
+  //debug
+  //print gathered remap targets
+  //for (const auto &[rt, p] : all_rtarget_toProposition) {
+  //  std::cout << rt << " -> " << prop2ColoredString(p) << "\n";
+  //}
 
-  std::unordered_map<std::string, std::string> targetToRemap;
   remapTargets(targetToRemap, all_rtarget_toProposition);
 
   //retrieve flattened expected assertions

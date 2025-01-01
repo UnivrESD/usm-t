@@ -44,4 +44,8 @@ Automaton *buildAutomatonFromSpot(spot::twa_graph_ptr &automata,
                                   const PlaceholderPack &pack);
 Automaton *
 generateAutomatonFromTemporal(const TemporalExpressionPtr &formula);
+
+Automaton *
+generateAutomatonFromString(const std::string &spotFormulaStr,
+                            const PlaceholderPack &ppack);
 } // namespace harm
