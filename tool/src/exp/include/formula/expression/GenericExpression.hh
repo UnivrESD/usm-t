@@ -95,6 +95,8 @@ using PropositionOr = GenericExpression<ope::ope::PropositionOr,
                                         Proposition, Proposition>;
 using PropositionXor = GenericExpression<ope::ope::PropositionXor,
                                          Proposition, Proposition>;
+using PropositionImplication = GenericExpression<ope::ope::PropositionImplication,
+                                         Proposition, Proposition>;
 using PropositionEq = GenericExpression<ope::ope::PropositionEq,
                                         Proposition, Proposition>;
 using PropositionNeq = GenericExpression<ope::ope::PropositionNeq,
@@ -163,6 +165,7 @@ using IntRShift = GenericExpression<ope::ope::IntRShift,
 
 using PropositionAndPtr = std::shared_ptr<PropositionAnd>;
 using PropositionOrPtr = std::shared_ptr<PropositionOr>;
+using PropositionImplicationPtr = std::shared_ptr<PropositionImplication>;
 using PropositionXorPtr = std::shared_ptr<PropositionXor>;
 using PropositionEqPtr = std::shared_ptr<PropositionEq>;
 using PropositionNeqPtr = std::shared_ptr<PropositionNeq>;

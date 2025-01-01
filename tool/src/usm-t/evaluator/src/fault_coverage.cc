@@ -18,25 +18,13 @@ using namespace harm;
 
 namespace usmt {
 
-static void
-usmt_fbqUsingFaultyTraces(const std::vector<AssertionPtr> &selected,
-                          const TracePtr &originalTrace,
-                          fault_coverage_t &fc_result);
-struct fault_coverage_t {
-  ///maps the assertion to the faults they cover
-  std::unordered_map<size_t, std::vector<size_t>> _aidToF;
-  ///maps covered faults to the assertion covering them
-  std::unordered_map<size_t, std::vector<size_t>> _fToAid;
-  //list of faulty traces
-  std::vector<std::string> _faultyTraceFiles;
-};
-
 static std::vector<size_t>
 getCoverageSet(const fault_coverage_t &fc_result);
 
 EvalReportPtr runFaultCoverage(const UseCase &use_case,
                                const Comparator comp) {
-  const std::string MINED_ASSERTIONS_FILE = getenv("MINED_ASSERTIONS_FILE");
+  const std::string MINED_ASSERTIONS_FILE =
+      getenv("MINED_ASSERTIONS_FILE");
 
   FaultCoverageReportPtr ret = generatePtr<FaultCoverageReport>();
 
@@ -67,7 +55,8 @@ EvalReportPtr runFaultCoverage(const UseCase &use_case,
   clc::clk = use_case.input[0].clk;
   clc::parserType = comp.trace_type;
   clc::findMinSubset = 1;
-  usmt_fbqUsingFaultyTraces(mined_assertions, trace, fc_result);
+
+  evaluateWithFaultCoverage(mined_assertions, trace, fc_result);
   std::unordered_map<size_t, std::vector<size_t>> &_fToAid =
       fc_result._fToAid;
 
@@ -104,7 +93,7 @@ EvalReportPtr runFaultCoverage(const UseCase &use_case,
   return ret;
 }
 
-void usmt_fbqUsingFaultyTraces(
+void evaluateWithFaultCoverage(
     const std::vector<AssertionPtr> &selected,
     const TracePtr &originalTrace, fault_coverage_t &fc_result) {
 
@@ -122,7 +111,6 @@ void usmt_fbqUsingFaultyTraces(
 
   std::vector<AssertionPtr> selected_copy = selected;
 
-  //make a new template for each assertion to allow the use of templates utils
   for (AssertionPtr &a : selected_copy) {
     try {
       a->enableEvaluation(originalTrace);
@@ -132,9 +120,13 @@ void usmt_fbqUsingFaultyTraces(
       a = nullptr;
       goto next;
     }
-    messageErrorIf(!a->holdsOnTrace(),
-                   "Specification '" + a->toString() +
-                       "', does not hold on the golden traces'");
+    if (!a->holdsOnTrace()) {
+      messageWarning("(Fault coverage) ignoring specification '" +
+                     a->toString() +
+                     ": does not hold on the golden traces'");
+      a = nullptr;
+      goto next;
+    }
 
   next:
     progressBarPS.increment(0);

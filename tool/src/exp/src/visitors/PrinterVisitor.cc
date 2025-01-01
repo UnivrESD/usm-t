@@ -161,6 +161,7 @@ namespace expression {
 VARIABLE(BooleanVariable)
 BOOLEAN_CONSTANT(BooleanConstant)
 EXP_OPE(PropositionOr)
+EXP_OPE(PropositionImplication)
 EXP_OPE(PropositionAnd)
 EXP_OPE(PropositionXor)
 EXP_OPE(PropositionEq)

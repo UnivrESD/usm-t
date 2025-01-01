@@ -30,4 +30,7 @@ harm::TracePtr parseFaultyTrace(const std::string &ftStr);
 std::vector<std::string>
 recoverTracesInDirectory(const std::string &path,
                          const std::string &extension);
+
+int getNumberOfCommonVariables(const harm::AssertionPtr &a1,
+                               const harm::AssertionPtr &a2);
 } // namespace usmt

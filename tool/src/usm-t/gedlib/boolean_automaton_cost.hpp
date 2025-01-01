@@ -3,6 +3,9 @@
 
 #include "src/edit_costs/edit_costs.hpp"
 #include "z3CheckSat.hh"
+#include <map>
+#include <string>
+#include <unordered_map>
 
 extern std::map<std::pair<std::string, std::string>, double>
     edge_rel_cost_map;
@@ -136,6 +139,10 @@ BooleanAutomaton<UserNodeLabel, UserEdgeLabel>::edge_rel_cost_fun(
       std::make_pair(edge_label_1, edge_label_2);
   std::pair<std::string, std::string> edge2_edge1_label =
       std::make_pair(edge_label_2, edge_label_1);
+
+  if (edge_label_1 == edge_label_2) {
+    return 0.0;
+  }
 
   double edge1_edge2_cost =
       edge_rel_cost_map.count(edge1_edge2_label)

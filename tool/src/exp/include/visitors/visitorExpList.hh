@@ -8,6 +8,7 @@
   VIRTUAL void visit(BooleanVariable &o) OVVERIDE;                   \
   VIRTUAL void visit(PropositionAnd &o) OVVERIDE;                    \
   VIRTUAL void visit(PropositionOr &o) OVVERIDE;                     \
+  VIRTUAL void visit(PropositionImplication &o) OVVERIDE;            \
   VIRTUAL void visit(PropositionXor &o) OVVERIDE;                    \
   VIRTUAL void visit(PropositionEq &o) OVVERIDE;                     \
   VIRTUAL void visit(PropositionNeq &o) OVVERIDE;                    \

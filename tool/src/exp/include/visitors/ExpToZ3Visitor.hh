@@ -36,6 +36,7 @@ public:
   virtual void visit(BooleanVariable &o) override;
   virtual void visit(PropositionAnd &o) override;
   virtual void visit(PropositionOr &o) override;
+  virtual void visit(PropositionImplication &o) override;
   virtual void visit(PropositionXor &o) override;
   virtual void visit(PropositionEq &o) override;
   virtual void visit(PropositionNeq &o) override;

@@ -193,6 +193,20 @@ void ExpToZ3Visitor::visit(expression::PropositionOr &o) {
   }
   _z3Expressions.push(z3::mk_or(expVector));
 }
+void ExpToZ3Visitor::visit(expression::PropositionImplication &o) {
+  assert(o.getItems().size() == 2);
+
+  o.getItems()[0]->acceptVisitor(*this);
+  o.getItems()[1]->acceptVisitor(*this);
+
+  //get ant and cons
+  z3::expr con = _z3Expressions.top();
+  _z3Expressions.pop();
+  z3::expr ant = _z3Expressions.top();
+  _z3Expressions.pop();
+  _z3Expressions.push(z3::implies(ant, con));
+}
+
 void ExpToZ3Visitor::visit(expression::PropositionXor &o) {
   assert(o.getItems().size() == 2);
   o.getItems()[0]->acceptVisitor(*this);

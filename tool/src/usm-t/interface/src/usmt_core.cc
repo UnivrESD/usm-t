@@ -12,30 +12,52 @@
 #include <chrono>
 #include <filesystem>
 #include <iomanip>
+#include <limits>
 #include <sstream>
 #include <vector>
 
 namespace usmt {
+
+class BestUseCase {
+public:
+  BestUseCase() = default;
+
+  void addUseCase(const std::string &use_case_id, double value,
+                  bool higher_is_better = true) {
+    bool is_better = (_best_value == -1.f) ||
+                     (higher_is_better && value > _best_value) ||
+                     (!higher_is_better && value < _best_value);
+    if (is_better) {
+      _best_value = value;
+      _same_value_use_cases.clear();
+      _same_value_use_cases.push_back(use_case_id);
+    } else if (value == _best_value) {
+      _same_value_use_cases.push_back(use_case_id);
+    }
+  }
+
+  double _best_value = -1.f;
+  std::vector<std::string> _same_value_use_cases;
+};
 
 void run() {
 
   std::vector<Test> tests = readTestFile(clc::testFile);
 
   for (auto &test : tests) {
-    bool startTablePrint = true;
     messageInfo("Running test " + test.name);
+
+    //print the header of the table
+    fort::utf8_table table;
+    table.set_border_style(FT_NICE_STYLE);
+    table << fort::header << "Use case";
+    for (const auto &comparator : test.comparators) {
+      table << fort::header << comparator.with_strategy;
+    }
+    table << fort::endr;
+
     std::unordered_map<std::string, std::vector<EvalReportPtr>>
         useCaseToEvalReports;
-    fort::utf8_table table;
-    if (startTablePrint) {
-      startTablePrint = false;
-      table.set_border_style(FT_NICE_STYLE);
-      table << fort::header << "Use case";
-      for (const auto comparator : test.comparators) {
-        table << fort::header << comparator.with_strategy;
-      }
-      table << fort::endr;
-    }
 
     for (auto &use_case : test.use_cases) {
       initPathHandler(use_case);
@@ -89,6 +111,7 @@ void run() {
                                                                 start)
               .count();
 
+      //ADAPT THE OUTPUT--------------------------------
       adaptOutput(use_case);
 
       //EVAL-----------------------------------------------
@@ -105,8 +128,11 @@ void run() {
       }
     } //end of use cases
 
-    //AGGREGATE THE EVALUATION REPORTS-------------------
+    //report to best use case
+    std::unordered_map<std::string, BestUseCase>
+        strategyToBestUseCase;
 
+    //AGGREGATE THE EVALUATION REPORTS-------------------
     for (const auto &[usecase_id, report] : useCaseToEvalReports) {
       std::vector<std::string> line;
       line.push_back(usecase_id);
@@ -116,26 +142,42 @@ void run() {
           FaultCoverageReportPtr fcr =
               std::dynamic_pointer_cast<FaultCoverageReport>(er);
           line.push_back(
-              to_string_with_precision(fcr->fault_coverage, 2));
+              to_string_with_precision(fcr->fault_coverage, 2) +
+              " (min cov: " +
+              std::to_string(fcr->_minCoveringAssertions.size()) +
+              ")");
+          strategyToBestUseCase[er->_with_strategy].addUseCase(
+              usecase_id, fcr->fault_coverage);
         } else if (std::dynamic_pointer_cast<
                        SemanticEquivalenceReport>(er)) {
           SemanticEquivalenceReportPtr evmr =
               std::dynamic_pointer_cast<SemanticEquivalenceReport>(
                   er);
           line.push_back(
-              to_string_with_precision(evmr->_final_score, 2));
+              to_string_with_precision(evmr->_final_score, 2) +
+              " (noise: " +
+              to_string_with_precision(evmr->_noise, 2) + ")");
+          strategyToBestUseCase[er->_with_strategy].addUseCase(
+              usecase_id, evmr->_final_score);
         } else if (std::dynamic_pointer_cast<EditDistanceReport>(
                        er)) {
           EditDistanceReportPtr evmr =
               std::dynamic_pointer_cast<EditDistanceReport>(er);
           line.push_back(
-              to_string_with_precision(evmr->_final_score, 2));
+              to_string_with_precision(evmr->_final_score, 2) +
+              " (noise: " +
+              to_string_with_precision(evmr->_noise, 2) + ")");
+          strategyToBestUseCase[er->_with_strategy].addUseCase(
+              usecase_id, evmr->_final_score);
         } else if (std::dynamic_pointer_cast<TemporalReport>(er)) {
           TemporalReportPtr tr =
               std::dynamic_pointer_cast<TemporalReport>(er);
           line.push_back(to_string_with_precision(
                              (double)tr->_timeMS / 1000.f, 2) +
                          "s");
+
+          strategyToBestUseCase[er->_with_strategy].addUseCase(
+              usecase_id, (double)tr->_timeMS / 1000.f, false);
         } else {
           messageError("Unknown report type");
         }
@@ -145,6 +187,17 @@ void run() {
     } // end of useCaseToEvalReports
 
     std::cout << table.to_string() << std::endl;
+
+    //print the best use case
+    for (const auto &[strategy, best] : strategyToBestUseCase) {
+      std::string best_use_cases = "";
+      for (const auto &use_case : best._same_value_use_cases) {
+        best_use_cases += use_case + " ";
+      }
+      messageInfo("Best " + strategy + ": " +
+                  best_use_cases);
+    }
+
   } //end of tests
 }
 

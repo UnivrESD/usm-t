@@ -1,4 +1,5 @@
 
+#include "expUtils/expUtils.hh"
 #include "usmt-evaluator.hh"
 
 #include "Assertion.hh"
@@ -151,4 +152,40 @@ TracePtr parseFaultyTrace(const std::string &ftStr) {
   messageError("Uknown parser type");
   return nullptr;
 }
+
+static std::map<std::pair<std::string, std::string>, int> cache;
+
+int getNumberOfCommonVariables(const AssertionPtr &a1,
+                               const AssertionPtr &a2) {
+  std::pair<std::string, std::string> key = {a1->toString(),
+                                             a2->toString()};
+
+  if (cache.count(key)) {
+    return cache[key];
+  }
+
+  std::vector<std::pair<std::string, std::pair<ExpType, size_t>>>
+      vars1 = expression::getVars(a1->_formula);
+  std::vector<std::pair<std::string, std::pair<ExpType, size_t>>>
+      vars2 = expression::getVars(a2->_formula);
+  size_t common = 0;
+  std::unordered_set<std::string> vars1_set;
+  for (const auto &v : vars1) {
+    vars1_set.insert(v.first);
+  }
+
+  for (const auto &v : vars2) {
+    if (vars1_set.count(v.first)) {
+      common++;
+    }
+  }
+
+  cache[key] = common;
+  std::pair<std::string, std::string> commutative_key = {
+      a2->toString(), a1->toString()};
+  cache[commutative_key] = common;
+
+  return common;
+}
+
 } // namespace usmt

@@ -261,6 +261,14 @@ void evaluateWithSemanticComparison(
       goto increment_pb;
     }
     for (const auto &fma : mined_assertions) {
+      //no point in comparing if they have no common variables
+      if (getNumberOfCommonVariables(fea.original, fma.original) ==
+          0) {
+        //std::cout << "Skipping " << fea.original->toString()
+        //          << " and " << fma.original->toString()
+        //          << " because they have no common variables\n";
+        continue;
+      }
       int res = compareLanguage(fea, fma);
       std::string fma_assertionStr = fma.original->toString();
 
@@ -276,7 +284,8 @@ void evaluateWithSemanticComparison(
         report->_expectedToSimilar[fea.original->toString()].insert(
             fma_assertionStr);
       }
-    }
+    } //end for mined_assertions
+
     if (!report->_expectedToSimilar.count(fea_assertionStr)) {
       report->_uncovered.push_back(fea_assertionStr);
     }
@@ -301,18 +310,18 @@ runSemanticEquivalence(const usmt::UseCase &use_case,
   evaluateWithSemanticComparison(report, flattenedAssertions);
 
   //compute final score
-  for (const auto &[ea, coveredWith] :
-       report->_expectedToCoveredWith) {
-    report->_final_score += 1.f;
-  }
-  for (const auto &[ea, similar] : report->_expectedToSimilar) {
-    report->_final_score += 0.5f;
-  }
+  report->_final_score += report->_expectedToCoveredWith.size();
+  report->_final_score += report->_expectedToSimilar.size() * 0.1f;
 
   size_t totExpected = report->_expectedToCoveredWith.size() +
                        report->_expectedToSimilar.size() +
                        report->_uncovered.size();
   report->_final_score /= totExpected;
+
+  report->_noise = (flattenedAssertions.at("mined").size() -
+                    (report->_expectedToCoveredWith.size() +
+                     report->_expectedToSimilar.size())) /
+                   (double)flattenedAssertions.at("mined").size();
 
   return report;
 }

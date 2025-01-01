@@ -100,7 +100,20 @@ void evaluateWithEditDistance(
     for (const auto &[ma, ma_sa] : minedToSAutomaton) {
       std::string ma_assertionStr = ma->toString();
 
-      double similarity = computeEditDistanceSimilarity(ea_sa, ma_sa);
+      if (getNumberOfCommonVariables(ea, ma) == 0) {
+        //std::cout << "Skipping " << ea->toString() << " and "
+        //          << ma->toString()
+        //          << " because they have no common variables\n";
+        continue;
+      }
+
+      double similarity = 0.f;
+      if (ea_assertionStr == ma_assertionStr) { //Optimization
+        similarity = 1.f;
+      } else {
+        similarity = computeEditDistanceSimilarity(ea_sa, ma_sa);
+      }
+
       //std::cout << "Similarity between " << ea->toString() << " and " << ma->toString() << " is " << similarity << "\n";
       if (similarity >=
           report->_expectedToClosest[ea_assertionStr].second) {
@@ -136,6 +149,10 @@ runEditDistance(const usmt::UseCase &use_case,
   }
 
   report->_final_score /= report->_expectedToClosest.size();
+
+  report->_noise = (assertions.at("mined").size() -
+                    report->_expectedToClosest.size()) /
+                   (double)assertions.at("mined").size();
 
   return report;
 }

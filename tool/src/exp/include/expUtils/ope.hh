@@ -36,6 +36,7 @@ enum ope : int {
   PropositionAnd,
   PropositionOr,
   PropositionXor,
+  PropositionImplication,
   PropositionEq,
   PropositionNeq,
 
@@ -260,6 +261,8 @@ inline std::string opeToString(ope o) {
     return "&&";
   case PropositionOr:
     return "||";
+  case PropositionImplication:
+    return "->";
   case PropositionXor:
     return "^";
   case PropositionEq:
@@ -479,13 +482,16 @@ inline int opeToPrecedenceClass(ope o) {
   case PropositionOr:
     return 11;
 
-  case NoOp:
+  case PropositionImplication:
     return 12;
+
+  case NoOp:
+    return 13;
   }
 
   messageError("Unknown ope type");
 
-  return 12;
+  return 13;
 }
 
 //return true if o1 has a higher precedence than o2

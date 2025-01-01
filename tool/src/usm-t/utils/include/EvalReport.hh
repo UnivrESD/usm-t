@@ -113,6 +113,9 @@ public:
       }
     }
 
+    ss << "Final score: " << _final_score << "\n";
+    ss << "Noise: " << _noise << "\n";
+
     return ss.str();
   }
 
@@ -137,6 +140,7 @@ public:
   std::unordered_map<std::string, std::string> _expectedToCoveredWith;
   std::vector<std::string> _uncovered;
   double _final_score = 0.f;
+  double _noise = 0.f;
 };
 
 class EditDistanceReport : public EvalReport {
@@ -152,6 +156,8 @@ public:
       ss << pair.first << "\n\t\t--> " << pair.second.first << " : "
          << pair.second.second << "\n";
     }
+    ss << "Final score: " << _final_score << "\n";
+    ss << "Noise: " << _noise << "\n";
 
     return ss.str();
   }
@@ -171,6 +177,7 @@ public:
   std::unordered_map<std::string, std::pair<std::string, double>>
       _expectedToClosest;
   double _final_score = 0.f;
+  double _noise = 0.f;
 };
 
 class TemporalReport : public EvalReport {

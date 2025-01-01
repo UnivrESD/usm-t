@@ -22,6 +22,7 @@ namespace expression {
 // proposition
 VISITOR_CALL(PropositionAnd, Proposition, Proposition)
 VISITOR_CALL(PropositionOr, Proposition, Proposition)
+VISITOR_CALL(PropositionImplication, Proposition, Proposition)
 VISITOR_CALL(PropositionXor, Proposition, Proposition)
 VISITOR_CALL(PropositionEq, Proposition, Proposition)
 VISITOR_CALL(PropositionNeq, Proposition, Proposition)
@@ -82,6 +83,15 @@ void GenericExpression<ope::ope::PropositionOr, Proposition,
         return true;
 
     return false;
+  };
+  disableCache();
+}
+
+template <>
+void GenericExpression<ope::ope::PropositionImplication, Proposition,
+                       Proposition>::initEvaluate() {
+  directEvaluate = [this](size_t time) {
+    return !_items[0]->evaluate(time) || _items[1]->evaluate(time);
   };
   disableCache();
 }
