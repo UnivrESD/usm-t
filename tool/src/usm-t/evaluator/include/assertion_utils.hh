@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <unordered_map>
 #include <vector>
 
 namespace harm {
@@ -33,4 +34,8 @@ recoverTracesInDirectory(const std::string &path,
 
 int getNumberOfCommonVariables(const harm::AssertionPtr &a1,
                                const harm::AssertionPtr &a2);
+
+std::unordered_map<std::string, std::vector<harm::AssertionPtr>>
+getExpectedMinedAssertions(const usmt::UseCase &use_case,
+                           const std::string expected_assertion_path);
 } // namespace usmt

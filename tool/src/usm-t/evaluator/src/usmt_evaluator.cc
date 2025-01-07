@@ -1,5 +1,5 @@
 
-#include "usmt-evaluator.hh"
+#include "usmt_evaluator.hh"
 #include "Test.hh"
 #include "message.hh"
 

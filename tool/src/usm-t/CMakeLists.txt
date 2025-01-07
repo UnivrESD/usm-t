@@ -19,7 +19,7 @@ add_subdirectory(testReader)
 add_subdirectory(adaptor)
 add_subdirectory(evaluator)
 
-target_link_libraries(${NAME} test_reader adaptor evaluator)
+target_link_libraries(${NAME} test_reader adaptor usmt_evaluator)
 
 
 

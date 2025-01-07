@@ -11,35 +11,33 @@
 
 using namespace expression;
 
-size_t time_spent_by_z3 = 0;
-
 namespace z3 {
-PropositionPtr
-edgePropositionToProposition(harm::EdgeProposition *edge);
+//PropositionPtr
+//edgePropositionToProposition(harm::EdgeProposition *edge);
 
-bool check_implies(const expression::PropositionPtr &p1,
-                   const expression::PropositionPtr &p2) {
-  //make not p1 or p2
-  PropositionPtr not_p1_imp_p2 =
-      makeGenericExpression<PropositionNot>(
-          makeGenericExpression<PropositionImplication>(p1, p2));
-
-  Z3ExpWrapper z3_not_imp = expression::to_z3exp(not_p1_imp_p2);
-
-  //make z3 implication
-  z3::context *ctx = z3_not_imp._ctx.get();
-
-  z3::solver s(*ctx);
-  z3::params params(*ctx);
-
-  // max 1 second before aborting the solver
-  params.set(":timeout", 1000U);
-  s.set(params);
-  s.add(*z3_not_imp._exp);
-  //  std::cout << s << "\n";
-
-  return s.check() == unsat;
-}
+//bool check_implies(const expression::PropositionPtr &p1,
+//                   const expression::PropositionPtr &p2) {
+//  //make not p1 or p2
+//  PropositionPtr not_p1_imp_p2 =
+//      makeGenericExpression<PropositionNot>(
+//          makeGenericExpression<PropositionImplication>(p1, p2));
+//
+//  Z3ExpWrapper z3_not_imp = expression::to_z3exp(not_p1_imp_p2);
+//
+//  //make z3 implication
+//  z3::context *ctx = z3_not_imp._ctx.get();
+//
+//  z3::solver s(*ctx);
+//  z3::params params(*ctx);
+//
+//  // max 1 second before aborting the solver
+//  params.set(":timeout", 1000U);
+//  s.set(params);
+//  s.add(*z3_not_imp._exp);
+//  //  std::cout << s << "\n";
+//
+//  return s.check() == unsat;
+//}
 
 bool check_equivalence(const expression::PropositionPtr &p1,
                        const expression::PropositionPtr &p2) {
@@ -171,8 +169,6 @@ bool check_implies(harm::EdgeProposition *edge1,
 
   //auto res1 = check_implies(p1, p2);
 
-  auto start = std::chrono::high_resolution_clock::now();
-
   DNF_OR dnf_or1 = to_dnf_or(edge1);
   DNF_OR dnf_or2 = to_dnf_or(edge2);
 
@@ -184,11 +180,6 @@ bool check_implies(harm::EdgeProposition *edge1,
 
   //check if dnf_or1 implies dnf_or2
   bool res2 = implies(dnf_or1, dnf_or2);
-  auto end = std::chrono::high_resolution_clock::now();
-  time_spent_by_z3 +=
-      std::chrono::duration_cast<std::chrono::milliseconds>(end -
-                                                            start)
-          .count();
 
   //messageErrorIf(res1 != res2, "Error: check_implies returned " +
   //                                 std::to_string(res1) +
@@ -198,55 +189,55 @@ bool check_implies(harm::EdgeProposition *edge1,
 
 } // end fun
 
-PropositionPtr
-edgePropositionToProposition(harm::EdgeProposition *edge) {
-  //visit the expression depending on the type of operator
-
-  // And
-  if (isEdgeAnd(edge)) {
-    auto children = edge->getOperands();
-    auto and_ = makeGenericExpression<PropositionAnd>(
-        edgePropositionToProposition(children[0]),
-        edgePropositionToProposition(children[1]));
-    for (size_t i = 2; i < children.size(); i++) {
-      and_->addItem(edgePropositionToProposition(children[i]));
-    }
-
-    return and_;
-  }
-
-  // Or
-  if (isEdgeOr(edge)) {
-    auto children = edge->getOperands();
-    auto or_ = makeGenericExpression<PropositionOr>(
-        edgePropositionToProposition(children[0]),
-        edgePropositionToProposition(children[1]));
-    for (size_t i = 2; i < children.size(); i++) {
-      or_->addItem(edgePropositionToProposition(children[i]));
-    }
-    return or_;
-  }
-
-  // Not
-  if (isEdgeNot(edge)) {
-    return makeGenericExpression<PropositionNot>(
-        edgePropositionToProposition(edge->getOperands()[0]));
-  }
-
-  // Atomic proposition
-  if (isEdgeInst(edge)) {
-    return dynamic_cast<harm::EdgeInst *>(edge)->_toInst;
-  }
-
-  if (isEdgeTrue(edge)) {
-    return generatePtr<BooleanConstant>(true, ExpType::Bool, 1, -1);
-  }
-
-  if (isEdgeFalse(edge)) {
-    return generatePtr<BooleanConstant>(true, ExpType::Bool, 0, -1);
-  }
-
-  messageError("Unknown edge proposition: " + edge->toString());
-  return nullptr;
-}
+//PropositionPtr
+//edgePropositionToProposition(harm::EdgeProposition *edge) {
+//  //visit the expression depending on the type of operator
+//
+//  // And
+//  if (isEdgeAnd(edge)) {
+//    auto children = edge->getOperands();
+//    auto and_ = makeGenericExpression<PropositionAnd>(
+//        edgePropositionToProposition(children[0]),
+//        edgePropositionToProposition(children[1]));
+//    for (size_t i = 2; i < children.size(); i++) {
+//      and_->addItem(edgePropositionToProposition(children[i]));
+//    }
+//
+//    return and_;
+//  }
+//
+//  // Or
+//  if (isEdgeOr(edge)) {
+//    auto children = edge->getOperands();
+//    auto or_ = makeGenericExpression<PropositionOr>(
+//        edgePropositionToProposition(children[0]),
+//        edgePropositionToProposition(children[1]));
+//    for (size_t i = 2; i < children.size(); i++) {
+//      or_->addItem(edgePropositionToProposition(children[i]));
+//    }
+//    return or_;
+//  }
+//
+//  // Not
+//  if (isEdgeNot(edge)) {
+//    return makeGenericExpression<PropositionNot>(
+//        edgePropositionToProposition(edge->getOperands()[0]));
+//  }
+//
+//  // Atomic proposition
+//  if (isEdgeInst(edge)) {
+//    return dynamic_cast<harm::EdgeInst *>(edge)->_toInst;
+//  }
+//
+//  if (isEdgeTrue(edge)) {
+//    return generatePtr<BooleanConstant>(true, ExpType::Bool, 1, -1);
+//  }
+//
+//  if (isEdgeFalse(edge)) {
+//    return generatePtr<BooleanConstant>(true, ExpType::Bool, 0, -1);
+//  }
+//
+//  messageError("Unknown edge proposition: " + edge->toString());
+//  return nullptr;
+//}
 } // namespace z3

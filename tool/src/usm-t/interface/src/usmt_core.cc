@@ -6,7 +6,7 @@
 #include "globals.hh"
 #include "misc.hh"
 #include "test_reader.hh"
-#include "usmt-evaluator.hh"
+#include "usmt_evaluator.hh"
 #include "ustm_core.hh"
 #include <algorithm>
 #include <chrono>

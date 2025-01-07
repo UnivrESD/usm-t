@@ -9,7 +9,7 @@
 #include "misc.hh"
 #include "set_cover/set_cover_wrapper.hh"
 #include "temporalParsingUtils.hh"
-#include "usmt-evaluator.hh"
+#include "usmt_evaluator.hh"
 
 #include <algorithm>
 #include <random>

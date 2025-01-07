@@ -48,9 +48,8 @@ void evaluateWithEditDistance(
 
 void evaluateWithSemanticComparison(
     SemanticEquivalenceReportPtr report,
-    const std::unordered_map<std::string,
-                             std::vector<FlattenedAssertion>>
-        &flattenedAssertions);
+    const std::unordered_map<
+        std::string, std::vector<harm::AssertionPtr>> &assertions);
 
 void evaluateWithFaultCoverage(
     const std::vector<harm::AssertionPtr> &selected,

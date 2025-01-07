@@ -39,6 +39,8 @@ public:
   size_t getLength() const;
 
   std::vector<VarDeclaration> getVariables();
+  std::vector<VarDeclaration> getUnsignedIntVariabes();
+  std::vector<VarDeclaration> getBooleanVariabes();
 
   /// @brief Returns the BooleanVariable given its name.
   /// @param name The name of the boolean variable

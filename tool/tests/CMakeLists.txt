@@ -1,6 +1,6 @@
 function(addTest test_name src)
     add_executable(${test_name} ${src})
-    target_link_libraries (${test_name} gtest_main stdc++fs all_utils progresscpp logging exp commandLineParser temporalParser usmt_core)
+    target_link_libraries (${test_name} gtest_main stdc++fs all_utils progresscpp logging exp commandLineParser temporalParser usmt_core usmt_evaluator)
     add_test(NAME ${test_name} COMMAND ${test_name} WORKING_DIRECTORY ${WORK_DIR})
 endfunction()
 

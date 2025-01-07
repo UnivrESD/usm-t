@@ -42,15 +42,12 @@
 #include "assertion_utils.hh"
 #include "propositionParsingUtils.hh"
 #include "temporalParsingUtils.hh"
-#include "usmt-evaluator.hh"
+#include "usmt_evaluator.hh"
 
 //normal include
 
 namespace usmt {
 using namespace harm;
-
-static std::map<std::pair<std::string, std::string>, bool>
-    non_bool_prop_cache;
 
 int compareLanguage(const FlattenedAssertion &a1,
                     const FlattenedAssertion &a2) {
@@ -72,27 +69,33 @@ int compareLanguage(const FlattenedAssertion &a1,
 
 void evaluateWithSemanticComparison(
     SemanticEquivalenceReportPtr report,
-    const std::unordered_map<std::string,
-                             std::vector<FlattenedAssertion>>
-        &flattenedAssertions) {
+    const std::unordered_map<std::string, std::vector<AssertionPtr>>
+        &assertions) {
+
+  //Flatten assertions--------------------------------------
+  std::unordered_map<std::string, std::string>
+      targetToRemap; //not used
+  auto flattenedAssertions =
+      getFlattenedAssertions(assertions.at("expected"),
+                             assertions.at("mined"), targetToRemap);
 
   progresscpp::ParallelProgressBar pb;
 
-  const std::vector<FlattenedAssertion> &expected_assertions =
+  const std::vector<FlattenedAssertion> &expectedFAssertions =
       flattenedAssertions.at("expected");
 
-  const std::vector<FlattenedAssertion> &mined_assertions =
+  const std::vector<FlattenedAssertion> &minedFAssertions =
       flattenedAssertions.at("mined");
 
   pb.addInstance(0, "Semantic Matching...",
-                 expected_assertions.size(), 70);
+                 expectedFAssertions.size(), 70);
 
-  for (const auto &fea : expected_assertions) {
+  for (const auto &fea : expectedFAssertions) {
     std::string fea_assertionStr = fea.original->toString();
     if (report->_expectedToCoveredWith.count(fea_assertionStr)) {
       goto increment_pb;
     }
-    for (const auto &fma : mined_assertions) {
+    for (const auto &fma : minedFAssertions) {
       //no point in comparing if they have no common variables
       if (getNumberOfCommonVariables(fea.original, fma.original) ==
           0) {
@@ -136,31 +139,11 @@ runSemanticEquivalence(const usmt::UseCase &use_case,
   SemanticEquivalenceReportPtr report =
       std::make_shared<SemanticEquivalenceReport>();
 
-  const std::string MINED_ASSERTIONS_FILE =
-      getenv("MINED_ASSERTIONS_FILE");
-  std::unordered_map<std::string, std::vector<FlattenedAssertion>>
-      ret;
+  std::unordered_map<std::string, std::vector<AssertionPtr>>
+      assertions = getExpectedMinedAssertions(
+          use_case, expected_assertion_path);
 
-  //get assertions from file--------------------------------
-  const UseCasePathHandler &ph = use_case.ph;
-  TracePtr trace = parseInputTraces(use_case);
-  auto expected_assertions =
-      getAssertionsFromFile(expected_assertion_path, trace);
-  messageErrorIf(expected_assertions.empty(),
-                 "No expected assertions found in " +
-                     expected_assertion_path);
-  std::string adapted_output_folder =
-      ph.work_path + "adapted/" + MINED_ASSERTIONS_FILE;
-  auto mined_assertions =
-      getAssertionsFromFile(adapted_output_folder, trace);
-
-  //Flatten assertions--------------------------------------
-  std::unordered_map<std::string, std::string>
-      targetToRemap; //not used
-  auto flattenedAssertions = getFlattenedAssertions(
-      expected_assertions, mined_assertions, targetToRemap);
-
-  evaluateWithSemanticComparison(report, flattenedAssertions);
+  evaluateWithSemanticComparison(report, assertions);
 
   //compute final score
   report->_final_score += report->_expectedToCoveredWith.size();
@@ -171,10 +154,10 @@ runSemanticEquivalence(const usmt::UseCase &use_case,
                        report->_uncovered.size();
   report->_final_score /= totExpected;
 
-  report->_noise = (flattenedAssertions.at("mined").size() -
+  report->_noise = (assertions.at("mined").size() -
                     (report->_expectedToCoveredWith.size() +
                      report->_expectedToSimilar.size())) /
-                   (double)flattenedAssertions.at("mined").size();
+                   (double)assertions.at("mined").size();
 
   return report;
 }

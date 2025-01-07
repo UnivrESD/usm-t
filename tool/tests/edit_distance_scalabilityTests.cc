@@ -1,3 +1,4 @@
+#include <filesystem>
 #include <gtest/gtest-message.h>
 #include <gtest/gtest-test-part.h>
 #include <limits>
@@ -20,7 +21,7 @@
 #include "misc.hh"
 #include "propositionParsingUtils.hh"
 #include "temporalParsingUtils.hh"
-#include "usmt-evaluator.hh"
+#include "usmt_evaluator.hh"
 #include "visitors/ExpToZ3Visitor.hh"
 #include "z3TestCaseGenerator.hh"
 #include "gtest/gtest_pred_impl.h"
@@ -34,7 +35,7 @@ TracePtr generateMockTrace(size_t number_of_variables) {
 
   std::vector<VarDeclaration> vars;
   for (size_t i = 0; i < number_of_variables; i++) {
-    //vars.emplace_back("b_" + std::to_string(i), ExpType::Bool, 1);
+    vars.emplace_back("b_" + std::to_string(i), ExpType::Bool, 1);
     vars.emplace_back("i_" + std::to_string(i), ExpType::UInt, 32);
   }
 
@@ -43,10 +44,16 @@ TracePtr generateMockTrace(size_t number_of_variables) {
 std::vector<AssertionPtr> makeAssertionsFromTemplate(
     std::string _template, size_t max_ant_length,
     size_t max_con_length, size_t number_to_make,
-    size_t max_number_of_variables) {
+    size_t max_number_of_variables, bool force_uint) {
   std::vector<AssertionPtr> ret;
   TracePtr trace = generateMockTrace(max_number_of_variables);
-  auto all_vars = trace->getVariables();
+  std::vector<VarDeclaration> all_vars = trace->getVariables();
+  if (force_uint) {
+    all_vars = trace->getUnsignedIntVariabes();
+  } else {
+    all_vars = trace->getBooleanVariabes();
+  }
+
   const std::string assertion_prefix = "G(";
   const std::string assertion_postfix = ")";
 
@@ -58,7 +65,13 @@ std::vector<AssertionPtr> makeAssertionsFromTemplate(
       for (size_t j = 0; j < ant_length; j++) {
         std::string randomVarName =
             all_vars[rand() % all_vars.size()].getName();
-        assertionStr_tmp += randomVarName;
+        if (force_uint) {
+          assertionStr_tmp +=
+              "(" + randomVarName + " + " + randomVarName + ") > 0";
+
+        } else {
+          assertionStr_tmp += randomVarName;
+        }
         if (j != ant_length - 1) {
           assertionStr_tmp += " && ";
         }
@@ -69,8 +82,13 @@ std::vector<AssertionPtr> makeAssertionsFromTemplate(
       for (size_t j = 0; j < on_length; j++) {
         std::string randomVarName =
             all_vars[rand() % all_vars.size()].getName();
-        assertionStr_tmp +=
-            "(" + randomVarName + +" + " + randomVarName + ") > 0";
+        if (force_uint) {
+          assertionStr_tmp +=
+              "(" + randomVarName + " + " + randomVarName + ") > 0";
+
+        } else {
+          assertionStr_tmp += randomVarName;
+        }
         if (j != on_length - 1) {
           assertionStr_tmp += " && ";
         }
@@ -90,8 +108,14 @@ std::vector<AssertionPtr> makeAssertionsFromTemplate(
       for (size_t j = 0; j < ant_length; j++) {
         std::string randomVarName =
             all_vars[rand() % all_vars.size()].getName();
-        assertionStr_tmp +=
-            "(" + randomVarName + +" + " + randomVarName + ") > 0";
+        if (force_uint) {
+          assertionStr_tmp +=
+              "(" + randomVarName + " + " + randomVarName + ") > 0";
+
+        } else {
+          assertionStr_tmp += randomVarName;
+        }
+
         if (j != ant_length - 1) {
           assertionStr_tmp += " ##1 ";
         }
@@ -102,7 +126,13 @@ std::vector<AssertionPtr> makeAssertionsFromTemplate(
       for (size_t j = 0; j < on_length; j++) {
         std::string randomVarName =
             all_vars[rand() % all_vars.size()].getName();
-        assertionStr_tmp += randomVarName;
+        if (force_uint) {
+          assertionStr_tmp +=
+              "(" + randomVarName + " + " + randomVarName + ") > 0";
+        } else {
+          assertionStr_tmp += randomVarName;
+        }
+
         if (j != on_length - 1) {
           assertionStr_tmp += " ##1 ";
         }
@@ -118,40 +148,21 @@ std::vector<AssertionPtr> makeAssertionsFromTemplate(
   return ret;
 }
 
-//TEST(edit_distance_scalabilityTests, edit_distance_next) {
-//  //handleErrors();
-//
-//  std::vector<AssertionPtr> assertions =
-//      makeAssertionsFromTemplate("..##1..", 3, 3, 100, 100);
-//  std::unordered_map<std::string, std::vector<AssertionPtr>>
-//      assertions_map;
-//  assertions_map["expected"] = assertions;
-//  assertions_map["mined"] = assertions;
-//
-//  EditDistanceReportPtr report =
-//      std::make_shared<EditDistanceReport>();
-//
-//  std::cout << "Number of comparisons: "
-//            << assertions_map["expected"].size() *
-//                   (assertions_map["mined"].size())
-//            << "\n";
-//  evaluateWithEditDistance(report, assertions_map);
-//}
+extern std::map<std::pair<std::string, std::string>, double>
+    edge_rel_cost_map;
+extern std::map<std::pair<std::string, std::string>, double>
+    equivalence_cache;
 
-extern size_t time_spent_by_z3;
-TEST(edit_distance_scalabilityTests, edit_distance_and) {
-  //TracePtr trace = generateMockTrace(10);
-  //BooleanVariablePtr b_0 = trace->getBooleanVariable("b_0");
-  //BooleanVariablePtr b_1 = trace->getBooleanVariable("b_1");
-  //PropositionPtr imp =
-  //    makeGenericExpression<PropositionImplication>(b_0, b_1);
-  //std::cout << prop2ColoredString(imp) << "\n";
-  //auto z3_expr = expression::to_z3exp(imp);
-  //std::cout << *z3_expr._exp << "\n";
-  //clc::psilent = 1;
+size_t test_with_parameters(std::string template_,
+                            size_t number_of_assertions,
+                            size_t number_of_variables,
+                            bool force_uint) {
+  edge_rel_cost_map.clear();
+  equivalence_cache.clear();
 
-  std::vector<AssertionPtr> assertions =
-      makeAssertionsFromTemplate("..##1..", 3, 3, 1000, 100);
+  std::vector<AssertionPtr> assertions = makeAssertionsFromTemplate(
+      template_, 3, 3, number_of_assertions, number_of_variables,
+      force_uint);
   std::unordered_map<std::string, std::vector<AssertionPtr>>
       assertions_map;
   assertions_map["expected"] = assertions;
@@ -164,7 +175,107 @@ TEST(edit_distance_scalabilityTests, edit_distance_and) {
             << assertions_map["expected"].size() *
                    (assertions_map["mined"].size())
             << "\n";
+  auto start = std::chrono::high_resolution_clock::now();
   evaluateWithEditDistance(report, assertions_map);
-  std::cout << "z3 time:" << time_spent_by_z3 / 1000.f << "s\n";
+  auto end = std::chrono::high_resolution_clock::now();
+  return std::chrono::duration_cast<std::chrono::milliseconds>(end -
+                                                               start)
+      .count();
+}
+
+TEST(edit_distance_scalabilityTests, edit_distance_and) {
+
+  //clc::psilent = 1;
+  clc::wsilent = 1;
+
+  // clang-format off
+  // template, number_of_assertions, number_of_variables, force_uint
+  std::tuple<std::string, size_t, size_t, bool> test_cases[] = {
+      {"..##1..", 100, 500, false},
+      {"..##1..", 200, 500, false},
+      {"..##1..", 300, 500, false},
+      {"..##1..", 400, 500, false},
+      {"..##1..", 500, 500, false},
+      {"..##1..", 200, 400, false},
+      {"..##1..", 300, 400, false},
+      {"..##1..", 400, 400, false},
+      {"..##1..", 500, 400, false},
+      {"..##1..", 100, 300, false},
+      {"..##1..", 200, 300, false},
+      {"..##1..", 300, 300, false},
+      {"..##1..", 400, 300, false},
+      {"..##1..", 500, 300, false},
+      {"..##1..", 100, 400, false},
+      {"..##1..", 100, 200, false},
+      {"..##1..", 200, 200, false},
+      {"..##1..", 300, 200, false},
+      {"..##1..", 400, 200, false},
+      {"..##1..", 500, 200, false},
+      {"..##1..", 100, 100, false},
+      {"..##1..", 200, 100, false},
+      {"..##1..", 300, 100, false},
+      {"..##1..", 400, 100, false},
+      {"..##1..", 500, 100, false},
+      {"..##1..", 100, 100, true},
+      {"..##1..", 200, 100, true},
+      {"..##1..", 300, 100, true},
+      {"..##1..", 400, 100, true},
+      {"..##1..", 500, 100, true},
+      {"..##1..", 100, 200, true},
+      {"..##1..", 200, 200, true},
+      {"..##1..", 300, 200, true},
+      {"..##1..", 400, 200, true},
+      {"..##1..", 500, 200, true},
+      {"..##1..", 100, 300, true},
+      {"..##1..", 200, 300, true},
+      {"..##1..", 300, 300, true},
+      {"..##1..", 400, 300, true},
+      {"..##1..", 500, 300, true},
+      {"..##1..", 100, 400, true},
+      {"..##1..", 200, 400, true},
+      {"..##1..", 300, 400, true},
+      {"..##1..", 400, 400, true},
+      {"..##1..", 500, 400, true},
+      {"..##1..", 100, 500, true},
+      {"..##1..", 200, 500, true},
+      {"..##1..", 300, 500, true},
+      {"..##1..", 400, 500, true},
+      {"..##1..", 500, 500, true},
+
+  };
+  // clang-format on
+
+  //dump to csv
+  std::string dump_path = "edit_distance_scalability.csv";
+
+  //delete file if it exists
+  if (std::filesystem::exists(dump_path)) {
+    std::filesystem::remove(dump_path);
+  }
+  std::ofstream file(dump_path);
+  file << "template,number_of_assertions,number_of_variables,"
+          "time,force_uint\n";
+  file.close();
+
+  for (auto test_case : test_cases) {
+    std::string template_;
+    size_t number_of_assertions;
+    size_t number_of_variables;
+    bool force_uint;
+    std::tie(template_, number_of_assertions, number_of_variables,
+             force_uint) = test_case;
+    std::cout << "Template: " << template_
+              << " Number of assertions: " << number_of_assertions
+              << " Number of variables: " << number_of_variables
+              << "\n";
+    size_t time_spent =
+        test_with_parameters(template_, number_of_assertions,
+                             number_of_variables, force_uint);
+    std::ofstream file(dump_path, std::ios_base::app);
+    file << template_ << "," << number_of_assertions << ","
+         << number_of_variables << "," << time_spent << ","
+         << (force_uint ? "int" : "bool") << "\n";
+    file.close();
+  }
 }
 

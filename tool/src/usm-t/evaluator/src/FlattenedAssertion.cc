@@ -5,7 +5,10 @@
 #include <optional>
 
 #include <set>
+#include <utility>
 
+std::map<std::pair<std::string, std::string>, double>
+    equivalence_cache;
 namespace usmt {
 using namespace harm;
 using namespace expression;
@@ -16,9 +19,8 @@ void remapTargets(
         &all_rtarget_toProposition) {
 
   progresscpp::ParallelProgressBar pb;
-  pb.addInstance(
-      0, "Flattening specifications",
-      all_rtarget_toProposition.size(), 70);
+  pb.addInstance(0, "Flattening specifications",
+                 all_rtarget_toProposition.size(), 70);
 
   //find semantically equivalent propositions
   std::unordered_map<std::string, std::set<std::string>>
@@ -50,7 +52,16 @@ void remapTargets(
         }
       }
 
-      if (z3::check_equivalence(p1, p2)) {
+      bool is_equivalent = false;
+      if (equivalence_cache.count({rt1, rt2})) {
+        is_equivalent = equivalence_cache.at({rt1, rt2});
+      } else {
+        is_equivalent = z3::check_equivalence(p1, p2);
+        equivalence_cache[std::make_pair(rt1, rt2)] = is_equivalent;
+        equivalence_cache[std::make_pair(rt2, rt1)] = is_equivalent;
+      }
+
+      if (is_equivalent) {
         semantically_equivalent[rt1].insert(rt2);
         p2 = nullptr;
       }

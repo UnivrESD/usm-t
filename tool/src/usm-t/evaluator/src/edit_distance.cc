@@ -21,36 +21,6 @@
 namespace usmt {
 using namespace harm;
 
-std::unordered_map<std::string, std::vector<AssertionPtr>>
-getAssertions(const usmt::UseCase &use_case,
-              const std::string expected_assertion_path) {
-  std::unordered_map<std::string, std::vector<AssertionPtr>> ret;
-
-  const std::string MINED_ASSERTIONS_FILE =
-      getenv("MINED_ASSERTIONS_FILE");
-
-  const UseCasePathHandler &ph = use_case.ph;
-  TracePtr trace = parseInputTraces(use_case);
-  auto expected_assertions =
-      getAssertionsFromFile(expected_assertion_path, trace);
-  messageErrorIf(expected_assertions.empty(),
-                 "No expected assertions found in " +
-                     expected_assertion_path);
-  ret["expected"] = expected_assertions;
-
-  std::vector<AssertionPtr> mined_assertions;
-  std::string adapted_output_folder =
-      ph.work_path + "adapted/" + MINED_ASSERTIONS_FILE;
-  auto mined_assertions_tmp =
-      getAssertionsFromFile(adapted_output_folder, trace);
-  mined_assertions.insert(mined_assertions.end(),
-                          mined_assertions_tmp.begin(),
-                          mined_assertions_tmp.end());
-  ret["mined"] = mined_assertions;
-
-  return ret;
-}
-
 void evaluateWithEditDistance(
     EditDistanceReportPtr &report,
     const std::unordered_map<std::string, std::vector<AssertionPtr>>
@@ -62,15 +32,11 @@ void evaluateWithEditDistance(
   std::unordered_map<AssertionPtr, SerializedAutomaton>
       minedToSAutomaton;
 
-  const std::vector<AssertionPtr> &expectedAssertions =
-      assertions.at("expected");
-  const std::vector<AssertionPtr> &minedAssertions =
-      assertions.at("mined");
-
   std::unordered_map<std::string, std::string> targetToRemap;
 
-  auto flattenedAssertions = getFlattenedAssertions(
-      expectedAssertions, minedAssertions, targetToRemap);
+  auto flattenedAssertions =
+      getFlattenedAssertions(assertions.at("expected"),
+                             assertions.at("mined"), targetToRemap);
 
   //Create a mock trace with all the remap targets
   std::vector<VarDeclaration> trace_vars;
@@ -167,7 +133,8 @@ runEditDistance(const usmt::UseCase &use_case,
       std::make_shared<EditDistanceReport>();
 
   std::unordered_map<std::string, std::vector<AssertionPtr>>
-      assertions = getAssertions(use_case, expected_assertion_path);
+      assertions = getExpectedMinedAssertions(
+          use_case, expected_assertion_path);
 
   evaluateWithEditDistance(report, assertions);
 

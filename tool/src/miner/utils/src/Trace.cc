@@ -260,8 +260,7 @@ void dumpTraceAsCSV(const TracePtr &trace,
   std::sort(vars.begin(), vars.end(),
             [](const VarDeclaration &a, const VarDeclaration &b) {
               return a.getName() < b.getName();
-            }
-  );
+            });
 
   for (auto &v : vars) {
     //skip the clock
@@ -317,5 +316,23 @@ void dumpTraceAsCSV(const TracePtr &trace,
 
 std::vector<VarDeclaration> Trace::getVariables() {
   return _variables;
+}
+std::vector<VarDeclaration> Trace::getBooleanVariabes() {
+  std::vector<VarDeclaration> ret;
+  for (auto &v : _variables) {
+    if (v.getType() == ExpType::Bool) {
+      ret.push_back(v);
+    }
+  }
+  return ret;
+}
+std::vector<VarDeclaration> Trace::getUnsignedIntVariabes() {
+  std::vector<VarDeclaration> ret;
+  for (auto &v : _variables) {
+    if (v.getType() == ExpType::UInt) {
+      ret.push_back(v);
+    }
+  }
+  return ret;
 }
 } // namespace harm

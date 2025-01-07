@@ -17,7 +17,7 @@
 #include "propositionParsingUtils.hh"
 #include "src/env/ged_env.hpp"
 #include "temporalParsingUtils.hh"
-#include "usmt-evaluator.hh"
+#include "usmt_evaluator.hh"
 #include "visitors/ExpToZ3Visitor.hh"
 #include "z3TestCaseGenerator.hh"
 #include "gtest/gtest_pred_impl.h"
