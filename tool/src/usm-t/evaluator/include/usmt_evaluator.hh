@@ -20,6 +20,9 @@ using EditDistanceReportPtr = std::shared_ptr<EditDistanceReport>;
 class SemanticEquivalenceReport;
 using SemanticEquivalenceReportPtr =
     std::shared_ptr<SemanticEquivalenceReport>;
+class SyntacticSimilarityReport;
+using SyntacticSimilarityReportPtr =
+    std::shared_ptr<SyntacticSimilarityReport>;
 class Comparator;
 struct fault_coverage_t;
 struct FlattenedAssertion;
@@ -34,6 +37,10 @@ runSemanticEquivalence(const usmt::UseCase &use_case,
 EvalReportPtr
 runEditDistance(const usmt::UseCase &use_case,
                 const std::string expected_assertion_path);
+
+EvalReportPtr
+runSyntacticSimilarity(const usmt::UseCase &use_case,
+                       const std::string expected_assertion_path);
 
 EvalReportPtr runFaultCoverage(const UseCase &use_case,
                                const Comparator comp);
@@ -63,4 +70,9 @@ struct fault_coverage_t {
   //list of faulty traces
   std::vector<std::string> _faultyTraceFiles;
 };
+
+void evaluateWithSyntacticSimilarity(
+    SyntacticSimilarityReportPtr &report,
+    const std::unordered_map<
+        std::string, std::vector<harm::AssertionPtr>> &assertions);
 } // namespace usmt

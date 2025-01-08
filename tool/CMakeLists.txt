@@ -189,6 +189,8 @@ add_subdirectory(src/fort)
 #Set cover
 add_subdirectory(src/paal)
 
+#Sequence alignment
+add_subdirectory(src/opal)
 
 ########USM-T CORE#########################################
 add_subdirectory(src/usm-t)

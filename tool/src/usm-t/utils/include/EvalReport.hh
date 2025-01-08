@@ -180,6 +180,44 @@ public:
   double _noise = 0.f;
 };
 
+class SyntacticSimilarityReport : public EvalReport {
+public:
+  SyntacticSimilarityReport() : EvalReport("syntactic_similarity") {}
+  ~SyntacticSimilarityReport() = default;
+
+  virtual std::string to_string() override {
+    std::stringstream ss;
+    ss << "Syntactic similarity Report\n";
+    ss << "----------------Syntactic similarity------------------\n";
+    for (const auto &pair : _expectedToClosest) {
+      ss << pair.first << "\n\t\t--> " << pair.second.first << " : "
+         << pair.second.second << "\n";
+    }
+    ss << "Final score: " << _final_score << "\n";
+    ss << "Noise: " << _noise << "\n";
+
+    return ss.str();
+  }
+
+  virtual void dumpTo(const std::string &pathToDir) override {
+    messageInfo("Dumping syntactic similarty report to: " +
+                pathToDir);
+    std::ofstream out(pathToDir + "/syntactic_similarity.csv");
+    out << "Expected, BestCoveredWith, Similarity\n";
+    for (const auto &[expected, mostSimilar] : _expectedToClosest) {
+      auto &[mostSimilar_assertion, similarity] =
+          _expectedToClosest[expected];
+      out << expected << ", " << mostSimilar_assertion << ", "
+          << similarity << "\n";
+    }
+  }
+
+  std::unordered_map<std::string, std::pair<std::string, double>>
+      _expectedToClosest;
+  double _final_score = 0.f;
+  double _noise = 0.f;
+};
+
 class TemporalReport : public EvalReport {
 public:
   TemporalReport() : EvalReport("time_to_mine") {}
@@ -207,6 +245,8 @@ using FaultCoverageReportPtr = std::shared_ptr<FaultCoverageReport>;
 using SemanticEquivalenceReportPtr =
     std::shared_ptr<SemanticEquivalenceReport>;
 using EditDistanceReportPtr = std::shared_ptr<EditDistanceReport>;
+using SyntacticSimilarityReportPtr =
+    std::shared_ptr<SyntacticSimilarityReport>;
 using TemporalReportPtr = std::shared_ptr<TemporalReport>;
 
 } // namespace usmt

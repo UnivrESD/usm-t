@@ -15,6 +15,9 @@ EvalReportPtr evaluate(const usmt::UseCase &use_case,
   } else if (comp.with_strategy == "edit_distance") {
     return runEditDistance(use_case,
                            ph.ustm_root + "/" + comp.expected);
+  } else if (comp.with_strategy == "syntactic_similarity") {
+    return runSyntacticSimilarity(use_case,
+                                  ph.ustm_root + "/" + comp.expected);
   } else if (comp.with_strategy == "fault_coverage") {
     return runFaultCoverage(use_case, comp);
   }

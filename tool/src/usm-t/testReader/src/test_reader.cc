@@ -74,18 +74,22 @@ Comparator parseCompare(XmlNode *compareNode) {
   messageErrorIf(!(comp.with_strategy == "fault_coverage" ||
                    comp.with_strategy == "semantic_equivalence" ||
                    comp.with_strategy == "edit_distance" ||
+                   comp.with_strategy == "syntactic_similarity" ||
                    comp.with_strategy == "time_to_mine"),
                  "Comparator strategy '" + comp.with_strategy +
                      "' not supported, supported strategies are "
-                     "'fault_coverage' and 'expected_vs_mined'");
+                     "'fault_coverage', 'semantic_equivalence', "
+                     "'edit_distance', 'syntactic_similarity' and "
+                     "'time_to_mine'");
   comp.expected = getAttributeValue(compareNode, "expected", "");
-  messageErrorIf(
-      comp.expected.empty() &&
-          (comp.with_strategy == "semantic_equivalence" ||
-           comp.with_strategy == "edit_distance"),
-      "Must specify a path to a set of golden assertions "
-      "with the attribute 'expected' when using the "
-      "'semantic_equivalence' or 'edit_distance' strategy");
+  messageErrorIf(comp.expected.empty() &&
+                     (comp.with_strategy == "semantic_equivalence" ||
+                      (comp.with_strategy == "systactic_similarity" ||
+                       comp.with_strategy == "edit_distance")),
+                 "Must specify a path to a set of golden assertions "
+                 "with the attribute 'expected' when using the "
+                 "'semantic_equivalence', 'edit_distance' or "
+                 "'syntactic_similarity strategy");
 
   comp.faulty_traces =
       getAttributeValue(compareNode, "faulty_traces", "");

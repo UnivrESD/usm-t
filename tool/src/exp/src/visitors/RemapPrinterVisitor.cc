@@ -117,7 +117,7 @@ std::string RemapPrinterVisitor::get() {
         items.size() > 1 &&                                          \
         hasHigherPrecedence(parent_op, ope::ope::NODE);              \
     if (putBrakets) {                                                \
-      _ss << selCol("(", BOOL("("));                                 \
+      _ss << selCol("(", BOOL("(")) << " ";                          \
     }                                                                \
     if (items.size() > 1) {                                          \
       --iterStop;                                                    \
@@ -131,7 +131,7 @@ std::string RemapPrinterVisitor::get() {
     }                                                                \
     (*iter)->acceptVisitor(*this);                                   \
     if (putBrakets) {                                                \
-      _ss << selCol(")", BOOL(")"));                                 \
+      _ss << " " << selCol(")", BOOL(")"));                          \
     }                                                                \
     _ope_stack.pop();                                                \
   }
@@ -187,7 +187,8 @@ EXP_OPE(PropositionNeq)
 void RemapPrinterVisitor::visit(expression::PropositionNot &o) {
   _ope_stack.push(ope::ope::PropositionNot);
   _ss << selCol(opeToString(ope::PropositionNot),
-                BOOL(opeToString(ope::PropositionNot)));
+                BOOL(opeToString(ope::PropositionNot)))
+      << " ";
   o.getItems()[0]->acceptVisitor(*this);
   _ope_stack.pop();
 }
@@ -195,7 +196,8 @@ void RemapPrinterVisitor::visit(expression::PropositionNot &o) {
 void RemapPrinterVisitor::visit(expression::IntNot &o) {
   _ope_stack.push(ope::ope::IntNot);
   _ss << selCol(opeToString(ope::IntNot),
-                BOOL(opeToString(ope::IntNot)));
+                BOOL(opeToString(ope::IntNot)))
+      << " ";
   o.getItems()[0]->acceptVisitor(*this);
   _ope_stack.pop();
 }
@@ -250,9 +252,9 @@ bool RemapPrinterVisitor::sereNeedsCurlyBrackets() {
 std::pair<std::string, std::string>
 RemapPrinterVisitor::getSereBrackets() {
   if (_lang != Language::SVA) {
-    return std::make_pair("{", "}");
+    return std::make_pair("{ ", " }");
   } else {
-    return std::make_pair("(", ")");
+    return std::make_pair("( ", " )");
   }
 }
 static std::string chooseTemporalOpColor(const std::string &str,
@@ -295,15 +297,18 @@ static bool isBinaryRightAssociative(ope::temporalOpe op) {
       }                                                              \
       if (leftRequiresBrackets) {                                    \
         _ss << selCol("(", chooseTemporalOpColor(                    \
-                               "(", ope::temporalOpe::NODE));        \
+                               "(", ope::temporalOpe::NODE))         \
+            << " ";                                                  \
       }                                                              \
       if (putBrakets) {                                              \
         _ss << selCol("(", chooseTemporalOpColor(                    \
-                               "(", ope::temporalOpe::NODE));        \
+                               "(", ope::temporalOpe::NODE))         \
+            << " ";                                                  \
       }                                                              \
       items[0]->acceptVisitor(*this);                                \
       if (leftRequiresBrackets) {                                    \
-        _ss << selCol(")", chooseTemporalOpColor(                    \
+        _ss << " "                                                   \
+            << selCol(")", chooseTemporalOpColor(                    \
                                ")", ope::temporalOpe::NODE));        \
       }                                                              \
       _ss << " ";                                                    \
@@ -319,12 +324,13 @@ static bool isBinaryRightAssociative(ope::temporalOpe op) {
       _ss << selCol(opeToString(ope::temporalOpe::NODE, _lang),      \
                     chooseTemporalOpColor(                           \
                         opeToString(ope::temporalOpe::NODE, _lang),  \
-                        ope::temporalOpe::NODE));                    \
+                        ope::temporalOpe::NODE))<< " " ;             \
     }                                                                \
                                                                      \
     if (items.size() == 1 && putBrakets) {                           \
-      _ss << selCol(                                                 \
-          "(", chooseTemporalOpColor("(", ope::temporalOpe::NODE));  \
+      _ss << selCol("(", chooseTemporalOpColor(                      \
+                             "(", ope::temporalOpe::NODE))           \
+          << " ";                                                    \
     }                                                                \
     if (items.size() == 2) {                                         \
       _ss << " ";                                                    \
@@ -332,13 +338,15 @@ static bool isBinaryRightAssociative(ope::temporalOpe op) {
     items.back()->acceptVisitor(*this);                              \
                                                                      \
     if (putBrakets) {                                                \
-      _ss << selCol(                                                 \
-          ")", chooseTemporalOpColor(")", ope::temporalOpe::NODE));  \
+      _ss << " "                                                     \
+          << selCol(")", chooseTemporalOpColor(                      \
+                             ")", ope::temporalOpe::NODE));          \
     }                                                                \
     if (clc::svaAssert &&                                            \
         _printMode != PrintMode::ShowOnlyPermuationPlaceholders) {   \
-      _ss << selCol(                                                 \
-          ")", chooseTemporalOpColor(")", ope::temporalOpe::NODE));  \
+      _ss << " "                                                     \
+          << selCol(")", chooseTemporalOpColor(                      \
+                             ")", ope::temporalOpe::NODE));          \
     }                                                                \
     _temporal_ope_stack.pop();                                       \
   }
@@ -426,7 +434,8 @@ static bool isBinaryRightAssociative(ope::temporalOpe op) {
 void RemapPrinterVisitor::visit(BooleanLayerNot &o) {
   _temporal_ope_stack.push(ope::temporalOpe::BooleanLayerNot);
   _ss << selCol(opeToString(ope::temporalOpe::BooleanLayerNot),
-                BOOL(opeToString(ope::BooleanLayerNot)));
+                BOOL(opeToString(ope::BooleanLayerNot)))
+      << " ";
   o.getBL()->acceptVisitor(*this);
   _temporal_ope_stack.pop();
 }
@@ -435,11 +444,11 @@ void RemapPrinterVisitor::visit(
     BooleanLayerPermutationPlaceholder &o) {
   if (_printMode == PrintMode::ShowAll) {
     if (!isUnary(*o.getPlaceholderPointer())) {
-      _ss << selCol("(", TEMP("("));
+      _ss << selCol("(", TEMP("(")) << " ";
     }
     (*o.getPlaceholderPointer())->acceptVisitor(*this);
     if (!isUnary(*o.getPlaceholderPointer())) {
-      _ss << selCol(")", TEMP(")"));
+      _ss << " " << selCol(")", TEMP(")"));
     }
   } else {
     _ss << selCol(o.getToken(), VAR(o.getToken()));
@@ -459,13 +468,13 @@ void RemapPrinterVisitor::visit(BooleanLayerDTPlaceholder &o) {
         getPropositionAndSize(*o.getPlaceholderPointer()) > 1;
 
     if (needsBrackets) {
-      _ss << selCol("(", TEMP("("));
+      _ss << selCol("(", TEMP("(")) << " ";
     }
 
     (*o.getPlaceholderPointer())->acceptVisitor(*this);
 
     if (needsBrackets) {
-      _ss << selCol(")", TEMP(")"));
+      _ss << " " << selCol(")", TEMP(")"));
     }
   } else if (_printMode ==
              PrintMode::ShowOnlyPermuationPlaceholders) {
@@ -482,13 +491,13 @@ void RemapPrinterVisitor::visit(BooleanLayerInst &o) {
 
   if (_printMode != PrintMode::Hide) {
     if (needsBrackets) {
-      _ss << selCol("(", TEMP("("));
+      _ss << selCol("(", TEMP("(")) << " ";
     }
     messageErrorIf((o.getProposition()) == nullptr,
                    "Attempting to print a nullptr proposition");
     o.getProposition()->acceptVisitor(*this);
     if (needsBrackets) {
-      _ss << selCol(")", TEMP(")"));
+      _ss << " " << selCol(")", TEMP(")"));
     }
   } else {
     _ss << selCol(o.getToken(), VAR(o.getToken()));
@@ -515,11 +524,11 @@ void RemapPrinterVisitor::visit(PropertyNext &o) {
     _ss << selCol(std::to_string(o.getDelay()),
                   TEMP(std::to_string(o.getDelay())));
     _ss << selCol("]", TEMP("]"));
-    _ss << selCol("(", TEMP("("));
+    _ss << selCol("(", TEMP("(")) << " ";
   }
   o.getItems()[0]->acceptVisitor(*this);
   if (o.getDelay() != 1) {
-    _ss << selCol(")", TEMP(")"));
+    _ss << " " << selCol(")", TEMP(")"));
   }
   _temporal_ope_stack.pop();
 }
@@ -560,9 +569,9 @@ void RemapPrinterVisitor::visit(SereFirstMatch &o) {
   _ss << (needsCurlyBrackets ? selCol(open, TEMP(open)) : "");
   _ss << selCol(opeToString(ope::SereFirstMatch, _lang),
                 TEMP(opeToString(ope::SereFirstMatch, _lang)));
-  _ss << selCol("(", TEMP("("));
+  _ss << " " << selCol("(", TEMP("("));
   o.getItems()[0]->acceptVisitor(*this);
-  _ss << selCol(")", TEMP(")"));
+  _ss << selCol(")", TEMP(")")) << " ";
   _ss << (needsCurlyBrackets ? selCol(close, TEMP(close)) : "");
 
   _temporal_ope_stack.pop();
@@ -583,13 +592,13 @@ void RemapPrinterVisitor::visit(SereConcat &o) {
     if (_lang == Language::SVA) {
       _ss << selCol(" ##0 ", TEMP(" ##0 "));
     } else {
-      _ss << selCol(":", TEMP(":"));
+      _ss << selCol(" : ", TEMP(" : "));
     }
   } else {
     if (_lang == Language::SVA) {
       _ss << selCol(" ##1 ", TEMP(" ##1 "));
     } else {
-      _ss << selCol(";", TEMP(";"));
+      _ss << selCol(" ; ", TEMP(" ; "));
     }
   }
   o.getItems()[1]->acceptVisitor(*this);

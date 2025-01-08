@@ -169,6 +169,17 @@ void run() {
               to_string_with_precision(evmr->_noise, 2) + ")");
           strategyToBestUseCase[er->_with_strategy].addUseCase(
               usecase_id, evmr->_final_score);
+        } else if (std::dynamic_pointer_cast<
+                       SyntacticSimilarityReport>(er)) {
+          SyntacticSimilarityReportPtr evmr =
+              std::dynamic_pointer_cast<SyntacticSimilarityReport>(
+                  er);
+          line.push_back(
+              to_string_with_precision(evmr->_final_score, 2) +
+              " (noise: " +
+              to_string_with_precision(evmr->_noise, 2) + ")");
+          strategyToBestUseCase[er->_with_strategy].addUseCase(
+              usecase_id, evmr->_final_score);
         } else if (std::dynamic_pointer_cast<TemporalReport>(er)) {
           TemporalReportPtr tr =
               std::dynamic_pointer_cast<TemporalReport>(er);
@@ -194,8 +205,7 @@ void run() {
       for (const auto &use_case : best._same_value_use_cases) {
         best_use_cases += use_case + " ";
       }
-      messageInfo("Best " + strategy + ": " +
-                  best_use_cases);
+      messageInfo("Best " + strategy + ": " + best_use_cases);
     }
 
   } //end of tests

@@ -82,10 +82,11 @@
     <usecase id="goldminer_usecase_1"/>
     <usecase id="samples2ltl_usecase_1"/>
 
-    <compare with_strategy="time_to_mine"/>
+    <compare with_strategy="syntactic_similarity" expected="input/arb2/expected/arb2_golden_ass_bool.txt"/>
     <compare with_strategy="edit_distance" expected="input/arb2/expected/arb2_golden_ass_bool.txt"/>
     <compare with_strategy="semantic_equivalence" expected="input/arb2/expected/arb2_golden_ass_bool.txt"/>
     <compare with_strategy="fault_coverage" faulty_traces="input/arb2/faulty_traces/" trace_type="csv" />
+    <compare with_strategy="time_to_mine"/>
   </test>
 
 
