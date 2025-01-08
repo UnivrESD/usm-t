@@ -1,0 +1,1206 @@
+$date
+	Wed Jan  8 16:08:49 2025
+$end
+$version
+	ModelSim Version 2019.4
+$end
+$timescale
+	1ns
+$end
+
+$scope module tb_fifo $end
+$var parameter 32 ! AWIDTH $end
+$var parameter 32 " DWIDTH $end
+$var parameter 32 # TW $end
+$var reg 1 $ clk $end
+$var reg 1 % reset $end
+$var reg 8 & data_i [7:0] $end
+$var reg 1 ' re_i $end
+$var wire 1 ( empty_o $end
+$var wire 1 ) full_o $end
+$var wire 1 * one_available_o $end
+$var wire 1 + two_available_o $end
+$var reg 1 , we_i $end
+$var wire 1 - data_o [7] $end
+$var wire 1 . data_o [6] $end
+$var wire 1 / data_o [5] $end
+$var wire 1 0 data_o [4] $end
+$var wire 1 1 data_o [3] $end
+$var wire 1 2 data_o [2] $end
+$var wire 1 3 data_o [1] $end
+$var wire 1 4 data_o [0] $end
+$var reg 8 5 got_data [7:0] $end
+
+$scope task test_reset $end
+$upscope $end
+
+$scope task check_control $end
+$var reg 5 6 exp_ctrl [4:0] $end
+$upscope $end
+
+$scope task write_data $end
+$var reg 8 7 data [7:0] $end
+$upscope $end
+
+$scope task read_data $end
+$var reg 8 8 data [7:0] $end
+$upscope $end
+
+$scope task check_result $end
+$var reg 8 9 got [7:0] $end
+$var reg 8 : expected [7:0] $end
+$upscope $end
+
+$scope module dut $end
+$var parameter 32 ; DWIDTH $end
+$var parameter 32 < AWIDTH $end
+$var wire 1 = clk $end
+$var wire 1 > reset $end
+$var wire 1 ( empty_o $end
+$var wire 1 ) full_o $end
+$var wire 1 * one_available_o $end
+$var wire 1 + two_available_o $end
+$var wire 1 ? we_i $end
+$var wire 1 @ data_i [7] $end
+$var wire 1 A data_i [6] $end
+$var wire 1 B data_i [5] $end
+$var wire 1 C data_i [4] $end
+$var wire 1 D data_i [3] $end
+$var wire 1 E data_i [2] $end
+$var wire 1 F data_i [1] $end
+$var wire 1 G data_i [0] $end
+$var wire 1 H re_i $end
+$var wire 1 - data_o [7] $end
+$var wire 1 . data_o [6] $end
+$var wire 1 / data_o [5] $end
+$var wire 1 0 data_o [4] $end
+$var wire 1 1 data_o [3] $end
+$var wire 1 2 data_o [2] $end
+$var wire 1 3 data_o [1] $end
+$var wire 1 4 data_o [0] $end
+$var reg 2 I read_ptr [1:0] $end
+$var reg 2 J write_ptr [1:0] $end
+$var reg 3 K fill_ctr [2:0] $end
+$var wire 1 L dp_we_i $end
+$var wire 1 M dp_re_i $end
+$var wire 1 N ce $end
+
+$scope module dpram $end
+$var parameter 32 O aw $end
+$var parameter 32 P dw $end
+$var wire 1 = rclk $end
+$var wire 1 > rrst $end
+$var wire 1 N rce $end
+$var wire 1 M oe $end
+$var wire 1 Q raddr [1] $end
+$var wire 1 R raddr [0] $end
+$var wire 1 - do [7] $end
+$var wire 1 . do [6] $end
+$var wire 1 / do [5] $end
+$var wire 1 0 do [4] $end
+$var wire 1 1 do [3] $end
+$var wire 1 2 do [2] $end
+$var wire 1 3 do [1] $end
+$var wire 1 4 do [0] $end
+$var wire 1 = wclk $end
+$var wire 1 > wrst $end
+$var wire 1 N wce $end
+$var wire 1 L we $end
+$var wire 1 S waddr [1] $end
+$var wire 1 T waddr [0] $end
+$var wire 1 @ di [7] $end
+$var wire 1 A di [6] $end
+$var wire 1 B di [5] $end
+$var wire 1 C di [4] $end
+$var wire 1 D di [3] $end
+$var wire 1 E di [2] $end
+$var wire 1 F di [1] $end
+$var wire 1 G di [0] $end
+$var reg 8 U do_reg [7:0] $end
+
+$scope task print_ram $end
+$var reg 2 V start [1:0] $end
+$var reg 2 W finish [1:0] $end
+$var integer 32 X rnum $end
+$upscope $end
+$upscope $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+0$
+0%
+bx &
+0'
+0,
+bx I
+bx J
+bx K
+bx U
+bx V
+bx W
+b0 5
+bx 6
+bx 7
+bx 8
+bx 9
+bx :
+b10 !
+b1000 "
+b1010 #
+b1000 ;
+b10 <
+b10 O
+b1000 P
+bx X
+x(
+x)
+x*
+x+
+z4
+z3
+z2
+z1
+z0
+z/
+z.
+z-
+0L
+0M
+1N
+0H
+xG
+xF
+xE
+xD
+xC
+xB
+xA
+x@
+0?
+0>
+0=
+xT
+xS
+xR
+xQ
+$end
+#10
+1$
+1%
+1=
+1>
+b0 K
+b0 I
+b0 J
+1(
+0)
+0+
+0*
+0T
+0S
+0R
+0Q
+#20
+0$
+0=
+#30
+0%
+b1 6
+b10101010 7
+1$
+0>
+1=
+#40
+0$
+0=
+b10101010 &
+1,
+0G
+1F
+0E
+1D
+0C
+1B
+0A
+1@
+1?
+1L
+#50
+1$
+1=
+b1 K
+b1 J
+0(
+1*
+1T
+#60
+0$
+0=
+0,
+b100 6
+0?
+0L
+#70
+1$
+1=
+#71
+b10101010 U
+#80
+0$
+0=
+1'
+1H
+1M
+04
+13
+02
+11
+00
+1/
+0.
+1-
+#90
+1$
+1=
+b0 K
+b1 I
+1(
+0M
+0*
+z4
+z3
+z2
+z1
+z0
+z/
+z.
+z-
+1R
+#100
+0$
+0=
+bz 8
+0'
+bz 5
+bz 9
+b10101010 :
+b1 6
+b1110000 7
+0H
+#110
+1$
+1=
+#111
+bx U
+#120
+0$
+0=
+b1110000 &
+1,
+0F
+0D
+1C
+1A
+0@
+1?
+1L
+#130
+1$
+1=
+b1 K
+b10 J
+0(
+1*
+0T
+1S
+#140
+0$
+0=
+0,
+b100 6
+b1110001 7
+0?
+0L
+#150
+1$
+1=
+#151
+b1110000 U
+#160
+0$
+0=
+b1110001 &
+1,
+1G
+1?
+1L
+#170
+1$
+1=
+b10 K
+b11 J
+1+
+1T
+#180
+0$
+0=
+0,
+b1100 6
+b1110010 7
+0?
+0L
+#190
+1$
+1=
+#200
+0$
+0=
+b1110010 &
+1,
+0G
+1F
+1?
+1L
+#210
+1$
+1=
+b11 K
+b0 J
+0T
+0S
+#220
+0$
+0=
+0,
+b1110011 7
+0?
+0L
+#230
+1$
+1=
+#240
+0$
+0=
+b1110011 &
+1,
+1G
+1?
+1L
+#250
+1$
+1=
+b100 K
+b1 J
+1)
+0L
+1T
+#260
+0$
+0=
+0,
+b1110 6
+b10101011 7
+0?
+#270
+1$
+1=
+#280
+0$
+0=
+b10101011 &
+1,
+1D
+0C
+0A
+1@
+1?
+#290
+1$
+1=
+#300
+0$
+0=
+0,
+0?
+#310
+1$
+1=
+#320
+0$
+0=
+1'
+1H
+1M
+04
+03
+02
+01
+10
+1/
+1.
+0-
+#330
+1$
+1=
+b11 K
+b10 I
+0)
+0R
+1Q
+#340
+0$
+0=
+b1110000 8
+0'
+b1110000 5
+b1110000 9
+b1110000 :
+b1100 6
+0H
+0M
+z4
+z3
+z2
+z1
+z0
+z/
+z.
+z-
+#350
+1$
+1=
+#351
+b1110001 U
+#360
+0$
+0=
+1'
+1H
+1M
+14
+03
+02
+01
+10
+1/
+1.
+0-
+#370
+1$
+1=
+b10 K
+b11 I
+1R
+#380
+0$
+0=
+b1110001 8
+0'
+b1110001 5
+b1110001 9
+b1110001 :
+0H
+0M
+z4
+z3
+z2
+z1
+z0
+z/
+z.
+z-
+#390
+1$
+1=
+#391
+b1110010 U
+#400
+0$
+0=
+1'
+1H
+1M
+04
+13
+02
+01
+10
+1/
+1.
+0-
+#410
+1$
+1=
+b1 K
+b0 I
+0+
+0R
+0Q
+#420
+0$
+0=
+b1110010 8
+0'
+b1110010 5
+b1110010 9
+b1110010 :
+b100 6
+0H
+0M
+z4
+z3
+z2
+z1
+z0
+z/
+z.
+z-
+#430
+1$
+1=
+#431
+b1110011 U
+#440
+0$
+0=
+1'
+1H
+1M
+14
+13
+02
+01
+10
+1/
+1.
+0-
+#450
+1$
+1=
+b0 K
+b1 I
+1(
+0M
+0*
+z4
+z3
+z2
+z1
+z0
+z/
+z.
+z-
+1R
+#460
+0$
+0=
+bz 8
+0'
+bz 5
+bz 9
+b1110011 :
+b1 6
+b10000000 7
+0H
+#470
+1$
+1=
+#471
+b1110000 U
+#480
+0$
+0=
+b10000000 &
+1,
+1'
+0G
+0F
+0D
+0B
+1?
+1H
+1L
+#490
+1$
+1=
+b1 K
+b10 J
+0(
+1M
+1*
+04
+03
+02
+01
+10
+1/
+1.
+0-
+0T
+1S
+#491
+bx U
+x4
+x3
+x2
+x1
+x0
+x/
+x.
+x-
+#500
+0$
+0=
+bx 8
+0'
+bx 5
+0,
+b100 6
+0H
+0?
+0L
+0M
+z4
+z3
+z2
+z1
+z0
+z/
+z.
+z-
+#510
+1$
+1=
+#511
+b10000000 U
+#520
+0$
+0=
+1'
+1H
+1M
+04
+03
+02
+01
+00
+0/
+0.
+1-
+#530
+1$
+1=
+b0 K
+b10 I
+1(
+0M
+0*
+z4
+z3
+z2
+z1
+z0
+z/
+z.
+z-
+0R
+1Q
+#540
+0$
+0=
+bz 8
+0'
+bz 5
+b10000000 :
+b10010000 7
+0H
+#550
+1$
+1=
+#551
+b1110001 U
+#560
+0$
+0=
+b10010000 &
+1,
+1C
+1?
+1L
+#570
+1$
+1=
+b1 K
+b11 J
+0(
+1*
+1T
+#571
+bx U
+#580
+0$
+0=
+0,
+b10100000 7
+0?
+0L
+#590
+1$
+1=
+#591
+b10010000 U
+#600
+0$
+0=
+b10100000 &
+1,
+1'
+0C
+1B
+1?
+1H
+1M
+1L
+04
+03
+02
+01
+10
+0/
+0.
+1-
+#610
+1$
+1=
+b0 J
+b11 I
+1R
+0T
+0S
+#620
+0$
+0=
+b10010000 8
+0'
+b10010000 5
+0,
+b10010000 9
+b10010000 :
+0H
+0?
+0L
+0M
+z4
+z3
+z2
+z1
+z0
+z/
+z.
+z-
+#630
+1$
+1=
+#631
+b10100000 U
+#640
+0$
+0=
+1'
+1H
+1M
+04
+03
+02
+01
+00
+1/
+0.
+1-
+#650
+1$
+1=
+b0 K
+b0 I
+1(
+0M
+0*
+z4
+z3
+z2
+z1
+z0
+z/
+z.
+z-
+0R
+0Q
+#660
+0$
+0=
+bz 8
+0'
+bz 5
+bz 9
+b10100000 :
+b1 6
+b10000 7
+0H
+#670
+1$
+1=
+#671
+b1110011 U
+#680
+0$
+0=
+b10000 &
+1,
+1C
+0B
+0@
+1?
+1L
+#690
+1$
+1=
+b1 K
+b1 J
+0(
+1*
+1T
+#691
+bx U
+#700
+0$
+0=
+0,
+b100 6
+b10001 7
+0?
+0L
+#710
+1$
+1=
+#711
+b10000 U
+#720
+0$
+0=
+b10001 &
+1,
+1G
+1?
+1L
+#730
+1$
+1=
+b10 K
+b10 J
+1+
+0T
+1S
+#740
+0$
+0=
+0,
+b1100 6
+b10010 7
+0?
+0L
+#750
+1$
+1=
+#760
+0$
+0=
+b10010 &
+1,
+0G
+1F
+1?
+1L
+#770
+1$
+1=
+b11 K
+b11 J
+1T
+#780
+0$
+0=
+0,
+b10011 7
+0?
+0L
+#790
+1$
+1=
+#800
+0$
+0=
+b10011 &
+1,
+1G
+1?
+1L
+#810
+1$
+1=
+b100 K
+b0 J
+1)
+0L
+0T
+0S
+#820
+0$
+0=
+0,
+b1110 6
+b100000 7
+0?
+#830
+1$
+1=
+#840
+0$
+0=
+b100000 &
+1,
+1'
+0G
+0F
+0C
+1B
+1?
+1H
+1M
+04
+03
+02
+01
+10
+0/
+0.
+0-
+#850
+1$
+1=
+b11 K
+b1 I
+0)
+1L
+1R
+#860
+0$
+0=
+b10000 8
+0'
+b10000 5
+0,
+b1100 6
+b10000 9
+b10000 :
+b100001 7
+0H
+0?
+0L
+0M
+z4
+z3
+z2
+z1
+z0
+z/
+z.
+z-
+#870
+1$
+1=
+#871
+b10001 U
+#880
+0$
+0=
+b100001 &
+1,
+1'
+1G
+1?
+1H
+1M
+1L
+14
+03
+02
+01
+10
+0/
+0.
+0-
+#890
+1$
+1=
+b1 J
+b10 I
+0R
+1Q
+1T
+#900
+0$
+0=
+b10001 8
+0'
+b10001 5
+0,
+b10001 9
+b10001 :
+0H
+0?
+0L
+0M
+z4
+z3
+z2
+z1
+z0
+z/
+z.
+z-
+#910
+1$
+1=
+#911
+b10010 U
+#920
+0$
+0=
+1'
+1H
+1M
+04
+13
+02
+01
+10
+0/
+0.
+0-
+#930
+1$
+1=
+b10 K
+b11 I
+1R
+#940
+0$
+0=
+b10010 8
+0'
+b10010 5
+b10010 9
+b10010 :
+0H
+0M
+z4
+z3
+z2
+z1
+z0
+z/
+z.
+z-
+#950
+1$
+1=
+#951
+b10011 U
+#960
+0$
+0=
+1'
+1H
+1M
+14
+13
+02
+01
+10
+0/
+0.
+0-
+#970
+1$
+1=
+b1 K
+b0 I
+0+
+0R
+0Q
+#980
+0$
+0=
+b10011 8
+0'
+b10011 5
+b10011 9
+b10011 :
+b100 6
+0H
+0M
+z4
+z3
+z2
+z1
+z0
+z/
+z.
+z-
+#990
+1$
+1=
+#991
+b100001 U
+#1000
+0$
+0=
+1'
+1H
+1M
+14
+03
+02
+01
+00
+1/
+0.
+0-
+#1010
+1$
+1=
+b0 K
+b1 I
+1(
+0M
+0*
+z4
+z3
+z2
+z1
+z0
+z/
+z.
+z-
+1R
+#1020
+0$
+0=
+bz 8
+0'
+bz 5
+bz 9
+b100001 :
+b1 6

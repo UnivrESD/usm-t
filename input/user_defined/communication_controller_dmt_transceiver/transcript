@@ -1,0 +1,54 @@
+# vsim -voptargs="+acc" -c work.tb_fifo -do "run -all; exit" 
+# Start time: 16:08:48 on Jan 08,2025
+# ** Note: (vsim-3812) Design is being optimized...
+# //  ModelSim SE-64 2019.4 Oct 15 2019 Linux 5.15.167.4-microsoft-standard-WSL2
+# //
+# //  Copyright 1991-2019 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  ModelSim SE-64 and its associated documentation contain trade
+# //  secrets and commercial or financial information that are the property of
+# //  Mentor Graphics Corporation and are privileged, confidential,
+# //  and exempt from disclosure under the Freedom of Information Act,
+# //  5 U.S.C. Section 552. Furthermore, this information
+# //  is prohibited from disclosure under the Trade Secrets Act,
+# //  18 U.S.C. Section 1905.
+# //
+# Loading work.tb_fifo(fast)
+# Loading work.fifo(fast)
+# Loading work.generic_dpram(fast)
+# run -all
+# === Verifing FIFO ===
+# - reset test
+# - verify write followed by read
+#                   60 Reading data
+# ERROR! => Result does not match! Got:   z (zz) expected: 170 (aa)
+# - fill FIFO up
+# - FIFO is full, another write should not have an affect
+# - verify reading the data from the full FIFO back
+#                  300 Reading data
+#                  340 Reading data
+#                  380 Reading data
+#                  420 Reading data
+# ERROR! => Result does not match! Got:   z (zz) expected: 115 (73)
+# = Now test a read/write at the same clock =
+# - First have an empty FIFO and do the read/write
+#                  460 Reading data
+#                  500 Reading data
+# ERROR! => Result does not match! Got:   z (zz) expected: 128 (80)
+# - Now have one entry in the FIFO and do a read/write
+#                  580 Reading data
+#                  620 Reading data
+# ERROR! => Result does not match! Got:   z (zz) expected: 160 (a0)
+# - Finally fill up the FIFO and to the read/write
+#                  820 Reading data
+#                  860 Reading data
+#                  900 Reading data
+#                  940 Reading data
+#                  980 Reading data
+# ERROR! => Result does not match! Got:   z (zz) expected:  33 (21)
+# FIFO verification done!
+# ** Note: $finish    : tb/tb_fifo.v(233)
+#    Time: 1020 ns  Iteration: 1  Instance: /tb_fifo
+# End time: 16:08:49 on Jan 08,2025, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0

@@ -1,13 +1,34 @@
 Expanded formula 1 for template 1:
-G({a_1_0 ##1 a_1_1} |=> {c_1_0})
+G({a_1_0 ##1 a_1_1} |=> {c_1_0 & c_1_1})
 
 Expanded formula 2 for template 1:
-G({a_2_0 ##1 a_2_1} |=> {c_2_0})
+G({a_2_0 ##1 a_2_1} |=> {c_2_0 & c_2_1})
 
 Expanded formula 3 for template 1:
-G({a_3_0 ##1 a_3_1} |=> {c_3_0})
+G({a_3_0 ##1 a_3_1} |=> {c_3_0 & c_3_1})
+
+Expanded formula 4 for template 1:
+G({a_4_0 ##1 a_4_1} |=> {c_4_0 & c_4_1})
+
+Expanded formula 5 for template 1:
+G({a_5_0 ##1 a_5_1} |=> {c_5_0 & c_5_1})
+
+Expanded formula 6 for template 1:
+G({a_6_0 ##1 a_6_1} |=> {c_6_0 & c_6_1})
+
+Expanded formula 7 for template 1:
+G({a_7_0 ##1 a_7_1} |=> {c_7_0 & c_7_1})
+
+Expanded formula 8 for template 1:
+G({a_8_0 ##1 a_8_1} |=> {c_8_0 & c_8_1})
+
+Expanded formula 9 for template 1:
+G({a_9_0 ##1 a_9_1} |=> {c_9_0 & c_9_1})
+
+Expanded formula 10 for template 1:
+G({a_10_0 ##1 a_10_1} |=> {c_10_0 & c_10_1})
 
 Merged specification:
-Formula: G({a_3_0 ##1 a_3_1} |=> {c_3_0}) & G({a_2_0 ##1 a_2_1} |=> {c_2_0}) & G({a_1_0 ##1 a_1_1} |=> {c_1_0})
-Inputs: a_2_1,a_1_1,a_2_0,a_3_0,a_3_1,a_1_0
-Outputs: c_1_0,c_2_0,c_3_0
+Formula: G({a_10_0 ##1 a_10_1} |=> {c_10_0 & c_10_1}) & G({a_9_0 ##1 a_9_1} |=> {c_9_0 & c_9_1}) & G({a_8_0 ##1 a_8_1} |=> {c_8_0 & c_8_1}) & G({a_7_0 ##1 a_7_1} |=> {c_7_0 & c_7_1}) & G({a_6_0 ##1 a_6_1} |=> {c_6_0 & c_6_1}) & G({a_5_0 ##1 a_5_1} |=> {c_5_0 & c_5_1}) & G({a_4_0 ##1 a_4_1} |=> {c_4_0 & c_4_1}) & G({a_3_0 ##1 a_3_1} |=> {c_3_0 & c_3_1}) & G({a_2_0 ##1 a_2_1} |=> {c_2_0 & c_2_1}) & G({a_1_0 ##1 a_1_1} |=> {c_1_0 & c_1_1})
+Inputs: a_6_1,a_2_1,a_9_1,a_1_0,a_1_1,a_4_0,a_4_1,a_5_1,a_10_0,a_2_0,a_3_1,a_9_0,a_8_0,a_8_1,a_5_0,a_7_1,a_3_0,a_6_0,a_10_1,a_7_0
+Outputs: c_4_0,c_10_1,c_7_0,c_5_0,c_6_1,c_8_1,c_1_0,c_8_0,c_3_1,c_2_1,c_10_0,c_4_1,c_9_1,c_5_1,c_6_0,c_3_0,c_9_0,c_2_0,c_7_1,c_1_1

@@ -1,0 +1,92 @@
+m255
+K4
+z2
+!s11f vlog 2019.4 2019.10, Oct 15 2019
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 d/home/magister/usm-t/input/user_defined/communication_controller_dmt_transceiver
+T_opt
+!s110 1736348929
+Vd`HD_:?AMOo3OVS_U36U82
+04 7 4 work tb_fifo fast 0
+=1-000ae431a4f1-677e9500-eb47b-1de5
+o-quiet -auto_acc_if_foreign -work work +acc
+Z1 tCvgOpt 0
+n@_opt
+OL;O;2019.4;69
+vfifo
+Z2 !s110 1736348927
+!i10b 1
+!s100 DRZFPK:>]eaIeTnOE`_`A2
+!s11b C:Nc2TFoha>@ceJ4>_F6l2
+IA=^Vc;YE^XWb1Tj?dLLm^1
+Z3 VDg1SIo80bB@j0V0VzS_@n1
+R0
+w1736344236
+8rtl/fifo.v
+Frtl/fifo.v
+!i122 -1
+L0 38
+Z4 OL;L;2019.4;69
+r1
+!s85 0
+31
+Z5 !s108 1736348927.000000
+Z6 !s107 rtl/generic_dpram.v|rtl/fifo.v|tb/tb_fifo.v|
+Z7 !s90 +incdir+tb/|tb/tb_fifo.v|rtl/fifo.v|rtl/generic_dpram.v|
+!i113 0
+Z8 o-L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+Z9 !s92 +incdir+tb/ -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R1
+vgeneric_dpram
+R2
+!i10b 1
+!s100 75aX2oYin:N8N8V>7[>B_0
+!s11b e83^95WK^dRM_2M29O:Zj2
+IT=URo8kmD>KnH^R@`0Y<X3
+R3
+R0
+w1736344844
+8rtl/generic_dpram.v
+Frtl/generic_dpram.v
+!i122 -1
+L0 108
+R4
+r1
+!s85 0
+31
+R5
+R6
+R7
+!i113 0
+R8
+R9
+R1
+vtb_fifo
+R2
+!i10b 1
+!s100 fD9lb]`R31zRNcIPe24d?0
+!s11b 49lkd@=P:59;9CFSXK;4f1
+IZj72jX;VBW6A4e^3VJW?Z0
+R3
+R0
+w1736346119
+8tb/tb_fifo.v
+Ftb/tb_fifo.v
+!i122 -1
+L0 27
+R4
+r1
+!s85 0
+31
+R5
+R6
+R7
+!i113 0
+R8
+R9
+R1
