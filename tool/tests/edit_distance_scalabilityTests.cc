@@ -11,6 +11,7 @@
 #include "CSVtraceReader.hh"
 #include "EvalReport.hh"
 #include "Evaluator.hh"
+#include "FlattenedAssertion.hh"
 #include "ProgressBar.hpp"
 #include "TemplateImplication.hh"
 #include "Trace.hh"
@@ -175,6 +176,10 @@ size_t test_with_parameters(std::string template_,
             << assertions_map["expected"].size() *
                    (assertions_map["mined"].size())
             << "\n";
+  std::unordered_map<std::string, std::string> targetToRemap;
+  auto tmp = getFlattenedAssertions(assertions_map.at("expected"),
+                                    assertions_map.at("mined"),
+                                    targetToRemap);
   auto start = std::chrono::high_resolution_clock::now();
   evaluateWithEditDistance(report, assertions_map);
   auto end = std::chrono::high_resolution_clock::now();
@@ -183,7 +188,7 @@ size_t test_with_parameters(std::string template_,
       .count();
 }
 
-TEST(edit_distance_scalabilityTests, edit_distance_and) {
+TEST(edit_distance_scalabilityTests, edit_distance_next) {
 
   //clc::psilent = 1;
   clc::wsilent = 1;
@@ -216,31 +221,31 @@ TEST(edit_distance_scalabilityTests, edit_distance_and) {
       {"..##1..", 300, 100, false},
       {"..##1..", 400, 100, false},
       {"..##1..", 500, 100, false},
-      {"..##1..", 100, 100, true},
-      {"..##1..", 200, 100, true},
-      {"..##1..", 300, 100, true},
-      {"..##1..", 400, 100, true},
-      {"..##1..", 500, 100, true},
-      {"..##1..", 100, 200, true},
-      {"..##1..", 200, 200, true},
-      {"..##1..", 300, 200, true},
-      {"..##1..", 400, 200, true},
-      {"..##1..", 500, 200, true},
-      {"..##1..", 100, 300, true},
-      {"..##1..", 200, 300, true},
-      {"..##1..", 300, 300, true},
-      {"..##1..", 400, 300, true},
-      {"..##1..", 500, 300, true},
-      {"..##1..", 100, 400, true},
-      {"..##1..", 200, 400, true},
-      {"..##1..", 300, 400, true},
-      {"..##1..", 400, 400, true},
-      {"..##1..", 500, 400, true},
-      {"..##1..", 100, 500, true},
-      {"..##1..", 200, 500, true},
-      {"..##1..", 300, 500, true},
-      {"..##1..", 400, 500, true},
-      {"..##1..", 500, 500, true},
+  //    {"..##1..", 100, 100, true},
+  //    {"..##1..", 200, 100, true},
+  //    {"..##1..", 300, 100, true},
+  //    {"..##1..", 400, 100, true},
+  //    {"..##1..", 500, 100, true},
+  //    {"..##1..", 100, 200, true},
+  //    {"..##1..", 200, 200, true},
+  //    {"..##1..", 300, 200, true},
+  //    {"..##1..", 400, 200, true},
+  //    {"..##1..", 500, 200, true},
+  //    {"..##1..", 100, 300, true},
+  //    {"..##1..", 200, 300, true},
+  //    {"..##1..", 300, 300, true},
+  //    {"..##1..", 400, 300, true},
+  //    {"..##1..", 500, 300, true},
+  //    {"..##1..", 100, 400, true},
+  //    {"..##1..", 200, 400, true},
+  //    {"..##1..", 300, 400, true},
+  //    {"..##1..", 400, 400, true},
+  //    {"..##1..", 500, 400, true},
+  //    {"..##1..", 100, 500, true},
+  //    {"..##1..", 200, 500, true},
+  //    {"..##1..", 300, 500, true},
+  //    {"..##1..", 400, 500, true},
+  //    {"..##1..", 500, 500, true},
 
   };
   // clang-format on

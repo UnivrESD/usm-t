@@ -1,3 +1,4 @@
+#include <filesystem>
 #include <gtest/gtest-message.h>
 #include <gtest/gtest-test-part.h>
 #include <limits>
@@ -26,7 +27,7 @@
 #include "z3TestCaseGenerator.hh"
 #include "gtest/gtest_pred_impl.h"
 #include <chrono>
-#include <filesystem>
+#include <z3++.h>
 
 using namespace harm;
 using namespace usmt;
@@ -168,26 +169,25 @@ size_t test_with_parameters(std::string template_,
   assertions_map["expected"] = assertions;
   assertions_map["mined"] = assertions;
 
-  SemanticEquivalenceReportPtr report =
-      std::make_shared<SemanticEquivalenceReport>();
+  EditDistanceReportPtr report =
+      std::make_shared<EditDistanceReport>();
 
   std::cout << "Number of comparisons: "
             << assertions_map["expected"].size() *
                    (assertions_map["mined"].size())
             << "\n";
+  auto start = std::chrono::high_resolution_clock::now();
   std::unordered_map<std::string, std::string> targetToRemap;
   auto tmp = getFlattenedAssertions(assertions_map.at("expected"),
                                     assertions_map.at("mined"),
                                     targetToRemap);
-  auto start = std::chrono::high_resolution_clock::now();
-  evaluateWithSemanticComparison(report, assertions_map);
   auto end = std::chrono::high_resolution_clock::now();
   return std::chrono::duration_cast<std::chrono::milliseconds>(end -
                                                                start)
       .count();
 }
 
-TEST(edit_distance_scalabilityTests, edit_distance_and) {
+TEST(flattening_scalabilityTests, flattening_next) {
 
   //clc::psilent = 1;
   clc::wsilent = 1;
@@ -220,37 +220,37 @@ TEST(edit_distance_scalabilityTests, edit_distance_and) {
       {"..##1..", 300, 100, false},
       {"..##1..", 400, 100, false},
       {"..##1..", 500, 100, false},
-//      {"..##1..", 100, 100, true},
-//      {"..##1..", 200, 100, true},
-//      {"..##1..", 300, 100, true},
-//      {"..##1..", 400, 100, true},
-//      {"..##1..", 500, 100, true},
-//      {"..##1..", 100, 200, true},
-//      {"..##1..", 200, 200, true},
-//      {"..##1..", 300, 200, true},
-//      {"..##1..", 400, 200, true},
-//      {"..##1..", 500, 200, true},
-//      {"..##1..", 100, 300, true},
-//      {"..##1..", 200, 300, true},
-//      {"..##1..", 300, 300, true},
-//      {"..##1..", 400, 300, true},
-//      {"..##1..", 500, 300, true},
-//      {"..##1..", 100, 400, true},
-//      {"..##1..", 200, 400, true},
-//      {"..##1..", 300, 400, true},
-//      {"..##1..", 400, 400, true},
-//      {"..##1..", 500, 400, true},
-//      {"..##1..", 100, 500, true},
-//      {"..##1..", 200, 500, true},
-//      {"..##1..", 300, 500, true},
-//      {"..##1..", 400, 500, true},
-//      {"..##1..", 500, 500, true},
+      {"..##1..", 100, 100, true},
+      {"..##1..", 200, 100, true},
+      {"..##1..", 300, 100, true},
+      {"..##1..", 400, 100, true},
+      {"..##1..", 500, 100, true},
+      {"..##1..", 100, 200, true},
+      {"..##1..", 200, 200, true},
+      {"..##1..", 300, 200, true},
+      {"..##1..", 400, 200, true},
+      {"..##1..", 500, 200, true},
+      {"..##1..", 100, 300, true},
+      {"..##1..", 200, 300, true},
+      {"..##1..", 300, 300, true},
+      {"..##1..", 400, 300, true},
+      {"..##1..", 500, 300, true},
+      {"..##1..", 100, 400, true},
+      {"..##1..", 200, 400, true},
+      {"..##1..", 300, 400, true},
+      {"..##1..", 400, 400, true},
+      {"..##1..", 500, 400, true},
+      {"..##1..", 100, 500, true},
+      {"..##1..", 200, 500, true},
+      {"..##1..", 300, 500, true},
+      {"..##1..", 400, 500, true},
+      {"..##1..", 500, 500, true},
 
   };
   // clang-format on
 
   //dump to csv
-  std::string dump_path = "semantic_equivalence_scalability.csv";
+  std::string dump_path = "flattening_scalability.csv";
 
   //delete file if it exists
   if (std::filesystem::exists(dump_path)) {

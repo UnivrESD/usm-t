@@ -56,8 +56,6 @@ void evaluateWithEditDistance(
       flattenedAssertions.at("mined");
 
   for (const auto &[ea, fea] : expectedFAssertions) {
-    //Extract the automaton without the G
-
     Automaton *aut = nullptr;
     try {
       aut = generateAutomatonFromString(fea, ppack);
@@ -70,7 +68,6 @@ void evaluateWithEditDistance(
   }
 
   for (const auto &[ma, fma] : minedFAssertions) {
-    //Extract the automaton without the G
     Automaton *aut = nullptr;
     try {
       aut = generateAutomatonFromString(fma, ppack);
@@ -83,7 +80,6 @@ void evaluateWithEditDistance(
   }
 
   //Compute the similarity between each expected and mined automaton
-
   progresscpp::ParallelProgressBar pb;
   pb.addInstance(0, "Computing Edit Distance Similarity...",
                  expectedToSAutomaton.size(), 70);
