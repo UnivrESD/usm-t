@@ -12,25 +12,27 @@ out_folder = root + '/tool/syntetic_gen/temp/'
 def expand_spec(specification, lenght, assnumb):
     formula = specification['formula'] 
     #base name for the proposition is a_propertyIndex
-    ant_base = specification['inputs'] + "_" + str(assnumb)
-    con_base = specification['outputs'] + "_" + str(assnumb)
+    #ant_base = specification['inputs'] + "_" + str(assnumb)
+    #con_base = specification['outputs'] + "_" + str(assnumb)
     #first propositions in the sequences are a_propertyIndex_0 and c_propertyIndex_0
     # + { is needed beacause we are using SERE syntax 
-    ant_seq = "{" + ant_base + "_0"
-    con_seq = "{" + con_base + "_0"
+    ant_seq = "{" +  chr(97) + "_" + str(assnumb)
+    con_seq = "{" + chr(97 + (lenght[0])) + "_" + str(assnumb)
     #initialize the inputs and outputs with the base propositions
-    ins = ant_base + "_0"
-    outs = con_base + "_0"
+    ins = "a_" + str(assnumb)
+    outs = chr(97 + lenght[0]) + "_" + str(assnumb)
 
     if '..&&..' in formula:
         #expand the antecedent
         for i in range(1, lenght[0]):
-            ins = ins + ',' + ant_base + "_" + str(i)
-            ant_seq = ant_seq + " & " + ant_base + "_" + str(i)
+            ant_base = chr(97 + i)  # 97 is the ASCII value for 'a'
+            ins = ins + ',' + ant_base + "_" + str(assnumb)
+            ant_seq = ant_seq + " & " + ant_base + "_" + str(assnumb)
         #expand the consequent
-        for i in range(1, lenght[1]):
-            outs = outs + ',' + con_base + "_" + str(i)
-            con_seq = con_seq + " & " + con_base + "_" + str(i)
+        for i in range(lenght[0] + 1, lenght[1]+lenght[0]):
+            con_base = chr(97 + i)  # 97 is the ASCII value for 'a'
+            outs = outs + ',' + con_base + "_" + str(assnumb)
+            con_seq = con_seq + " & " + con_base + "_" + str(assnumb)
         #close the sequence with } for SERE syntax
         ant_seq = ant_seq + "}"
         con_seq = con_seq + "}" 
@@ -42,12 +44,14 @@ def expand_spec(specification, lenght, assnumb):
     if '..##1..' in formula:
         #expand the antecedent
         for i in range(1, lenght[0]):
-            ins = ins + ',' + ant_base + "_" + str(i)
-            ant_seq = ant_seq + " ##1 " + ant_base + "_" + str(i)
+            ant_base = chr(97 + i)  # 97 is the ASCII value for 'a'
+            ins = ins + ',' + ant_base + "_" + str(assnumb)
+            ant_seq = ant_seq + " ##1 " + ant_base + "_" + str(assnumb)
         #expand the consequent
-        for i in range(1, lenght[1]):
-            outs = outs + ',' + con_base + "_" + str(i)
-            con_seq = con_seq + " & " + con_base + "_" + str(i)
+        for i in range(lenght[0] + 1, lenght[1]+lenght[0]):
+            con_base = chr(97 + i)  # 97 is the ASCII value for 'a'
+            outs = outs + ',' + con_base + "_" + str(assnumb)
+            con_seq = con_seq + " ##1 " + con_base + "_" + str(assnumb)
 
         #close the sequence with } for SERE syntax
         ant_seq = ant_seq + "}"
@@ -283,7 +287,7 @@ def main():
     
             # Write expanded formulas to a file
             with open(out_folder + 'specifications.txt', 'a') as file:
-                file.write(f"Expanded formula {j} for template {i}:\n")
+            #    file.write(f"Expanded formula {j} for template {i}:\n")
                 file.write(f"{expanded_formula['formula']}\n\n")
 
             #if module subdivision is enabled
@@ -292,11 +296,11 @@ def main():
                 spec_list.append(copy.deepcopy(expanded_formula))
 
     # Write merged specification to a file
-    with open(out_folder + 'specifications.txt', 'a') as file:
-        file.write("Merged specification:\n")
-        file.write(f"Formula: {merged_specification['formula']}\n")
-        file.write(f"Inputs: {merged_specification['inputs']}\n")
-        file.write(f"Outputs: {merged_specification['outputs']}\n")
+    #with open(out_folder + 'specifications.txt', 'a') as file:
+        #file.write("Merged specification:\n")
+        #file.write(f"Formula: {merged_specification['formula']}\n")
+        #file.write(f"Inputs: {merged_specification['inputs']}\n")
+        #file.write(f"Outputs: {merged_specification['outputs']}\n")
     
     print("Merged specification:\n")
     print(merged_specification)
