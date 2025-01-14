@@ -65,8 +65,9 @@ else
   exit 1
 fi
 
-# Handle variable mapping after processing all files
-for (( i=0; i<${#header[@]}; i++ )); do
-  echo "${header[$i]},x$i" >> "$output_dir/$VARIABLES_MAP_FILE"
+# Handle variable mapping dump backwards
+for (( i=${#header[@]}; i>0; i-- )); do
+  echo "${header[$i-1]},x$((i-1))" >> "$output_dir/$VARIABLES_MAP_FILE"
 done
+
 

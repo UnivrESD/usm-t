@@ -40,21 +40,44 @@ public:
   std::vector<std::string> _same_value_use_cases;
 };
 
+void appendCSVLineToFile(const std::string &filename,
+                         const std::vector<std::string> &line) {
+  std::ofstream file(filename, std::ios_base::app);
+  for (size_t i = 0; i < line.size(); i++) {
+    file << line[i];
+    if (i != line.size() - 1) {
+      file << ",";
+    }
+  }
+  file << "\n";
+  file.close();
+}
+
 void run() {
 
   std::vector<Test> tests = readTestFile(clc::testFile);
 
   for (auto &test : tests) {
     messageInfo("Running test " + test.name);
+    std::string summaryReportDumpPath =
+        clc::dumpPath + "/summary_report_" + test.name + ".csv";
+    if (clc::dumpPath != "" &&
+        std::filesystem::exists(summaryReportDumpPath)) {
+      std::filesystem::remove(summaryReportDumpPath);
+    }
 
     //print the header of the table
     fort::utf8_table table;
     table.set_border_style(FT_NICE_STYLE);
-    table << fort::header << "Use case";
+
+    std::vector<std::string> line;
+    table << fort::header;
+    line.push_back("Use Case");
     for (const auto &comparator : test.comparators) {
-      table << fort::header << comparator.with_strategy;
+      line.push_back(comparator.with_strategy);
     }
-    table << fort::endr;
+    table.range_write_ln(std::begin(line), std::end(line));
+    appendCSVLineToFile(summaryReportDumpPath, line);
 
     std::unordered_map<std::string, std::vector<EvalReportPtr>>
         useCaseToEvalReports;
@@ -195,6 +218,7 @@ void run() {
 
       } //end of reports
       table.range_write_ln(std::begin(line), std::end(line));
+      appendCSVLineToFile(summaryReportDumpPath, line);
     } // end of useCaseToEvalReports
 
     std::cout << table.to_string() << std::endl;

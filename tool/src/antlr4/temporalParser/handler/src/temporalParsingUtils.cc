@@ -105,8 +105,19 @@ parse(std::string formula, const harm::TracePtr &trace,
 TemporalExpressionPtr
 parseTemporalExpression(std::string formula,
                         const harm::TracePtr &trace) {
+  static std::map<std::pair<std::string, harm::TracePtr>,
+                  TemporalExpressionPtr>
+      cache;
 
-  return parse(formula, trace, false)->getTemporalExpression();
+  if (cache.count({formula, trace})) {
+    return cache.at({formula, trace});
+  }
+
+  auto parsedFormula =
+      parse(formula, trace, false)->getTemporalExpression();
+  cache[std::make_pair(formula, trace)] = parsedFormula;
+
+  return parsedFormula;
 }
 
 } // namespace hparser

@@ -34,6 +34,8 @@ struct Comparator {
   std::string expected;
   std::string faulty_traces;
   std::string trace_type;
+  std::string scope;
+  std::string clk;
 };
 
 struct Test {

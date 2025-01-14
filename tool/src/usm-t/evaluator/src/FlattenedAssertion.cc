@@ -150,6 +150,10 @@ getFlattenedAssertions(
 
   //retrieve flattened expected assertions
   for (const auto &a : expected_assertions) {
+    messageErrorIf(
+        !isPropertyAlways(a->_formula),
+        "Expecting a safety assertion starting with G, got '" +
+            a->toString() + "'");
     auto flattened_str =
         temp2RemapString(a->_formula->getItems()[0], targetToRemap,
                          Language::SpotLTL, PrintMode::ShowAll);
@@ -158,6 +162,10 @@ getFlattenedAssertions(
 
   //retrieve flattened mined assertions
   for (const auto &a : mined_assertions) {
+    messageErrorIf(
+        !isPropertyAlways(a->_formula),
+        "Expecting a safety assertion starting with G, got '" +
+            a->toString() + "'");
     auto flattened_str =
         temp2RemapString(a->_formula->getItems()[0], targetToRemap,
                          Language::SpotLTL, PrintMode::ShowAll);

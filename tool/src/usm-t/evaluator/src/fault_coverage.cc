@@ -52,8 +52,10 @@ EvalReportPtr runFaultCoverage(const UseCase &use_case,
       "." + comp.trace_type);
   ret->_totFaults = fc_result._faultyTraceFiles.size();
 
-  clc::clk = use_case.input[0].clk;
+  clc::clk = comp.clk;
   clc::parserType = comp.trace_type;
+  clc::selectedScope = comp.scope;
+  clc::vcdRecursive = 1;
   clc::findMinSubset = 1;
 
   evaluateWithFaultCoverage(mined_assertions, trace, fc_result);
@@ -123,7 +125,7 @@ void evaluateWithFaultCoverage(
     if (!a->holdsOnTrace()) {
       messageWarning("(Fault coverage) ignoring specification '" +
                      a->toString() +
-                     ": does not hold on the golden traces'");
+                     "': does not hold on the golden traces");
       a = nullptr;
       goto next;
     }

@@ -22,7 +22,24 @@ TraceReader::TraceReader(const std::vector<std::string> &traceFiles)
   // ntd
 }
 
+std::string
+serializeTraceFiles(std::vector<std::string> &traceFiles) {
+  //sort the files
+  std::sort(traceFiles.begin(), traceFiles.end());
+
+  std::string res = "";
+  for (const auto &f : traceFiles) {
+    res += f + " ";
+  }
+  return res;
+}
+
 TracePtr TraceReader::readTrace() {
+  static std::map<std::string, TracePtr> cache;
+  auto serializedTraceFiles = serializeTraceFiles(_traceFiles);
+  if (cache.count(serializedTraceFiles)) {
+    return cache.at(serializeTraceFiles(_traceFiles));
+  }
 
   //avoid repeating the read
   if (_trace != nullptr) {
@@ -38,7 +55,8 @@ TracePtr TraceReader::readTrace() {
       traces.push_back(trace);
     }
   }
-  messageErrorIf(traces.empty(), "All traces are empty or could not be processed");
+  messageErrorIf(traces.empty(),
+                 "All traces are empty or could not be processed");
 
   if (traces.size() > 1) {
     //merge multiple traces into one
@@ -64,6 +82,8 @@ TracePtr TraceReader::readTrace() {
   //  std::cout << i << " ";
   //}
   //std::cout << "\n";
+
+  cache[serializedTraceFiles] = _trace;
 
   return _trace;
 }

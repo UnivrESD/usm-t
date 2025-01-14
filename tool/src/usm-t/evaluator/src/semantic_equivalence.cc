@@ -55,6 +55,16 @@ int compareLanguage(const FlattenedAssertion &a1,
   spot::formula p1 = spot::parse_formula(a1.flattened_str);
   spot::formula p2 = spot::parse_formula(a2.flattened_str);
 
+  //if one of them is tt, then we discard it, because "true" it is vacuously equivalent to everything
+  if (spot::are_equivalent(p1, spot::formula::tt()) ||
+      spot::are_equivalent(p2, spot::formula::tt())) {
+    return -1;
+  }
+
+  if (p1.is_tt() || p2.is_tt()) {
+    return -1;
+  }
+
   if (spot::are_equivalent(p1, p2)) {
     return 0;
   } else {

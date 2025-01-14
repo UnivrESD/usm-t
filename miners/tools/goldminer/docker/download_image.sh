@@ -1,1 +1,1 @@
-docker pull samger/goldminer:latest
+docker pull samger/goldminer2:latest

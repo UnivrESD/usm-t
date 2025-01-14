@@ -15,6 +15,9 @@ RUN git clone https://github.com/SamueleGerminiani/samples2ltl.git
 WORKDIR "/samples2ltl"
 
 RUN pip install -r requirements.txt
+ARG CACHE_DATE=not_a_date
+RUN git reset --hard
+RUN git pull
 
 
 

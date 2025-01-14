@@ -94,6 +94,16 @@ Comparator parseCompare(XmlNode *compareNode) {
   comp.faulty_traces =
       getAttributeValue(compareNode, "faulty_traces", "");
   comp.trace_type = getAttributeValue(compareNode, "trace_type", "");
+  if (comp.trace_type == "vcd") {
+    comp.clk = getAttributeValue(compareNode, "clk", "");
+    messageErrorIf(comp.clk == "",
+                   "VCD trace type must have a clk in the xml tag of "
+                   "a fault coverage comparator");
+    comp.scope = getAttributeValue(compareNode, "scope", "");
+    messageErrorIf(comp.scope == "",
+                   "VCD trace type must have a scope in the xml tag of "
+                   "a fault coverage comparator");
+  }
   messageErrorIf(
       (comp.trace_type.empty() || comp.faulty_traces.empty()) &&
           comp.faulty_traces == "fault_coverage",
@@ -179,9 +189,11 @@ std::vector<Test> parseTests(XmlNode *root) {
   for (auto testNode : testNodes) {
     Test test;
     test.name = getAttributeValue(testNode, "name", "");
-    test.mode = getAttributeValue(testNode, "mode", "");
-    messageErrorIf(test.name.empty() || test.mode.empty(),
-                   "Test name and mode cannot be empty in test tag");
+    //test.mode = getAttributeValue(testNode, "mode", "");
+    //messageErrorIf(test.name.empty() || test.mode.empty(),
+    //               "Test name or mode cannot be empty in test tag");
+    messageErrorIf(test.name.empty(),
+                   "Test name cannot be empty in test tag");
 
     //parse comparators
     XmlNodeList compareNodes;

@@ -45,9 +45,17 @@ parseAssertions(const std::vector<std::string> &assStrs,
 
   std::vector<AssertionPtr> assertions;
 
+  progresscpp::ParallelProgressBar pb;
+  pb.addInstance(0,
+                 "Parsing " + std::to_string(assStrs.size()) +
+                     " specifications...",
+                 assStrs.size(), 70);
   for (size_t i = 0; i < assStrs.size(); i++) {
     assertions.push_back(makeAssertion(assStrs[i], trace));
+    pb.increment(0);
+    pb.display();
   }
+  pb.done(0);
   return assertions;
 }
 
@@ -112,7 +120,6 @@ TracePtr parseInputTraces(const usmt::UseCase &use_case) {
                        traces_in_dir.end());
 
     } else {
-
       allTraces.push_back(trace_path);
     }
 
